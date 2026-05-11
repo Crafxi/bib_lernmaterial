@@ -1,0 +1,32 @@
+details {
+    margin-bottom: 12px;
+    border: 1px solid #d5d5d5;
+    background-color: #f0f0f0;
+    border-radius: 12px;
+    padding: 10px;
+}
+
+details summary {
+    cursor: pointer;
+}
+
+details summary:hover {
+    color: salmon;
+}
+
+a {
+    text-decoration: none;
+    text-decoration-thickness: 1.5px;
+    text-underline-offset: 3px;
+
+    /* WebKit prefixed fallbacks */
+    -webkit-text-decoration-thickness: 1.5px;
+    -webkit-text-underline-offset: 3px;
+
+    color: black;
+}
+
+a:hover {
+    text-decoration: underline wavy;
+    color: salmon;
+}
