@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wirtschaftstheorie 2 – Lernzettel</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500&family=DM+Mono&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f5f2eb;
+    --bg2: #ede9e0;
+    --bg3: #e2ddd3;
+    --card: #faf8f4;
+    --text: #1a1915;
+    --text2: #5a5750;
+    --text3: #9a9690;
+    --accent: #2d5a3d;
+    --accent2: #c4873a;
+    --accent3: #8b3a3a;
+    --border: rgba(26,25,21,0.12);
+    --border2: rgba(26,25,21,0.06);
+    --green-bg: #eaf3ec;
+    --green-text: #1e4a2a;
+    --red-bg: #f5eaea;
+    --red-text: #6b2020;
+    --amber-bg: #f5f0e8;
+    --amber-text: #6b4a1a;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    line-height: 1.6;
+  }
+
+  header {
+    background: var(--accent);
+    color: #fff;
+    padding: 2.5rem 2rem 2rem;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 200px; height: 200px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.05);
+  }
+  header::after {
+    content: '';
+    position: absolute;
+    bottom: -60px; left: 30%;
+    width: 300px; height: 300px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.04);
+  }
+  header h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 2.2rem;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    position: relative;
+    z-index: 1;
+  }
+  header p {
+    font-size: 0.9rem;
+    opacity: 0.7;
+    margin-top: 0.4rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  nav {
+    display: flex;
+    gap: 0;
+    background: var(--bg2);
+    border-bottom: 1px solid var(--border);
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  nav::-webkit-scrollbar { display: none; }
+  nav button {
+    flex-shrink: 0;
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    padding: 0.9rem 1.2rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: var(--text2);
+    cursor: pointer;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+  nav button:hover { color: var(--text); background: var(--border2); }
+  nav button.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+  main {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem 4rem;
+  }
+
+  .section { display: none; }
+  .section.show { display: block; }
+
+  .section-header {
+    margin-bottom: 1.5rem;
+  }
+  .section-header h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.6rem;
+    font-weight: 400;
+    color: var(--text);
+  }
+  .section-header p {
+    font-size: 0.88rem;
+    color: var(--text2);
+    margin-top: 0.3rem;
+  }
+
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.4rem;
+    margin-bottom: 1rem;
+  }
+  .card-title {
+    font-size: 0.78rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text3);
+    margin-bottom: 1rem;
+    padding-bottom: 0.6rem;
+    border-bottom: 1px solid var(--border2);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .badge {
+    display: inline-block;
+    font-size: 0.7rem;
+    padding: 2px 7px;
+    border-radius: 20px;
+    font-weight: 500;
+    text-transform: none;
+    letter-spacing: 0;
+  }
+  .badge-green { background: var(--green-bg); color: var(--green-text); }
+  .badge-amber { background: var(--amber-bg); color: var(--amber-text); }
+  .badge-red { background: var(--red-bg); color: var(--red-text); }
+
+  .grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 0.8rem; }
+  .grid3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 0.8rem; }
+
+  .box {
+    background: var(--bg2);
+    border-radius: 8px;
+    padding: 0.9rem 1rem;
+  }
+  .box-title {
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 0.35rem;
+  }
+  .box p, .txt {
+    font-size: 0.82rem;
+    color: var(--text2);
+    line-height: 1.55;
+  }
+
+  .kv { display: flex; gap: 0.5rem; font-size: 0.82rem; margin: 0.22rem 0; align-items: flex-start; }
+  .k { font-weight: 500; color: var(--text); min-width: 130px; flex-shrink: 0; }
+  .v { color: var(--text2); }
+
+  .formula {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.82rem;
+    background: var(--bg3);
+    padding: 4px 10px;
+    border-radius: 6px;
+    display: inline-block;
+    color: var(--text);
+    margin: 0.3rem 0;
+    border: 1px solid var(--border);
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.8rem;
+    margin-top: 0.4rem;
+  }
+  th {
+    background: var(--bg2);
+    color: var(--text2);
+    font-weight: 500;
+    padding: 7px 10px;
+    text-align: left;
+    border: 1px solid var(--border);
+  }
+  td {
+    padding: 6px 10px;
+    border: 1px solid var(--border);
+    color: var(--text2);
+    vertical-align: top;
+  }
+  td strong { color: var(--text); font-weight: 500; }
+
+  .maslow-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0.65rem 0.9rem;
+    border-radius: 8px;
+    margin: 5px 0;
+  }
+  .maslow-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .maslow-label { font-size: 0.85rem; font-weight: 500; }
+  .maslow-sub { font-size: 0.78rem; opacity: 0.8; margin-top: 1px; }
+
+  .arrow-list { list-style: none; }
+  .arrow-list li { font-size: 0.82rem; color: var(--text2); padding: 0.2rem 0; padding-left: 1.2rem; position: relative; }
+  .arrow-list li::before { content: '→'; position: absolute; left: 0; color: var(--accent); }
+
+  .highlight {
+    background: var(--green-bg);
+    border-left: 3px solid var(--accent);
+    border-radius: 0 8px 8px 0;
+    padding: 0.7rem 1rem;
+    font-size: 0.85rem;
+    color: var(--green-text);
+    margin: 0.6rem 0;
+  }
+
+  /* QUIZ */
+  .progress-bar {
+    height: 4px;
+    background: var(--bg3);
+    border-radius: 2px;
+    margin-bottom: 1.5rem;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 2px;
+    transition: width 0.3s ease;
+  }
+
+  .q-num { font-size: 0.75rem; color: var(--text3); font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 0.5rem; }
+  .q-text { font-family: 'DM Serif Display', serif; font-size: 1.25rem; font-weight: 400; color: var(--text); margin-bottom: 1rem; line-height: 1.4; }
+
+  .opt {
+    display: block;
+    width: 100%;
+    text-align: left;
+    padding: 0.8rem 1rem;
+    margin: 0.4rem 0;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--card);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.12s;
+  }
+  .opt:hover:not(:disabled) { background: var(--bg2); border-color: var(--accent); }
+  .opt.correct { background: var(--green-bg); border-color: #2d7a40; color: var(--green-text); }
+  .opt.wrong { background: var(--red-bg); border-color: #a33030; color: var(--red-text); }
+  .opt.show-correct { background: var(--green-bg); border-color: #2d7a40; color: var(--green-text); }
+
+  .feedback {
+    font-size: 0.82rem;
+    padding: 0.7rem 1rem;
+    border-radius: 8px;
+    margin-top: 0.6rem;
+    line-height: 1.5;
+  }
+  .feedback.ok { background: var(--green-bg); color: var(--green-text); }
+  .feedback.err { background: var(--red-bg); color: var(--red-text); }
+
+  .next-btn {
+    margin-top: 1rem;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    padding: 0.7rem 1.6rem;
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: opacity 0.15s;
+  }
+  .next-btn:hover { opacity: 0.88; }
+
+  .score-wrap {
+    text-align: center;
+    padding: 3rem 1rem;
+  }
+  .score-circle {
+    width: 110px; height: 110px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem;
+  }
+  .score-big { font-size: 2rem; font-weight: 500; line-height: 1; }
+  .score-of { font-size: 0.78rem; opacity: 0.75; }
+  .score-msg { font-family: 'DM Serif Display', serif; font-size: 1.4rem; color: var(--text); margin-bottom: 0.5rem; }
+  .score-sub { font-size: 0.85rem; color: var(--text2); margin-bottom: 1.5rem; }
+  .btn-row { display: flex; gap: 0.7rem; justify-content: center; flex-wrap: wrap; }
+  .btn-outline {
+    background: none;
+    border: 1px solid var(--border);
+    padding: 0.65rem 1.4rem;
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    cursor: pointer;
+    color: var(--text);
+    transition: background 0.12s;
+  }
+  .btn-outline:hover { background: var(--bg2); }
+
+  @media (max-width: 600px) {
+    header h1 { font-size: 1.6rem; }
+    main { padding: 1.2rem 1rem 3rem; }
+    .grid2, .grid3 { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Wirtschaftstheorie 2</h1>
+  <p>Lernzettel &amp; Quiz zur Klausurvorbereitung – Dipl.-Kfm. Carsten Pohlmann</p>
+</header>
+
+<nav>
+  <button class="active" onclick="showSection('s1', this)">Güter &amp; Wirtschaften</button>
+  <button onclick="showSection('s2', this)">Maslow</button>
+  <button onclick="showSection('s3', this)">Marktformen</button>
+  <button onclick="showSection('s4', this)">Nachfrage</button>
+  <button onclick="showSection('s5', this)">Funktionen &amp; Gleichgewicht</button>
+  <button onclick="showSection('s6', this)">Soz. Marktwirtschaft</button>
+  <button onclick="showSection('quiz', this)">Quiz</button>
+</nav>
+
+<main>
+
+  <!-- GÜTER & WIRTSCHAFTEN -->
+  <div id="s1" class="section show">
+    <div class="section-header">
+      <h2>Güter, Knappheit &amp; wirtschaftliches Handeln</h2>
+      <p>Folien 7, 8 &amp; 10</p>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Definition <span class="badge badge-green">Grundbegriff</span></div>
+      <div class="highlight">Ein <strong>Gut</strong> ist alles, was zur Beseitigung oder Verbesserung eines Mangelzustands nützt. Da menschliche Bedürfnisse unbegrenzt sind, Güter aber knapp, entsteht die Notwendigkeit des Wirtschaftens.</div>
+      <div class="highlight" style="margin-top:0.5rem; border-left-color: var(--accent2); background: var(--amber-bg); color: var(--amber-text);">
+        <strong>Wirtschaften</strong> = planmäßige Bereitstellung von Gütern &amp; Dienstleistungen zur Bedarfsdeckung, unter Beachtung des ökonomischen Prinzips.
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Güterarten nach verschiedenen Kriterien</div>
+      <div class="grid2">
+        <div class="box">
+          <div class="box-title">Verfügbarkeit</div>
+          <div class="kv"><span class="k">Freie Güter</span><span class="v">Luft im Freien – nicht knapp</span></div>
+          <div class="kv"><span class="k">Wirtschaftsgüter</span><span class="v">Luft im Bergwerk – knapp</span></div>
+        </div>
+        <div class="box">
+          <div class="box-title">Mobilität</div>
+          <div class="kv"><span class="k">Mobilien</span><span class="v">Büromöbel, Fahrzeuge</span></div>
+          <div class="kv"><span class="k">Immobilien</span><span class="v">Gebäude, Grundstücke</span></div>
+        </div>
+        <div class="box">
+          <div class="box-title">Nutzungsart</div>
+          <div class="kv"><span class="k">Gebrauchsgüter</span><span class="v">Maschinen – mehrfach nutzbar</span></div>
+          <div class="kv"><span class="k">Verbrauchsgüter</span><span class="v">Rohstoffe – einmalig</span></div>
+        </div>
+        <div class="box">
+          <div class="box-title">Einsatzart</div>
+          <div class="kv"><span class="k">Konsumgüter</span><span class="v">Fahrrad – privater Konsum</span></div>
+          <div class="kv"><span class="k">Investitionsgüter</span><span class="v">Gabelstapler – Produktion</span></div>
+        </div>
+        <div class="box">
+          <div class="box-title">Notwendigkeit</div>
+          <div class="kv"><span class="k">Lebensnotwendig</span><span class="v">Brot, Wasser</span></div>
+          <div class="kv"><span class="k">Kulturgüter</span><span class="v">Zeitung, Bücher</span></div>
+          <div class="kv"><span class="k">Luxusgüter</span><span class="v">Pelzmantel, Schmuck</span></div>
+        </div>
+        <div class="box">
+          <div class="box-title">Wirtschaftssystem</div>
+          <div class="kv"><span class="k">Realgüter</span><span class="v">Erzeugnisse, Waren</span></div>
+          <div class="kv"><span class="k">Nominalgüter</span><span class="v">Geld, Forderungen</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Die 3 Kernfragen des Knappheitsproblems <span class="badge badge-amber">Folie 10</span></div>
+      <div class="grid3">
+        <div class="box">
+          <div class="box-title">Was produzieren?</div>
+          <p>Art und relative Zusammensetzung der Güter bestimmen</p>
+        </div>
+        <div class="box">
+          <div class="box-title">Wie produzieren?</div>
+          <p>Effizienzproblem: welche Faktoren &amp; welche Technik einsetzen?</p>
+        </div>
+        <div class="box">
+          <div class="box-title">Für wen produzieren?</div>
+          <p>Verteilungsproblem: Güterverteilung auf die Gesellschaft</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MASLOW -->
+  <div id="s2" class="section">
+    <div class="section-header">
+      <h2>Bedürfnispyramide nach Maslow</h2>
+      <p>Folie 9</p>
+    </div>
+    <div class="card">
+      <div class="card-title">Definition &amp; Aufbau</div>
+      <p class="txt" style="margin-bottom:1rem"><strong>Bedürfnis</strong> = Mangelgefühl, das Motivation für Handlungen liefert. Niedere Stufen müssen zuerst befriedigt sein, bevor höhere angestrebt werden.</p>
+
+      <div class="maslow-row" style="background:#f5eaea;">
+        <div class="maslow-dot" style="background:#c0392b;"></div>
+        <div>
+          <div class="maslow-label" style="color:#6b2020;">5. Selbstverwirklichung</div>
+          <div class="maslow-sub" style="color:#8b3a3a;">Entfaltung, Kreativität, persönliches Wachstum</div>
+        </div>
+      </div>
+      <div class="maslow-row" style="background:#f0eaf5;">
+        <div class="maslow-dot" style="background:#7f77dd;"></div>
+        <div>
+          <div class="maslow-label" style="color:#3c3489;">4. Geltungsbedürfnisse</div>
+          <div class="maslow-sub" style="color:#534ab7;">Anerkennung, Status, Prestige, Wertschätzung</div>
+        </div>
+      </div>
+      <div class="maslow-row" style="background:#eaf3ec;">
+        <div class="maslow-dot" style="background:#1d9e75;"></div>
+        <div>
+          <div class="maslow-label" style="color:#1e4a2a;">3. Soziale Bedürfnisse</div>
+          <div class="maslow-sub" style="color:#2d5a3d;">Zugehörigkeit, Freundschaft, Liebe, Gemeinschaft</div>
+        </div>
+      </div>
+      <div class="maslow-row" style="background:#f5f0e8;">
+        <div class="maslow-dot" style="background:#c4873a;"></div>
+        <div>
+          <div class="maslow-label" style="color:#6b4a1a;">2. Sicherheitsbedürfnis</div>
+          <div class="maslow-sub" style="color:#854f0b;">Schutz, Stabilität, Gesundheit, Arbeit, Wohnung</div>
+        </div>
+      </div>
+      <div class="maslow-row" style="background:#e8f0f5;">
+        <div class="maslow-dot" style="background:#2d5a7a;"></div>
+        <div>
+          <div class="maslow-label" style="color:#0c447c;">1. Physiologische Bedürfnisse</div>
+          <div class="maslow-sub" style="color:#185fa5;">Essen, Trinken, Schlafen, Wärme – Basis aller Bedürfnisse</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MARKTFORMEN -->
+  <div id="s3" class="section">
+    <div class="section-header">
+      <h2>Marktformen &amp; Klassifikation</h2>
+      <p>Folien 16, 17, 18</p>
+    </div>
+    <div class="card">
+      <div class="card-title">Marktformschema <span class="badge badge-amber">Folie 16</span></div>
+      <p class="txt" style="margin-bottom:0.8rem">Einteilung nach Anzahl der Anbieter (Angebot) und Nachfrager:</p>
+      <table>
+        <tr>
+          <th>Angebot \ Nachfrage</th>
+          <th>Einer</th>
+          <th>Wenige</th>
+          <th>Viele</th>
+        </tr>
+        <tr>
+          <td><strong>Einer</strong></td>
+          <td>Bilaterales Monopol<br><em style="font-size:0.75rem;">Panzerhersteller</em></td>
+          <td>Besch. Angebotsmonopol<br><em style="font-size:0.75rem;">med. Spezialgeräte</em></td>
+          <td>Angebotsmonopol<br><em style="font-size:0.75rem;">Post mit Briefmarken</em></td>
+        </tr>
+        <tr>
+          <td><strong>Wenige</strong></td>
+          <td>Besch. Nachfragemonopol<br><em style="font-size:0.75rem;">EZB mit Münzen</em></td>
+          <td>Bilaterales Oligopol<br><em style="font-size:0.75rem;">Autozulieferer</em></td>
+          <td>Angebotsoligopol<br><em style="font-size:0.75rem;">Tourismus, Benzin</em></td>
+        </tr>
+        <tr>
+          <td><strong>Viele</strong></td>
+          <td>Nachfragemonopol<br><em style="font-size:0.75rem;">staatl. Ausschreibungen</em></td>
+          <td>Nachfrageoligopol<br><em style="font-size:0.75rem;">Arbeitsmarkt</em></td>
+          <td>Polypol<br><em style="font-size:0.75rem;">Apotheke, Bäckerei</em></td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Marktklassifikation nach… <span class="badge badge-green">Folien 17–18</span></div>
+      <div class="grid2">
+        <div class="box">
+          <div class="box-title">Vollkommenheit</div>
+          <ul class="arrow-list">
+            <li>Sachliche Gleichartigkeit der Güter</li>
+            <li>Keine persönlichen Präferenzen</li>
+            <li>Keine räumliche Differenzierung (Punktmarkt)</li>
+            <li>Keine zeitliche Differenzierung</li>
+            <li>Vollständige Markttransparenz</li>
+          </ul>
+        </div>
+        <div class="box">
+          <div class="box-title">Organisiertheit</div>
+          <p>Preisbildung nach festen Regeln in besonderen Einrichtungen:</p>
+          <ul class="arrow-list" style="margin-top:0.3rem">
+            <li>Börsen</li>
+            <li>Auktionen &amp; Versteigerungen</li>
+            <li>Warenterminmärkte</li>
+          </ul>
+        </div>
+        <div class="box">
+          <div class="box-title">Beschränktheit</div>
+          <p>Faktisch beschränkter Zugang durch wirtschaftliche Gegebenheiten – z.B. in der Landwirtschaft: formal freier Zugang, faktisch durch begrenztes Bodenangebot eingeschränkt.</p>
+        </div>
+        <div class="box">
+          <div class="box-title">Regulierung</div>
+          <p>Rechtlich beschränkter Marktzugang:</p>
+          <ul class="arrow-list" style="margin-top:0.3rem">
+            <li>Genehmigung für Gewerbebetrieb</li>
+            <li>Grundstückverkehrsrecht</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NACHFRAGE -->
+  <div id="s4" class="section">
+    <div class="section-header">
+      <h2>Nachfragedeterminanten</h2>
+      <p>Folien 23–28</p>
+    </div>
+
+    <div class="card">
+      <div class="card-title">1. Produktpreis – Haupteinflussgröße <span class="badge badge-green">Folie 24</span></div>
+      <div class="highlight">Normalfall: Preis ↑ → Nachfrage ↓</div>
+      <div class="grid2" style="margin-top:0.8rem;">
+        <div class="box">
+          <div class="box-title">Substitutionseffekt</div>
+          <p>Jedes Gut konkurriert mit anderen. Steigt Preis von Gut A, weicht die Nachfrage auf Gut B aus (z.B. Butter → Margarine).</p>
+        </div>
+        <div class="box">
+          <div class="box-title">Einkommenseffekt</div>
+          <p>Preis ↑ → Kaufkraft des Einkommens ↓ → Haushalt kann weniger von allen Gütern kaufen → Nachfrage insgesamt ↓</p>
+        </div>
+      </div>
+      <div class="box" style="margin-top:0.8rem; border-left: 3px solid var(--accent3); border-radius: 0 8px 8px 0;">
+        <div class="box-title" style="color:var(--accent3);">Anormale Reaktion: Preis ↑ → Nachfrage ↑</div>
+        <div class="grid3" style="margin-top:0.5rem;">
+          <div>
+            <div class="box-title">Qualitätsvermutung</div>
+            <p>Preis wird als Signal für höhere Qualität interpretiert</p>
+          </div>
+          <div>
+            <div class="box-title">Veblen-/Snob-Effekt</div>
+            <p>Mit steigendem Preis steigt der Prestigewert (z.B. Kaviar)</p>
+          </div>
+          <div>
+            <div class="box-title">Giffen-Effekt</div>
+            <p>Weitere Preissteigerungen erwartet → Hamsterkäufe</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">2. Preise anderer Güter <span class="badge badge-green">Folie 26</span></div>
+      <div class="grid3">
+        <div class="box">
+          <div class="box-title">Substitutionsgüter</div>
+          <p>Güter ersetzen sich gegenseitig (Butter/Margarine)</p>
+          <p style="margin-top:0.4rem; font-weight:500; color:var(--accent);">Preis B ↑ → Nachfrage A ↑</p>
+        </div>
+        <div class="box">
+          <div class="box-title">Komplementärgüter</div>
+          <p>Güter ergänzen sich (Auto/Reifen)</p>
+          <p style="margin-top:0.4rem; font-weight:500; color:var(--accent3);">Preis A ↑ → Nachfrage B ↓</p>
+        </div>
+        <div class="box">
+          <div class="box-title">Unabhängige Güter</div>
+          <p>Kein Zusammenhang (Butter/Bücher)</p>
+          <p style="margin-top:0.4rem; color:var(--text2); font-size:0.8rem;">Trotzdem wirkt Einkommenseffekt</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">3. Einkommen (EK) <span class="badge badge-amber">Folie 27</span></div>
+      <div class="grid2">
+        <div class="box">
+          <div class="box-title">Superiore Güter</div>
+          <p>EK ↑ → Nachfrage überproportional ↑</p>
+          <p style="margin-top:0.3rem; font-size:0.78rem; color:var(--text3);">Beispiel: Luxusgüter, Reisen</p>
+        </div>
+        <div class="box">
+          <div class="box-title">Inferiore Güter</div>
+          <p>EK ↑ → Nachfrage ↓ (werden durch höherwertige Güter ersetzt)</p>
+          <p style="margin-top:0.3rem; font-size:0.78rem; color:var(--text3);">Beispiel: Kartoffeln werden durch Fleisch ersetzt</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">4. Bedürfnis- &amp; Präferenzstruktur <span class="badge badge-green">Folie 28</span></div>
+      <p class="txt">Neue Bedarfe entstehen laufend durch technischen Fortschritt, Werbung etc. Dazu kommen externe Konsumenteneffekte:</p>
+      <div class="grid2" style="margin-top:0.7rem;">
+        <div class="box">
+          <div class="box-title">Mitläufereffekt</div>
+          <p>Übernahme von Konsummustern anderer (Trend folgen)</p>
+        </div>
+        <div class="box">
+          <div class="box-title">Snob-Effekt</div>
+          <p>Suche nach exklusiven Produkten, die andere nicht haben</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FUNKTIONEN & GLEICHGEWICHT -->
+  <div id="s5" class="section">
+    <div class="section-header">
+      <h2>Nachfragefunktion &amp; Marktgleichgewicht</h2>
+      <p>Folien 30–32, 35, 36, 39, 40</p>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Nachfragefunktion <span class="badge badge-green">Folien 30–32</span></div>
+      <div class="grid2">
+        <div>
+          <div class="box-title" style="font-size:0.85rem; margin-bottom:0.4rem;">Allgemeine Form</div>
+          <div class="formula">X₁ᴺ = X₁ᴺ(p₁, p₂, …, pₙ, EK, BS)</div>
+          <p class="txt" style="margin-top:0.5rem;">Vereinfacht (ceteris paribus – alle anderen Determinanten konstant):</p>
+          <div class="formula">X₁ᴺ = a − b · p₁</div>
+        </div>
+        <div>
+          <div class="box-title" style="font-size:0.85rem; margin-bottom:0.4rem;">Achsenschnittpunkte</div>
+          <div class="box">
+            <div class="box-title">Prohibitivpreis</div>
+            <p>Schnittpunkt mit der Preisachse → Nachfragemenge = 0</p>
+          </div>
+          <div class="box" style="margin-top:0.5rem;">
+            <div class="box-title">Sättigungsmenge</div>
+            <p>Schnittpunkt mit der Mengenachse → Preis = 0</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="box" style="margin-top:0.8rem; background: var(--green-bg);">
+        <div class="box-title" style="color:var(--green-text);">Beispiel: p = 5 − 0,5 · x</div>
+        <div class="grid3" style="margin-top:0.5rem;">
+          <div>
+            <p class="txt"><strong>Prohibitivpreis:</strong> x=0 → p = 5</p>
+            <p class="txt"><strong>Sättigungsmenge:</strong> p=0 → x = 10</p>
+          </div>
+          <div>
+            <p class="txt">p = 1 → x = 8</p>
+            <p class="txt">p = 2 → x = 6</p>
+            <p class="txt">p = 3 → x = 4</p>
+          </div>
+          <div>
+            <p class="txt" style="font-size:0.78rem; color:var(--text3);">Umstellen nach x: x = (5 − p) / 0,5 = 10 − 2p</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Bewegung auf vs. Verschiebung der Kurve <span class="badge badge-amber">Folie 35</span></div>
+      <div class="grid2">
+        <div class="box">
+          <div class="box-title">Bewegung auf der Kurve</div>
+          <p>Der <strong>Preis</strong> ändert sich → die Menge bewegt sich entlang derselben Nachfragekurve.</p>
+          <p style="margin-top:0.4rem; font-size:0.78rem; color:var(--text3);">Preis ↓ → Menge ↑ (auf der Kurve entlang)</p>
+        </div>
+        <div class="box">
+          <div class="box-title">Verschiebung der Kurve</div>
+          <p>Eine <strong>andere Determinante</strong> ändert sich (z.B. EK ↑) → die gesamte Kurve verschiebt sich nach rechts.</p>
+          <p style="margin-top:0.4rem; font-size:0.78rem; color:var(--text3);">Bei gleichem Preis wird mehr nachgefragt</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Marktgleichgewicht <span class="badge badge-green">Folie 36</span></div>
+      <div class="highlight">Gleichgewicht bei p₀: Angebotsmenge = Nachfragemenge → Markt ist geräumt. Alle Pläne der Wirtschaftssubjekte gehen in Erfüllung.</div>
+      <div class="grid2" style="margin-top:0.8rem;">
+        <div class="box" style="border-left: 3px solid var(--accent); border-radius: 0 8px 8px 0;">
+          <div class="box-title">Konsumentenrente</div>
+          <p>Eingesparte Ausgabe der Nachfrager = Differenz zwischen ihrer Zahlungsbereitschaft und dem tatsächlichen Preis p₀.</p>
+          <p style="margin-top:0.4rem; font-size:0.78rem; color:var(--text3);">Grafisch: Dreieck <em>oberhalb</em> p₀ unter der Nachfragekurve</p>
+        </div>
+        <div class="box" style="border-left: 3px solid var(--accent2); border-radius: 0 8px 8px 0;">
+          <div class="box-title">Produzentenrente</div>
+          <p>Zusatzgewinn der Anbieter, die zu einem Preis unterhalb p₀ angeboten hätten und nun mehr erhalten.</p>
+          <p style="margin-top:0.4rem; font-size:0.78rem; color:var(--text3);">Grafisch: Dreieck <em>unterhalb</em> p₀ über der Angebotskurve</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SOZIALE MARKTWIRTSCHAFT -->
+  <div id="s6" class="section">
+    <div class="section-header">
+      <h2>Soziale Marktwirtschaft</h2>
+      <p>Folie 14</p>
+    </div>
+    <div class="card">
+      <div class="card-title">Euckensche Prinzipien <span class="badge badge-amber">Der „Dritte Weg"</span></div>
+      <p class="txt" style="margin-bottom:0.8rem">Die soziale Marktwirtschaft verbindet marktwirtschaftliche Freiheit mit staatlicher Korrektur von Marktversagen – zwischen reiner Marktwirtschaft und Planwirtschaft.</p>
+      <div class="grid2">
+        <div class="box">
+          <div class="box-title">Konstituierende Prinzipien</div>
+          <p class="txt" style="margin-bottom:0.3rem; font-size:0.78rem; color:var(--text3);">Schaffen den Ordnungsrahmen</p>
+          <ul class="arrow-list">
+            <li>Offene Märkte</li>
+            <li>Privateigentum an Produktionsmitteln</li>
+            <li>Haftung des Eigentümers</li>
+            <li>Vertragsfreiheit</li>
+            <li>Stabilität der Währung (Preisniveau)</li>
+            <li>Konstanz der Wirtschaftspolitik</li>
+          </ul>
+        </div>
+        <div class="box">
+          <div class="box-title">Regulierende Prinzipien</div>
+          <p class="txt" style="margin-bottom:0.3rem; font-size:0.78rem; color:var(--text3);">Korrigieren Marktversagen nachträglich</p>
+          <ul class="arrow-list">
+            <li>Monopolaufsicht</li>
+            <li>Korrektur der Einkommensverteilung</li>
+            <li>Soziale Sicherung</li>
+            <li>Schutz der Arbeitnehmer</li>
+            <li>Internalisierung externer Effekte</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- QUIZ -->
+  <div id="quiz" class="section">
+    <div class="section-header">
+      <h2>Quiz</h2>
+      <p>Teste dein Wissen – 10 Fragen aus allen Themen</p>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="prog"></div></div>
+    <div id="quiz-body"></div>
+    <div id="quiz-result" style="display:none;">
+      <div class="card">
+        <div class="score-wrap">
+          <div class="score-circle">
+            <div class="score-big" id="score-num"></div>
+            <div class="score-of">Punkte</div>
+          </div>
+          <div class="score-msg" id="score-msg"></div>
+          <div class="score-sub" id="score-sub"></div>
+          <div class="btn-row">
+            <button class="next-btn" onclick="restartQuiz()">Nochmal versuchen</button>
+            <button class="btn-outline" onclick="showSection('s1', document.querySelector('nav button'))">Zurück zum Lernen</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<script>
+  function showSection(id, btn) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('show'));
+    document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+    document.getElementById(id).classList.add('show');
+    btn.classList.add('active');
+    if (id === 'quiz') initQuiz();
+  }
+
+  const questions = [
+    {
+      q: "Was ist ein inferiores Gut?",
+      opts: ["Ein Gut, dessen Nachfrage mit steigendem Einkommen sinkt", "Ein Gut von schlechter Qualität", "Ein Gut, das nicht knapp ist", "Ein Gut, das nur der Staat kauft"],
+      correct: 0,
+      fb: "Inferiore Güter werden bei steigendem Einkommen weniger nachgefragt, weil sie durch höherwertige Produkte ersetzt werden – klassisches Beispiel: Kartoffeln werden durch Fleisch ersetzt."
+    },
+    {
+      q: "Beim Nachfragemonopol gibt es…",
+      opts: ["Viele Anbieter und einen einzigen Nachfrager", "Einen Anbieter und viele Nachfrager", "Wenige Anbieter und wenige Nachfrager", "Einen Anbieter und einen Nachfrager"],
+      correct: 0,
+      fb: "Nachfragemonopol = das Monopol liegt auf der Nachfrageseite. Viele Anbieter stehen einem einzigen Nachfrager gegenüber. Typisches Beispiel: staatliche Ausschreibungen."
+    },
+    {
+      q: "Was beschreibt der Giffen-Effekt?",
+      opts: ["Nachfrage steigt, weil weitere Preissteigerungen erwartet werden (Hamsterkäufe)", "Nachfrage steigt, weil der Preis als Qualitätssignal gilt", "Nachfrage sinkt stärker als der Preis steigt", "Nachfrage bleibt konstant trotz Preisänderung"],
+      correct: 0,
+      fb: "Beim Giffen-Effekt kaufen Wirtschaftssubjekte mehr von einem Gut, weil sie erwarten, dass der Preis weiter steigt – sie decken sich also vorsorglich ein (Hamsterkäufe)."
+    },
+    {
+      q: "Was ist der Prohibitivpreis?",
+      opts: ["Der Preis, bei dem die Nachfragemenge genau 0 ist", "Der höchste je gezahlte Preis auf dem Markt", "Der staatlich festgelegte Höchstpreis", "Der Gleichgewichtspreis zwischen Angebot und Nachfrage"],
+      correct: 0,
+      fb: "Der Prohibitivpreis ist der Schnittpunkt der Nachfragekurve mit der Preisachse. Bei diesem Preis ist niemand mehr bereit zu kaufen – die Nachfragemenge beträgt 0."
+    },
+    {
+      q: "Eine Rechtsverschiebung der Nachfragekurve entsteht durch…",
+      opts: ["Steigendes Einkommen der Haushalte", "Sinkenden Produktpreis", "Steigende Zinsen", "Mehr Anbieter auf dem Markt"],
+      correct: 0,
+      fb: "Wenn das Einkommen steigt, kaufen Haushalte bei gleichem Preis mehr → die Kurve verschiebt sich nach rechts (Lageparameter ändert sich). Ein sinkender Preis bewegt nur die Menge auf der bestehenden Kurve."
+    },
+    {
+      q: "Welche Stufe steht an der Basis der Maslow-Pyramide?",
+      opts: ["Physiologische Bedürfnisse", "Sicherheitsbedürfnis", "Soziale Bedürfnisse", "Selbstverwirklichung"],
+      correct: 0,
+      fb: "Die Basis bilden die physiologischen Bedürfnisse: Essen, Trinken, Schlafen, Wärme. Erst wenn diese erfüllt sind, streben Menschen nach höheren Stufen wie Sicherheit oder Zugehörigkeit."
+    },
+    {
+      q: "Auto und Reifen sind…",
+      opts: ["Komplementärgüter – sie ergänzen sich gegenseitig", "Substitutionsgüter – sie ersetzen sich gegenseitig", "Inferiore Güter", "Freie Güter"],
+      correct: 0,
+      fb: "Auto und Reifen sind Komplementärgüter: sie werden zusammen gebraucht. Steigt der Preis von Autos, sinkt auch die Nachfrage nach Reifen – gleichgerichtete Reaktion."
+    },
+    {
+      q: "Was sind die konstituierenden Prinzipien der sozialen Marktwirtschaft?",
+      opts: ["Grundregeln, die den Ordnungsrahmen des Wirtschaftssystems schaffen", "Regeln, die Marktversagen nachträglich korrigieren", "Gesetze zur Verstaatlichung von Unternehmen", "Vorgaben für staatliche Produktionsplanung"],
+      correct: 0,
+      fb: "Konstituierende Prinzipien schaffen den Rahmen: offene Märkte, Privateigentum, Vertragsfreiheit usw. Die regulierenden Prinzipien (Monopolaufsicht, soziale Sicherung) korrigieren dagegen Marktversagen."
+    },
+    {
+      q: "Was versteht man unter der Konsumentenrente?",
+      opts: ["Die Ersparnis der Käufer gegenüber ihrer maximalen Zahlungsbereitschaft", "Der Gewinn der Verkäufer über ihren Mindestpreis hinaus", "Die Summe aller auf dem Markt gezahlten Preise", "Die Differenz zwischen Angebots- und Nachfragemenge"],
+      correct: 0,
+      fb: "Konsumentenrente = Differenz zwischen dem Preis, den Nachfrager maximal zahlen würden, und dem tatsächlichen Marktpreis p₀. Grafisch ist es das Dreieck oberhalb von p₀ unter der Nachfragekurve."
+    },
+    {
+      q: "Gebrauchsgüter unterscheiden sich von Verbrauchsgütern dadurch, dass sie…",
+      opts: ["Mehrfach genutzt werden können (z.B. Maschinen)", "Einmalig genutzt werden (z.B. Rohstoffe)", "Nur vom Staat angeschafft werden", "Kostenlos verfügbar sind"],
+      correct: 0,
+      fb: "Gebrauchsgüter (wie Maschinen oder Fahrzeuge) können mehrfach genutzt werden. Verbrauchsgüter (wie Rohstoffe oder Lebensmittel) werden bei der Nutzung verbraucht."
+    }
+  ];
+
+  let answers = [];
+  let current = 0;
+
+  function initQuiz() {
+    answers = new Array(questions.length).fill(null);
+    current = 0;
+    document.getElementById('quiz-result').style.display = 'none';
+    document.getElementById('quiz-body').innerHTML = '';
+    renderQuestion();
+  }
+
+  function restartQuiz() {
+    document.getElementById('quiz-result').style.display = 'none';
+    initQuiz();
+  }
+
+  function renderQuestion() {
+    const q = questions[current];
+    const answered = answers[current] !== null;
+    const pct = (current / questions.length) * 100;
+    document.getElementById('prog').style.width = pct + '%';
+
+    let html = '<div class="card">';
+    html += '<div class="q-num">Frage ' + (current + 1) + ' von ' + questions.length + '</div>';
+    html += '<div class="q-text">' + q.q + '</div>';
+
+    q.opts.forEach((opt, i) => {
+      let cls = 'opt';
+      if (answered) {
+        if (i === q.correct) cls += ' show-correct';
+        else if (i === answers[current] && answers[current] !== q.correct) cls += ' wrong';
+      }
+      html += '<button class="' + cls + '" onclick="answer(' + i + ')" ' + (answered ? 'disabled' : '') + '>' + opt + '</button>';
+    });
+
+    if (answered) {
+      const ok = answers[current] === q.correct;
+      html += '<div class="feedback ' + (ok ? 'ok' : 'err') + '">';
+      html += '<strong>' + (ok ? '✓ Richtig!' : '✗ Leider falsch.') + '</strong> ' + q.fb;
+      html += '</div>';
+    }
+
+    html += '</div>';
+
+    if (answered) {
+      if (current < questions.length - 1) {
+        html += '<button class="next-btn" onclick="nextQ()">Nächste Frage →</button>';
+      } else {
+        html += '<button class="next-btn" onclick="showResult()">Ergebnis anzeigen →</button>';
+      }
+    }
+
+    document.getElementById('quiz-body').innerHTML = html;
+  }
+
+  function answer(i) {
+    if (answers[current] !== null) return;
+    answers[current] = i;
+    renderQuestion();
+  }
+
+  function nextQ() {
+    current++;
+    renderQuestion();
+  }
+
+  function showResult() {
+    const score = answers.filter((a, i) => a === questions[i].correct).length;
+    document.getElementById('quiz-body').innerHTML = '';
+    document.getElementById('prog').style.width = '100%';
+    document.getElementById('quiz-result').style.display = 'block';
+    document.getElementById('score-num').textContent = score + ' / ' + questions.length;
+
+    let msg, sub;
+    if (score === questions.length) {
+      msg = 'Perfekt!';
+      sub = 'Alle Fragen richtig – du bist bestens auf die Klausur vorbereitet.';
+    } else if (score >= 8) {
+      msg = 'Sehr gut!';
+      sub = 'Fast alles richtig. Schau dir die falschen Antworten kurz nochmal an.';
+    } else if (score >= 6) {
+      msg = 'Gut!';
+      sub = 'Solide Basis. Wiederhole die Themen, bei denen du Fehler gemacht hast.';
+    } else {
+      msg = 'Noch etwas Übung nötig.';
+      sub = 'Lies die Lernzettel-Abschnitte nochmal durch und versuche es erneut.';
+    }
+
+    document.getElementById('score-msg').textContent = msg;
+    document.getElementById('score-sub').textContent = sub;
+  }
+</script>
+
+</body>
+</html>

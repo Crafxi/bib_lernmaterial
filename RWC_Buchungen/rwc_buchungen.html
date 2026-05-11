@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lernzettel: Buchführung & Steuern</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: #f4f6fb; color: #1a1a2e; line-height: 1.6; }
+
+  .header { background: #2a2a6e; color: white; padding: 2rem; text-align: center; }
+  .header h1 { font-size: 2rem; font-weight: 700; letter-spacing: 1px; }
+  .header p { opacity: 0.8; margin-top: 0.4rem; font-size: 1rem; }
+
+  .nav { display: flex; flex-wrap: wrap; gap: 8px; padding: 1.2rem 2rem; background: #1e1e5e; justify-content: center; position: sticky; top: 0; z-index: 100; }
+  .nav a { color: #a0c4ff; text-decoration: none; font-size: 0.85rem; padding: 6px 14px; border-radius: 20px; border: 1px solid rgba(160,196,255,0.3); transition: all 0.2s; }
+  .nav a:hover { background: rgba(160,196,255,0.15); color: white; }
+
+  .container { max-width: 960px; margin: 2rem auto; padding: 0 1.5rem; }
+
+  .section { margin-bottom: 2.5rem; }
+  .section-title { font-size: 1.4rem; font-weight: 700; color: #2a2a6e; border-left: 5px solid #4a90e2; padding-left: 12px; margin-bottom: 1.2rem; }
+
+  .card { background: white; border-radius: 12px; padding: 1.4rem; margin-bottom: 1rem; box-shadow: 0 2px 8px rgba(0,0,0,0.07); border: 1px solid #e8edf5; }
+  .card h3 { font-size: 1rem; font-weight: 700; color: #2a2a6e; margin-bottom: 0.7rem; }
+  .card p, .card li { font-size: 0.92rem; color: #444; }
+  .card ul { padding-left: 1.2rem; }
+  .card li { margin-bottom: 4px; }
+
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; }
+
+  .highlight { background: #eef4ff; border-left: 4px solid #4a90e2; padding: 0.8rem 1rem; border-radius: 0 8px 8px 0; margin: 0.7rem 0; font-size: 0.9rem; }
+  .highlight.green { background: #edfaf1; border-color: #27ae60; }
+  .highlight.orange { background: #fff8ee; border-color: #e67e22; }
+  .highlight.red { background: #fff0f0; border-color: #e74c3c; }
+
+  .formula { background: #1a1a2e; color: #7ee8a2; font-family: monospace; padding: 1rem 1.2rem; border-radius: 8px; font-size: 0.95rem; margin: 0.7rem 0; line-height: 1.8; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 0.88rem; margin-top: 0.7rem; }
+  th { background: #2a2a6e; color: white; padding: 8px 12px; text-align: left; }
+  td { padding: 7px 12px; border-bottom: 1px solid #eee; }
+  tr:nth-child(even) td { background: #f8f9ff; }
+  tr:hover td { background: #eef4ff; }
+
+  .badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 0.78rem; font-weight: 600; margin: 2px; }
+  .badge-blue { background: #dbeafe; color: #1e40af; }
+  .badge-green { background: #dcfce7; color: #166534; }
+  .badge-orange { background: #ffedd5; color: #9a3412; }
+  .badge-red { background: #fee2e2; color: #991b1b; }
+  .badge-gray { background: #f1f5f9; color: #475569; }
+
+  .t-konto { display: grid; grid-template-columns: 1fr 1fr; border: 2px solid #2a2a6e; border-radius: 8px; overflow: hidden; font-size: 0.88rem; }
+  .t-konto-title { grid-column: 1 / -1; background: #2a2a6e; color: white; text-align: center; padding: 6px; font-weight: 700; font-size: 0.85rem; }
+  .t-konto-header { background: #eef4ff; padding: 6px 10px; font-weight: 600; color: #2a2a6e; text-align: center; border-bottom: 1px solid #c5d5ee; }
+  .t-konto-left { border-right: 2px solid #2a2a6e; }
+  .t-konto-cell { padding: 5px 10px; border-bottom: 1px solid #e8edf5; color: #444; font-size: 0.82rem; }
+  .t-konto-empty { padding: 14px 10px; color: #aaa; font-size: 0.8rem; font-style: italic; }
+
+  .quiz-section { margin-bottom: 2.5rem; }
+  .quiz-card { background: white; border-radius: 12px; padding: 1.4rem; margin-bottom: 1rem; box-shadow: 0 2px 8px rgba(0,0,0,0.07); border: 1px solid #e8edf5; }
+  .quiz-question { font-size: 0.95rem; font-weight: 600; color: #2a2a6e; margin-bottom: 1rem; }
+  .quiz-options { display: flex; flex-direction: column; gap: 8px; }
+  .quiz-option { padding: 10px 14px; border: 1.5px solid #d1d9f0; border-radius: 8px; cursor: pointer; font-size: 0.88rem; transition: all 0.2s; background: #fafbff; }
+  .quiz-option:hover { border-color: #4a90e2; background: #eef4ff; }
+  .quiz-option.correct { background: #edfaf1; border-color: #27ae60; color: #1a6b3c; font-weight: 600; }
+  .quiz-option.wrong { background: #fff0f0; border-color: #e74c3c; color: #c0392b; }
+  .quiz-feedback { margin-top: 10px; padding: 10px 14px; border-radius: 8px; font-size: 0.85rem; display: none; }
+  .quiz-feedback.show { display: block; }
+  .quiz-feedback.correct { background: #edfaf1; color: #1a6b3c; }
+  .quiz-feedback.wrong { background: #fff0f0; color: #c0392b; }
+
+  .flow { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; margin: 0.7rem 0; }
+  .flow-box { background: #eef4ff; border: 1.5px solid #4a90e2; border-radius: 8px; padding: 8px 14px; font-size: 0.85rem; font-weight: 600; color: #2a2a6e; text-align: center; }
+  .flow-arrow { color: #4a90e2; font-size: 1.2rem; font-weight: 700; }
+  .flow-box.green { background: #edfaf1; border-color: #27ae60; color: #1a6b3c; }
+  .flow-box.red { background: #fff0f0; border-color: #e74c3c; color: #c0392b; }
+  .flow-box.orange { background: #fff8ee; border-color: #e67e22; color: #8a4800; }
+
+  details { border: 1px solid #e8edf5; border-radius: 8px; margin-bottom: 8px; overflow: hidden; }
+  summary { background: #f4f6fb; padding: 10px 14px; cursor: pointer; font-weight: 600; font-size: 0.9rem; color: #2a2a6e; }
+  summary:hover { background: #eef4ff; }
+  .details-content { padding: 12px 14px; font-size: 0.88rem; color: #444; background: white; }
+
+  .steuer-table td:first-child { font-weight: 600; }
+  .no-ust { background: #f1f5f9; color: #64748b; }
+  .ust7 { background: #fef9c3; color: #854d0e; }
+  .ust19 { background: #dbeafe; color: #1e40af; }
+
+  footer { text-align: center; padding: 2rem; color: #888; font-size: 0.8rem; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>📚 Lernzettel: Buchführung & Steuern</h1>
+  <p>Buchungssatz · Erfolgswirksame Buchungen · Steuerarten · Umsatzsteuer</p>
+</div>
+
+<nav class="nav">
+  <a href="#buchungssatz">106 Buchungssatz</a>
+  <a href="#erfolg">107 Erfolgswirksame Buchungen</a>
+  <a href="#steuern">108 Steuerarten</a>
+  <a href="#ust">109 Umsatzsteuer</a>
+  <a href="#quiz">🎯 Quiz</a>
+</nav>
+
+<div class="container">
+
+<!-- ==================== MODUL 106 ==================== -->
+<div class="section" id="buchungssatz">
+  <div class="section-title">106 · Der Buchungssatz</div>
+
+  <div class="card">
+    <h3>Was ist ein Buchungssatz?</h3>
+    <p>Jeder Geschäftsfall wird als Buchungssatz erfasst: zuerst das <strong>Soll-Konto</strong>, dann das <strong>Haben-Konto</strong>, verbunden durch das Wort <em>„an"</em>.</p>
+    <div class="formula">Soll-Konto &nbsp;&nbsp;an&nbsp;&nbsp; Haben-Konto &nbsp;&nbsp; Betrag €</div>
+    <p>Neben dem Buchungssatz werden im <strong>Grundbuch (Journal)</strong> auch Datum, Belegbezeichnung und Belegnummer festgehalten.</p>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <h3>📋 4 Fragen zur Buchungssatzbildung</h3>
+      <ol style="padding-left: 1.2rem;">
+        <li style="margin-bottom: 6px;">Welche <strong>Konten</strong> sind betroffen?</li>
+        <li style="margin-bottom: 6px;">Ist es ein <strong>aktives oder passives</strong> Bestandskonto?</li>
+        <li style="margin-bottom: 6px;">Liegt ein <strong>Zu- oder Abgang</strong> vor?</li>
+        <li style="margin-bottom: 6px;">Auf welcher <strong>Kontenseite</strong> ist zu buchen?</li>
+      </ol>
+    </div>
+    <div class="card">
+      <h3>⚖️ Buchungsregeln Bestandskonten</h3>
+      <table>
+        <tr><th>Konto</th><th>Zugang</th><th>Abgang</th></tr>
+        <tr><td>Aktivkonto</td><td class="badge badge-blue">Soll</td><td class="badge badge-gray">Haben</td></tr>
+        <tr><td>Passivkonto</td><td class="badge badge-gray">Haben</td><td class="badge badge-blue">Soll</td></tr>
+      </table>
+      <div class="highlight" style="margin-top: 0.8rem;">
+        Aktiva: Kasse, Bank, Rohstoffe, Maschinen, Forderungen …<br>
+        Passiva: EK, Verbindlichkeiten, Darlehen …
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>📖 Wichtige Konten im Überblick</h3>
+    <div class="grid-3">
+      <div>
+        <p style="font-weight:700; color:#2a2a6e; margin-bottom:6px;">Anlagekonten (Aktiv)</p>
+        <ul>
+          <li>Grundstücke (unbebaut/bebaut)</li>
+          <li>Maschinen</li>
+          <li>Fuhrpark (Pkw, Lkw)</li>
+          <li>BGA (Betriebs- &amp; Geschäftsausstattung)</li>
+          <li>DV-Anlagen</li>
+        </ul>
+      </div>
+      <div>
+        <p style="font-weight:700; color:#2a2a6e; margin-bottom:6px;">Umlaufkonten (Aktiv)</p>
+        <ul>
+          <li>Rohstoffe</li>
+          <li>Hilfsstoffe</li>
+          <li>Betriebsstoffe</li>
+          <li>Fertige Erzeugnisse</li>
+          <li>Forderungen aLL</li>
+          <li>Kasse / Bank / Postbank</li>
+        </ul>
+      </div>
+      <div>
+        <p style="font-weight:700; color:#2a2a6e; margin-bottom:6px;">Passivkonten</p>
+        <ul>
+          <li>Eigenkapital (EK)</li>
+          <li>Verbindlichkeiten aLL</li>
+          <li>Darlehensschulden</li>
+          <li>Hypotheken</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>✏️ Beispiel-Buchungssätze</h3>
+    <table>
+      <tr><th>Geschäftsfall</th><th>Soll</th><th>Haben</th></tr>
+      <tr><td>Zielkauf von Rohstoffen</td><td>Rohstoffe</td><td>Verbindlichkeiten aLL</td></tr>
+      <tr><td>Kunde zahlt per Banküberweisung</td><td>Bank</td><td>Forderungen aLL</td></tr>
+      <tr><td>Barabhebung vom Bankkonto</td><td>Kasse</td><td>Bank</td></tr>
+      <tr><td>Kauf einer Maschine auf Ziel</td><td>Maschinen</td><td>Verbindlichkeiten aLL</td></tr>
+      <tr><td>Aufnahme eines Darlehens (Bankgutschrift)</td><td>Bank</td><td>Darlehensschulden</td></tr>
+      <tr><td>Tilgung einer Darlehensschuld (Banküberweisung)</td><td>Darlehensschulden</td><td>Bank</td></tr>
+      <tr><td>Bareinzahlung auf Bankkonto</td><td>Bank</td><td>Kasse</td></tr>
+      <tr><td>Barkauf von Hilfsstoffen</td><td>Hilfsstoffe</td><td>Kasse</td></tr>
+      <tr><td>Kauf Kopiergerät per Bankscheck</td><td>BGA</td><td>Bank</td></tr>
+      <tr><td>Umwandlung Liefererschuld in Darlehen</td><td>Verbindlichkeiten aLL</td><td>Darlehensschulden</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h3>🔷 T-Konto Struktur</h3>
+    <div class="grid-2" style="max-width:500px;">
+      <div class="t-konto">
+        <div class="t-konto-title">Aktivkonto (z.B. Kasse)</div>
+        <div class="t-konto-header t-konto-left">Soll (Zugänge)</div>
+        <div class="t-konto-header">Haben (Abgänge)</div>
+        <div class="t-konto-cell t-konto-left">AB (Anfangsbestand)</div>
+        <div class="t-konto-cell">Abgänge</div>
+        <div class="t-konto-cell t-konto-left">Zugänge</div>
+        <div class="t-konto-cell">SB (Schlussbestand)</div>
+      </div>
+      <div class="t-konto">
+        <div class="t-konto-title">Passivkonto (z.B. Verbindlichkeiten)</div>
+        <div class="t-konto-header t-konto-left">Soll (Abgänge)</div>
+        <div class="t-konto-header">Haben (Zugänge)</div>
+        <div class="t-konto-cell t-konto-left">Abgänge</div>
+        <div class="t-konto-cell">AB (Anfangsbestand)</div>
+        <div class="t-konto-cell t-konto-left">SB (Schlussbestand)</div>
+        <div class="t-konto-cell">Zugänge</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== MODUL 107 ==================== -->
+<div class="section" id="erfolg">
+  <div class="section-title">107 · Erfolgswirksame Buchungen</div>
+
+  <div class="grid-2">
+    <div class="card">
+      <h3>📉 Aufwendungen</h3>
+      <p>Mindern das Eigenkapital → werden im <span class="badge badge-blue">Soll</span> gebucht</p>
+      <ul style="margin-top:8px;">
+        <li>Materialaufwendungen (Rohstoffe, Hilfsstoffe, Betriebsstoffe)</li>
+        <li>Löhne &amp; Gehälter, Sozialabgaben</li>
+        <li>Miete, Werbung, Verwaltung</li>
+        <li>Abschreibungen (Wertminderung AV)</li>
+        <li>Zinsen</li>
+        <li>Telefonkosten</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>📈 Erträge</h3>
+      <p>Erhöhen das Eigenkapital → werden im <span class="badge badge-gray">Haben</span> gebucht</p>
+      <ul style="margin-top:8px;">
+        <li>Verkaufserlöse (Fertigerzeugnisse, Handelswaren)</li>
+        <li>Zinserträge</li>
+        <li>Provisionseinnahmen</li>
+        <li>Erträge aus Vermietung/Verpachtung</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>🗂️ Aufwands- und Ertragskonten = Unterkonten des EK</h3>
+    <div class="highlight">Anstatt direkt auf dem Eigenkapitalkonto zu buchen, werden separate Aufwands- und Ertragskonten geführt – so bleibt die Buchführung übersichtlich und einzelne Positionen (z.B. Lohnkosten) können direkt ausgewertet werden.</div>
+    <div class="flow" style="margin-top: 1rem;">
+      <div class="flow-box">Aufwandskonto<br><small style="font-weight:400;">(Soll-Buchung)</small></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box orange">EK sinkt<br><small style="font-weight:400;">(Verlust)</small></div>
+      &nbsp;&nbsp;&nbsp;
+      <div class="flow-box green">Ertragskonto<br><small style="font-weight:400;">(Haben-Buchung)</small></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box green">EK steigt<br><small style="font-weight:400;">(Gewinn)</small></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>✏️ Beispiel-Buchungssätze (erfolgswirksam)</h3>
+    <table>
+      <tr><th>Geschäftsfall</th><th>Soll</th><th>Haben</th></tr>
+      <tr><td>Aushilfslöhne bar gezahlt (2.400 €)</td><td>Löhne &amp; Gehälter</td><td>Kasse</td></tr>
+      <tr><td>Bank belastet Darlehenszinsen (50 €)</td><td>Zinsaufwand</td><td>Bank</td></tr>
+      <tr><td>Telefonrechnung per Banküberweisung (900 €)</td><td>Telekommunikation</td><td>Bank</td></tr>
+      <tr><td>Rohstoffe gehen in Produktion (4.200 €)</td><td>Aufwendungen Rohstoffe</td><td>Rohstoffe</td></tr>
+      <tr><td>Bank schreibt Zinsen gut (40 €)</td><td>Bank</td><td>Zinserträge</td></tr>
+      <tr><td>Bank schreibt Provisionen gut (500 €)</td><td>Bank</td><td>Provisionserlöse</td></tr>
+      <tr><td>Miete bar gezahlt (1.700 €)</td><td>Mietaufwand</td><td>Kasse</td></tr>
+      <tr><td>Zielverkauf Erzeugnisse (9.000 €)</td><td>Forderungen aLL</td><td>Umsatzerlöse</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h3>📊 Gewinn- und Verlustkonto (GuV)</h3>
+    <p style="margin-bottom: 0.7rem;">Am Jahresende werden alle Aufwands- und Ertragskonten über das GuV-Konto abgeschlossen:</p>
+    <div class="formula">GuV  an  alle Aufwandskonten&nbsp;&nbsp;&nbsp;&nbsp;(Aufwandskonten schließen ins GuV)<br>alle Ertragskonten  an  GuV&nbsp;&nbsp;&nbsp;&nbsp;(Ertragskonten schließen ins GuV)</div>
+    <div class="grid-2" style="margin-top: 0.8rem;">
+      <div class="highlight green"><strong>Erträge &gt; Aufwendungen</strong> → Gewinn<br>→ Buchung: GuV / EK-Konto</div>
+      <div class="highlight red"><strong>Aufwendungen &gt; Erträge</strong> → Verlust<br>→ Buchung: EK-Konto / GuV</div>
+    </div>
+    <div class="highlight orange" style="margin-top: 0.8rem;">
+      Materialverbrauch ermitteln: AB + Zugänge − Endbestand (Inventur) = Verbrauch<br>
+      Beispiel: 5.000 + 2.000 − 4.000 = <strong>3.000 € Verbrauch</strong>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== MODUL 108 ==================== -->
+<div class="section" id="steuern">
+  <div class="section-title">108 · Überblick Steuerarten</div>
+
+  <div class="card">
+    <h3>Klassifizierung nach 4 Kriterien</h3>
+    <details>
+      <summary>Nach Finanzhoheit (Steuerempfänger)</summary>
+      <div class="details-content">
+        <table>
+          <tr><th>Art</th><th>Empfänger</th><th>Beispiele</th></tr>
+          <tr><td>Gemeinschaftssteuern</td><td>Bund &amp; Länder</td><td>Einkommensteuer, Lohnsteuer</td></tr>
+          <tr><td>Bundessteuern</td><td>Bund</td><td>Einfuhrumsatzsteuer</td></tr>
+          <tr><td>Landessteuern</td><td>Länder</td><td>Erbschaftsteuer, Schenkungsteuer</td></tr>
+          <tr><td>Gemeindesteuern</td><td>Gemeinden</td><td>Grundsteuer, Hundesteuer</td></tr>
+        </table>
+      </div>
+    </details>
+    <details>
+      <summary>Nach Erhebungsart (direkte vs. indirekte Steuern)</summary>
+      <div class="details-content">
+        <div class="grid-2">
+          <div>
+            <p><strong>Direkte Steuern:</strong> Steuerzahler = Steuerträger. Keine Überwälzung möglich.<br>Beispiel: Lohnsteuer (Arbeitnehmer zahlt selbst)</p>
+          </div>
+          <div>
+            <p><strong>Indirekte Steuern:</strong> Unternehmen führt ab, wälzt Steuer auf Verbraucher um.<br>Beispiele: Umsatzsteuer, Tabaksteuer, Mineralölsteuer</p>
+          </div>
+        </div>
+      </div>
+    </details>
+    <details>
+      <summary>Nach belastungspolitischen Gesichtspunkten</summary>
+      <div class="details-content">
+        <p><strong>Subjektsteuern (Personensteuern):</strong> berücksichtigen persönliche Verhältnisse (Familienstand, Kinder, Behinderungen) → Einkommensteuer</p>
+        <p style="margin-top: 6px;"><strong>Objektsteuern (Realsteuern):</strong> knüpfen an sachliches Merkmal an → Grundsteuer</p>
+      </div>
+    </details>
+    <details>
+      <summary>Nach Steuergegenstand</summary>
+      <div class="details-content">
+        <table>
+          <tr><th>Art</th><th>Erklärung</th><th>Beispiele</th></tr>
+          <tr><td>Besitzsteuern</td><td>Einkommen/Ertrag &amp; Vermögen</td><td>Körperschaftsteuer, Grundsteuer</td></tr>
+          <tr><td>Verkehrssteuern</td><td>Güteraustausch, rechtliche Vorgänge</td><td>Umsatzsteuer, Grunderwerbsteuer</td></tr>
+          <tr><td>Verbrauchssteuern</td><td>Güterverbrauch</td><td>Mineralölsteuer</td></tr>
+        </table>
+      </div>
+    </details>
+    <details>
+      <summary>Nach Abzugsfähigkeit</summary>
+      <div class="details-content">
+        <p><strong>Betriebssteuern:</strong> als Betriebsausgaben abzugsfähig → Gewerbeertragsteuer, Grundsteuer (betriebliche Grundstücke)</p>
+        <p style="margin-top: 6px;"><strong>Personalsteuern:</strong> nicht abzugsfähig → Einkommensteuer, Körperschaftsteuer</p>
+      </div>
+    </details>
+  </div>
+
+  <div class="card">
+    <h3>💰 Die 7 Einkunftsarten (Einkommensteuer)</h3>
+    <table>
+      <tr><th>Einkunftsart</th><th>Beispiele</th><th>Typ</th></tr>
+      <tr><td>Land- &amp; Forstwirtschaft</td><td>Landwirtschaft, Weinbau, Gartenbau</td><td><span class="badge badge-blue">Gewinneinkünfte</span></td></tr>
+      <tr><td>Gewerbebetrieb</td><td>Einzelkaufmann, Personengesellschaft</td><td><span class="badge badge-blue">Gewinneinkünfte</span></td></tr>
+      <tr><td>Selbständige Arbeit</td><td>Ärzte, Rechtsanwälte, Steuerberater</td><td><span class="badge badge-blue">Gewinneinkünfte</span></td></tr>
+      <tr><td>Nichtselbständige Arbeit</td><td>Lohn &amp; Gehalt</td><td><span class="badge badge-orange">Überschusseinkünfte</span></td></tr>
+      <tr><td>Kapitalvermögen</td><td>Zinsen, Dividenden (Privatanleger)</td><td><span class="badge badge-orange">Überschusseinkünfte</span></td></tr>
+      <tr><td>Vermietung &amp; Verpachtung</td><td>Mietwohnungen</td><td><span class="badge badge-orange">Überschusseinkünfte</span></td></tr>
+      <tr><td>Sonstige Einkünfte</td><td>Spekulationsgeschäfte, Renten</td><td><span class="badge badge-orange">Überschusseinkünfte</span></td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ==================== MODUL 109 ==================== -->
+<div class="section" id="ust">
+  <div class="section-title">109 · Umsatzsteuer</div>
+
+  <div class="card">
+    <h3>Einordnung der Umsatzsteuer</h3>
+    <div class="grid-3" style="margin-top: 0.5rem;">
+      <div class="highlight"><strong>Indirekte Steuer:</strong><br>Steuerzahler (Endverbraucher) ≠ Steuerschuldner (Händler)</div>
+      <div class="highlight"><strong>Verkehrsteuer:</strong><br>Besteuert wirtschaftliche Vorgänge (nicht den Besitz)</div>
+      <div class="highlight"><strong>Verbrauchsteuer:</strong><br>Wird vom Endverbraucher getragen</div>
+    </div>
+    <p style="margin-top:0.8rem; font-size: 0.88rem;">Bemessungsgrundlage: das vereinbarte <strong>Entgelt (Nettobetrag)</strong> für Lieferungen und Leistungen.</p>
+  </div>
+
+  <div class="card">
+    <h3>📊 Steuersätze</h3>
+    <div class="grid-2">
+      <div class="highlight"><strong>Normaler Steuersatz: 19 %</strong><br>z.B. Getränke, Bekleidung, Elektronik, Haarschnitt</div>
+      <div class="highlight green"><strong>Ermäßigter Steuersatz: 7 %</strong><br>z.B. Milch, Brot, Bücher, Zeitungen, Hotelübernachtung, Essen im/zum Mitnehmen im Restaurant</div>
+    </div>
+    <p style="margin-top: 0.8rem; font-size: 0.85rem;"><strong>Keine USt (steuerfreie Umsätze):</strong> Arztbehandlung, Kauf von Grundstücken, Vermietung/Verpachtung, Kreditgewährung, Versicherungen, Ausfuhrlieferungen (Exporte), EU-Lieferungen, Ärzte, Pflegeheime, Museen usw.</p>
+  </div>
+
+  <div class="card">
+    <h3>🔄 System der Mehrwertsteuer (Vorsteuerabzug)</h3>
+    <p style="margin-bottom: 0.8rem;">Die USt ist als <strong>Mehrwertsteuer</strong> konzipiert: auf jeder Wirtschaftsstufe wird nur der Mehrwert (die Wertschöpfung) besteuert.</p>
+    <div class="flow">
+      <div class="flow-box">Lieferant<br><small>zahlt USt ans FA</small></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box orange">Unternehmen<br><small>VSt abziehbar</small></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box orange">Unternehmen<br><small>USt einziehen</small></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box red">Endverbraucher<br><small>trägt volle USt</small></div>
+    </div>
+    <div class="formula">Zahllast = USt (aus Ausgangsrechnungen) − Vorsteuer (aus Eingangsrechnungen)
+Beispiel: 570 € USt − 494 € VSt = 76 € Zahllast ans Finanzamt</div>
+    <div class="highlight orange">Vorsteuerüberhang: VSt &gt; USt → Forderung gegenüber dem Finanzamt → FA erstattet den Differenzbetrag</div>
+  </div>
+
+  <div class="card">
+    <h3>📋 Buchung von USt bei Ein- und Verkauf</h3>
+    <table>
+      <tr><th>Vorgang</th><th>Konto</th><th>Bedeutung</th></tr>
+      <tr><td>Einkauf (Eingangsrechnung)</td><td>Vorsteuer (VSt)</td><td>Forderung an Finanzamt</td></tr>
+      <tr><td>Verkauf (Ausgangsrechnung)</td><td>Umsatzsteuer (USt)</td><td>Verbindlichkeit gegenüber Finanzamt</td></tr>
+    </table>
+    <div class="formula">Einkauf Rohstoffe bar (netto 1.000 € + 19% = 1.190 €):
+  Rohstoffe 1.000 €  an  Kasse 1.190 €
+  VSt        190 €
+
+Verkauf Erzeugnisse bar (netto 3.000 € + 19% = 3.570 €):
+  Kasse 3.570 €  an  Umsatzerlöse  3.000 €
+                     USt            570 €</div>
+    <p style="margin-top: 0.8rem; font-size: 0.88rem;"><strong>Monatsende:</strong> VSt an USt (VSt-Konto wird auf USt-Konto abgeschlossen)<br>
+    <strong>10. Folgemonat:</strong> USt an Bank (Zahllast wird überwiesen)</p>
+  </div>
+
+  <div class="card">
+    <h3>↩️ Rücksendungen / Storno</h3>
+    <p style="margin-bottom: 0.8rem;">Bei Warenrücksendungen muss die ursprüngliche Buchung korrigiert werden – sowohl beim Käufer als auch beim Verkäufer, inklusive USt/VSt-Korrektur.</p>
+    <table>
+      <tr><th>Seite</th><th>Ursprungsbuchung</th><th>Stornobuchung</th></tr>
+      <tr><td>Verkäufer</td><td>Forderungen / Umsatzerlöse + USt</td><td>Umsatzerlöse + USt / Forderungen</td></tr>
+      <tr><td>Käufer</td><td>Rohstoffe + VSt / Verbindlichkeiten</td><td>Verbindlichkeiten / Rohstoffe + VSt</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h3>📄 Umsatzsteuervoranmeldung</h3>
+    <ul>
+      <li>Monatliche Verrechnung von USt und VSt, elektronisch ans Finanzamt</li>
+      <li>Abgabefrist: <strong>bis zum 10. des Folgemonats</strong></li>
+      <li>Jahreserklärung: bis <strong>31.05. des Folgejahres</strong></li>
+      <li>Kleinunternehmer: keine USt auf Ausgangsrechnungen, von USt befreit</li>
+    </ul>
+    <div class="highlight" style="margin-top: 0.8rem;">USt ist für alle Unternehmen ein <strong>„durchlaufender Posten"</strong> – hat keinen Einfluss auf den Unternehmenserfolg!</div>
+  </div>
+
+  <div class="card">
+    <h3>📑 Pflichtangaben auf Rechnungen (§ 14 UStG)</h3>
+    <div class="grid-2">
+      <ul>
+        <li>Vollst. Name &amp; Adresse des Lieferanten</li>
+        <li>Vollst. Name &amp; Adresse des Empfängers</li>
+        <li>Menge und Art der Leistung</li>
+        <li>Steuernummer / USt-ID des Lieferanten</li>
+      </ul>
+      <ul>
+        <li>Zeitpunkt der Lieferung/Leistung</li>
+        <li>Vorab vereinbarte Entgeltsminderungen (Rabatte, Skonti)</li>
+        <li>Steuersatz</li>
+        <li>Steuerbetrag</li>
+      </ul>
+    </div>
+    <div class="highlight orange" style="margin-top: 0.8rem;"><strong>E-Rechnungspflicht ab 01.01.2025</strong> für inländische B2B-Unternehmen (maschinenlesbares Format, z.B. XML). PDF-Rechnungen per E-Mail erfüllen die Anforderungen <em>nicht</em>.</div>
+  </div>
+</div>
+
+<!-- ==================== QUIZ ==================== -->
+<div class="section quiz-section" id="quiz">
+  <div class="section-title">🎯 Selbsttest: Quiz</div>
+
+  <div class="quiz-card" id="q1">
+    <div class="quiz-question">1. Welches Konto wird bei einem Zielkauf von Rohstoffen im Soll gebucht?</div>
+    <div class="quiz-options">
+      <div class="quiz-option" onclick="answer('q1','a','b')">A) Verbindlichkeiten aLL</div>
+      <div class="quiz-option" onclick="answer('q1','b','b')">B) Rohstoffe</div>
+      <div class="quiz-option" onclick="answer('q1','c','b')">C) Kasse</div>
+      <div class="quiz-option" onclick="answer('q1','d','b')">D) Bank</div>
+    </div>
+    <div class="quiz-feedback" id="q1-feedback"></div>
+  </div>
+
+  <div class="quiz-card" id="q2">
+    <div class="quiz-question">2. Was versteht man unter dem „Vorsteuerüberhang"?</div>
+    <div class="quiz-options">
+      <div class="quiz-option" onclick="answer('q2','a','a')">A) Die Vorsteuer aus Eingangsrechnungen ist größer als die USt aus Ausgangsrechnungen → Forderung ans Finanzamt</div>
+      <div class="quiz-option" onclick="answer('q2','b','a')">B) Die USt aus Ausgangsrechnungen ist größer als die Vorsteuer → Zahllast ans Finanzamt</div>
+      <div class="quiz-option" onclick="answer('q2','c','a')">C) Vorsteuer und Umsatzsteuer sind gleich groß</div>
+      <div class="quiz-option" onclick="answer('q2','d','a')">D) Der Unternehmer muss keine USt ans Finanzamt abführen</div>
+    </div>
+    <div class="quiz-feedback" id="q2-feedback"></div>
+  </div>
+
+  <div class="quiz-card" id="q3">
+    <div class="quiz-question">3. Wofür steht das Wort „an" im Buchungssatz?</div>
+    <div class="quiz-options">
+      <div class="quiz-option" onclick="answer('q3','a','b')">A) Es trennt Betrag und Datum</div>
+      <div class="quiz-option" onclick="answer('q3','b','b')">B) Es trennt Soll-Konto und Haben-Konto</div>
+      <div class="quiz-option" onclick="answer('q3','c','b')">C) Es verbindet zwei Buchungsperioden</div>
+      <div class="quiz-option" onclick="answer('q3','d','b')">D) Es markiert eine Stornobuchung</div>
+    </div>
+    <div class="quiz-feedback" id="q3-feedback"></div>
+  </div>
+
+  <div class="quiz-card" id="q4">
+    <div class="quiz-question">4. Welcher Steuersatz gilt für den Kauf von Büchern in Deutschland?</div>
+    <div class="quiz-options">
+      <div class="quiz-option" onclick="answer('q4','a','b')">A) 0 % (steuerfrei)</div>
+      <div class="quiz-option" onclick="answer('q4','b','b')">B) 7 % (ermäßigter Steuersatz)</div>
+      <div class="quiz-option" onclick="answer('q4','c','b')">C) 19 % (normaler Steuersatz)</div>
+      <div class="quiz-option" onclick="answer('q4','d','b')">D) 10 % (Zwischensteuersatz)</div>
+    </div>
+    <div class="quiz-feedback" id="q4-feedback"></div>
+  </div>
+
+  <div class="quiz-card" id="q5">
+    <div class="quiz-question">5. Aufwendungen werden auf dem GuV-Konto im … gebucht:</div>
+    <div class="quiz-options">
+      <div class="quiz-option" onclick="answer('q5','a','a')">A) Soll – weil sie das Eigenkapital mindern</div>
+      <div class="quiz-option" onclick="answer('q5','b','a')">B) Haben – weil sie das Eigenkapital erhöhen</div>
+      <div class="quiz-option" onclick="answer('q5','c','a')">C) Soll – weil sie das Eigenkapital erhöhen</div>
+      <div class="quiz-option" onclick="answer('q5','d','a')">D) Haben – weil sie das Eigenkapital mindern</div>
+    </div>
+    <div class="quiz-feedback" id="q5-feedback"></div>
+  </div>
+
+  <div class="quiz-card" id="q6">
+    <div class="quiz-question">6. Bis wann muss die monatliche Umsatzsteuervoranmeldung beim Finanzamt eingehen?</div>
+    <div class="quiz-options">
+      <div class="quiz-option" onclick="answer('q6','a','b')">A) Bis zum letzten Tag des laufenden Monats</div>
+      <div class="quiz-option" onclick="answer('q6','b','b')">B) Bis zum 10. des Folgemonats</div>
+      <div class="quiz-option" onclick="answer('q6','c','b')">C) Bis zum 31.05. des Folgejahres</div>
+      <div class="quiz-option" onclick="answer('q6','d','b')">D) Vierteljährlich bis zum 15. des Folgequartals</div>
+    </div>
+    <div class="quiz-feedback" id="q6-feedback"></div>
+  </div>
+
+  <div class="quiz-card" id="q7">
+    <div class="quiz-question">7. Welches Konto wird bei einer Barabhebung vom Bankkonto im HABEN gebucht?</div>
+    <div class="quiz-options">
+      <div class="quiz-option" onclick="answer('q7','a','b')">A) Kasse</div>
+      <div class="quiz-option" onclick="answer('q7','b','b')">B) Bank</div>
+      <div class="quiz-option" onclick="answer('q7','c','b')">C) Verbindlichkeiten aLL</div>
+      <div class="quiz-option" onclick="answer('q7','d','b')">D) Eigenkapital</div>
+    </div>
+    <div class="quiz-feedback" id="q7-feedback"></div>
+  </div>
+
+  <div class="quiz-card" id="q8">
+    <div class="quiz-question">8. Die Umsatzsteuer ist eine …</div>
+    <div class="quiz-options">
+      <div class="quiz-option" onclick="answer('q8','a','c')">A) direkte Steuer</div>
+      <div class="quiz-option" onclick="answer('q8','b','c')">B) Besitzsteuer</div>
+      <div class="quiz-option" onclick="answer('q8','c','c')">C) indirekte Steuer, Verkehrsteuer und Verbrauchsteuer</div>
+      <div class="quiz-option" onclick="answer('q8','d','c')">D) Personalsteuer</div>
+    </div>
+    <div class="quiz-feedback" id="q8-feedback"></div>
+  </div>
+
+  <div id="quiz-result" style="display:none; background: white; border-radius: 12px; padding: 1.5rem; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.07); border: 1px solid #e8edf5;">
+    <p style="font-size: 1.2rem; font-weight: 700; color: #2a2a6e;">Dein Ergebnis: <span id="score"></span> / 8</p>
+    <p style="margin-top: 0.5rem; color: #666;" id="score-msg"></p>
+    <button onclick="resetQuiz()" style="margin-top: 1rem; padding: 10px 24px; background: #2a2a6e; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 0.95rem;">🔄 Nochmal versuchen</button>
+  </div>
+</div>
+
+</div><!-- /container -->
+
+<footer>Lernzettel · Buchführung &amp; Steuern · Module 106–109</footer>
+
+<script>
+const answers = {
+  q1: { correct: 'b', explanation: 'Richtig! Rohstoffe ist ein Aktivkonto – Zugang = Soll-Buchung. Verbindlichkeiten aLL im Haben (Passivkonto, Zugang).' },
+  q2: { correct: 'a', explanation: 'Richtig! Vorsteuerüberhang = VSt > USt → Das Finanzamt erstattet dem Unternehmen die Differenz.' },
+  q3: { correct: 'b', explanation: 'Richtig! „Soll-Konto an Haben-Konto" – das Wort „an" trennt Soll- und Haben-Konto.' },
+  q4: { correct: 'b', explanation: 'Richtig! Bücher unterliegen dem ermäßigten Steuersatz von 7 %.' },
+  q5: { correct: 'a', explanation: 'Richtig! Aufwendungen mindern das Eigenkapital → Soll-Buchung auf dem Aufwandskonto.' },
+  q6: { correct: 'b', explanation: 'Richtig! Die USt-Voranmeldung muss bis zum 10. des Folgemonats beim FA eingehen.' },
+  q7: { correct: 'b', explanation: 'Richtig! Bei Barabhebung: Kasse (Soll) an Bank (Haben). Bank ist ein Aktivkonto – Abgang = Haben-Buchung.' },
+  q8: { correct: 'c', explanation: 'Richtig! Die USt ist indirekt (Unternehmer führt ab, Verbraucher trägt), eine Verkehrsteuer und eine Verbrauchsteuer.' }
+};
+
+let answered = {};
+
+function answer(qId, chosen, correct) {
+  if (answered[qId]) return;
+  answered[qId] = true;
+  const opts = document.querySelectorAll(`#${qId} .quiz-option`);
+  const letters = ['a','b','c','d'];
+  opts.forEach((opt, i) => {
+    if (letters[i] === answers[qId].correct) opt.classList.add('correct');
+    else if (letters[i] === chosen) opt.classList.add('wrong');
+    opt.style.pointerEvents = 'none';
+  });
+  const fb = document.getElementById(`${qId}-feedback`);
+  fb.textContent = answers[qId].explanation;
+  fb.className = 'quiz-feedback show ' + (chosen === answers[qId].correct ? 'correct' : 'wrong');
+  if (Object.keys(answered).length === 8) showResult();
+}
+
+function showResult() {
+  let score = 0;
+  for (let q in answered) {
+    const chosen = answered[q];
+    if (chosen === answers[q].correct) score++;
+  }
+  document.getElementById('score').textContent = score;
+  const msgs = ['Noch mal üben! 💪', 'Guter Ansatz! 📖', 'Solide! 👍', 'Fast perfekt! 🌟', 'Perfekt! 🏆'];
+  document.getElementById('score-msg').textContent = msgs[Math.min(Math.floor(score / 2), 4)];
+  document.getElementById('quiz-result').style.display = 'block';
+}
+
+function resetQuiz() {
+  answered = {};
+  document.querySelectorAll('.quiz-option').forEach(opt => {
+    opt.classList.remove('correct','wrong');
+    opt.style.pointerEvents = '';
+  });
+  document.querySelectorAll('.quiz-feedback').forEach(fb => { fb.className = 'quiz-feedback'; fb.textContent = ''; });
+  document.getElementById('quiz-result').style.display = 'none';
+}
+</script>
+</body>
+</html>
