@@ -1,0 +1,1294 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BGZ Lernzettel – Klausurvorbereitung</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f0f13;
+    --card: #18181f;
+    --border: #2a2a38;
+    --accent: #6c63ff;
+    --accent2: #ff6b6b;
+    --accent3: #43e97b;
+    --accent4: #f9ca24;
+    --text: #e8e8f0;
+    --muted: #7a7a9a;
+    --radius: 12px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* HEADER */
+  header {
+    padding: 3rem 2rem 2rem;
+    text-align: center;
+    position: relative;
+    border-bottom: 1px solid var(--border);
+    background: linear-gradient(135deg, #0f0f13 0%, #1a1030 100%);
+  }
+  header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 60% 0%, rgba(108,99,255,0.15) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  header h1 {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 800;
+    letter-spacing: -1px;
+    background: linear-gradient(135deg, #fff 30%, #6c63ff 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1.1;
+  }
+  header p {
+    margin-top: 0.75rem;
+    color: var(--muted);
+    font-family: 'Space Mono', monospace;
+    font-size: 0.85rem;
+    letter-spacing: 1px;
+  }
+
+  /* NAV */
+  nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    justify-content: center;
+    padding: 1.5rem 2rem;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(15,15,19,0.95);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+  nav button {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    padding: 0.5rem 1rem;
+    border-radius: 99px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.2s;
+    text-transform: uppercase;
+  }
+  nav button:hover, nav button.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+    transform: translateY(-1px);
+  }
+
+  /* MAIN */
+  main {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 2.5rem 1.5rem 6rem;
+  }
+
+  /* SECTIONS */
+  .section { display: none; }
+  .section.active { display: block; animation: fadeIn 0.4s ease; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+  .section-title {
+    font-size: 2rem;
+    font-weight: 800;
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .section-title .icon {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+  }
+
+  /* CARDS */
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.25rem;
+    margin-bottom: 2rem;
+  }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+  .card:hover { border-color: var(--accent); transform: translateY(-2px); }
+  .card h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .card h3 .tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    padding: 2px 7px;
+    border-radius: 99px;
+    font-weight: 400;
+  }
+  .card p, .card li {
+    font-size: 0.88rem;
+    color: #b0b0c8;
+    line-height: 1.65;
+  }
+  .card ul { padding-left: 1.1rem; }
+  .card li { margin-bottom: 0.3rem; }
+
+  .accent-purple { color: var(--accent); }
+  .accent-red { color: var(--accent2); }
+  .accent-green { color: var(--accent3); }
+  .accent-yellow { color: var(--accent4); }
+
+  .tag-purple { background: rgba(108,99,255,0.2); color: var(--accent); }
+  .tag-red { background: rgba(255,107,107,0.2); color: var(--accent2); }
+  .tag-green { background: rgba(67,233,123,0.2); color: var(--accent3); }
+  .tag-yellow { background: rgba(249,202,36,0.2); color: var(--accent4); }
+
+  .icon-purple { background: rgba(108,99,255,0.2); }
+  .icon-red { background: rgba(255,107,107,0.2); }
+  .icon-green { background: rgba(67,233,123,0.2); }
+  .icon-yellow { background: rgba(249,202,36,0.2); }
+
+  /* TABLES */
+  .table-wrap { overflow-x: auto; margin: 1.5rem 0; border-radius: var(--radius); border: 1px solid var(--border); }
+  table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
+  thead { background: rgba(108,99,255,0.15); }
+  th { padding: 0.9rem 1rem; text-align: left; font-family: 'Space Mono', monospace; font-size: 0.75rem; letter-spacing: 0.5px; color: var(--accent); border-bottom: 1px solid var(--border); }
+  td { padding: 0.8rem 1rem; border-bottom: 1px solid rgba(42,42,56,0.5); color: #b0b0c8; vertical-align: top; line-height: 1.55; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(108,99,255,0.05); }
+  td strong { color: #fff; }
+
+  /* NOTICE BOX */
+  .notice {
+    border-radius: var(--radius);
+    padding: 1.1rem 1.3rem;
+    margin: 1.25rem 0;
+    font-size: 0.875rem;
+    line-height: 1.65;
+    border-left: 3px solid;
+  }
+  .notice-purple { background: rgba(108,99,255,0.08); border-color: var(--accent); }
+  .notice-red { background: rgba(255,107,107,0.08); border-color: var(--accent2); }
+  .notice-green { background: rgba(67,233,123,0.08); border-color: var(--accent3); }
+  .notice-yellow { background: rgba(249,202,36,0.08); border-color: var(--accent4); }
+  .notice strong { display: block; margin-bottom: 0.3rem; font-size: 0.8rem; letter-spacing: 0.5px; font-family: 'Space Mono', monospace; }
+
+  /* EPK DIAGRAM */
+  .epk-demo {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+    margin: 1.5rem 0;
+  }
+  .epk-event {
+    background: rgba(108,99,255,0.15);
+    border: 2px solid var(--accent);
+    border-radius: 50%;
+    width: 120px;
+    min-height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 0.8rem;
+    font-weight: 700;
+    padding: 8px;
+    position: relative;
+    clip-path: none;
+  }
+  .epk-func {
+    background: rgba(67,233,123,0.12);
+    border: 2px solid var(--accent3);
+    border-radius: 8px;
+    width: 140px;
+    min-height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 0.8rem;
+    font-weight: 700;
+    padding: 8px;
+    color: var(--accent3);
+  }
+  .epk-arrow {
+    width: 2px;
+    height: 30px;
+    background: var(--muted);
+    position: relative;
+  }
+  .epk-arrow::after {
+    content: '▼';
+    position: absolute;
+    bottom: -14px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 10px;
+    color: var(--muted);
+  }
+  .epk-connector {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: 2px solid var(--accent4);
+    background: rgba(249,202,36,0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 900;
+    font-size: 1.1rem;
+    color: var(--accent4);
+  }
+  .epk-branch {
+    display: flex;
+    gap: 3rem;
+    align-items: flex-start;
+    margin-top: 0.5rem;
+  }
+  .epk-branch-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+  }
+  .epk-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--muted);
+    margin-top: 6px;
+    letter-spacing: 0.5px;
+  }
+  /* Hexagonal event shape via CSS */
+  .epk-event-shape {
+    width: 130px;
+    min-height: 56px;
+    background: rgba(108,99,255,0.15);
+    border: 2px solid var(--accent);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 0.78rem;
+    font-weight: 700;
+    padding: 10px;
+    color: var(--accent);
+  }
+
+  /* QUIZ */
+  .quiz-container {
+    max-width: 740px;
+    margin: 0 auto;
+  }
+  .quiz-progress {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+  }
+  .quiz-pip {
+    width: 28px;
+    height: 6px;
+    border-radius: 99px;
+    background: var(--border);
+    transition: background 0.3s;
+  }
+  .quiz-pip.done { background: var(--accent3); }
+  .quiz-pip.current { background: var(--accent); }
+  .quiz-pip.wrong { background: var(--accent2); }
+
+  .quiz-question-box {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 2rem;
+    margin-bottom: 1.5rem;
+  }
+  .quiz-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--muted);
+    letter-spacing: 1px;
+    margin-bottom: 0.5rem;
+  }
+  .quiz-q {
+    font-size: 1.1rem;
+    font-weight: 700;
+    line-height: 1.5;
+    margin-bottom: 1.5rem;
+  }
+  .quiz-options {
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+  }
+  .quiz-opt {
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.9rem 1.2rem;
+    text-align: left;
+    cursor: pointer;
+    font-family: 'Syne', sans-serif;
+    font-size: 0.9rem;
+    color: var(--text);
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .quiz-opt:hover:not(:disabled) { border-color: var(--accent); background: rgba(108,99,255,0.08); }
+  .quiz-opt.correct { border-color: var(--accent3); background: rgba(67,233,123,0.1); color: #fff; }
+  .quiz-opt.wrong { border-color: var(--accent2); background: rgba(255,107,107,0.1); color: var(--accent2); }
+  .quiz-opt:disabled { cursor: default; }
+  .quiz-opt .letter {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-weight: 700;
+    transition: background 0.2s;
+  }
+  .quiz-opt.correct .letter { background: var(--accent3); color: #000; }
+  .quiz-opt.wrong .letter { background: var(--accent2); color: #fff; }
+
+  .quiz-feedback {
+    margin-top: 1.25rem;
+    padding: 1rem 1.25rem;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    line-height: 1.6;
+    display: none;
+  }
+  .quiz-feedback.show { display: block; }
+  .quiz-feedback.correct-fb { background: rgba(67,233,123,0.1); border: 1px solid rgba(67,233,123,0.3); }
+  .quiz-feedback.wrong-fb { background: rgba(255,107,107,0.1); border: 1px solid rgba(255,107,107,0.3); }
+
+  .quiz-controls {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .btn {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.8rem;
+    font-weight: 700;
+    padding: 0.7rem 1.5rem;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.5px;
+  }
+  .btn-primary { background: var(--accent); color: #fff; }
+  .btn-primary:hover { background: #5a52e0; transform: translateY(-1px); }
+  .btn-secondary { background: var(--border); color: var(--text); }
+  .btn-secondary:hover { background: #3a3a50; }
+  .btn:disabled { opacity: 0.4; cursor: default; transform: none; }
+
+  .quiz-score {
+    text-align: center;
+    padding: 3rem 2rem;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+  }
+  .quiz-score h2 { font-size: 2rem; font-weight: 800; margin-bottom: 0.5rem; }
+  .quiz-score .score-num {
+    font-size: 4rem;
+    font-weight: 800;
+    font-family: 'Space Mono', monospace;
+    line-height: 1;
+    margin: 1.5rem 0;
+  }
+  .quiz-score p { color: var(--muted); font-size: 0.9rem; }
+
+  .h2 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin: 2rem 0 1rem;
+    color: #fff;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 0.5rem;
+  }
+
+  .pill-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 0.75rem 0;
+  }
+  .pill {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.72rem;
+    padding: 4px 12px;
+    border-radius: 99px;
+    font-weight: 700;
+  }
+
+  .pro-con {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin: 1rem 0;
+  }
+  .pro-con > div {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1rem;
+  }
+  .pro-con h4 {
+    font-size: 0.8rem;
+    font-family: 'Space Mono', monospace;
+    margin-bottom: 0.5rem;
+    letter-spacing: 0.5px;
+  }
+  .pro-con ul { padding-left: 1rem; }
+  .pro-con li { font-size: 0.83rem; color: #b0b0c8; margin-bottom: 0.25rem; }
+
+  @media (max-width: 600px) {
+    .pro-con { grid-template-columns: 1fr; }
+    .epk-branch { gap: 1.5rem; }
+    .cards { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>BGZ Klausurvorbereitung</h1>
+  <p>BETRIEBLICHE GESCHÄFTSPROZESSE · INTERAKTIVER LERNZETTEL</p>
+</header>
+
+<nav id="nav">
+  <button onclick="showSection('org')" class="active">🏢 Organisation</button>
+  <button onclick="showSection('vollmacht')">📜 Vollmachten</button>
+  <button onclick="showSection('prozess')">⚙️ Prozessmanagement</button>
+  <button onclick="showSection('epk')">📊 Prozessvisualisierung & EPK</button>
+  <button onclick="showSection('quiz')">🎯 Quiz</button>
+</nav>
+
+<main>
+
+<!-- ===================== ORGANISATION ===================== -->
+<div id="org" class="section active">
+  <div class="section-title">
+    <span class="icon icon-purple">🏢</span>
+    Betriebliche Organisation
+  </div>
+
+  <div class="notice notice-purple">
+    <strong>📌 KERNBEGRIFF</strong>
+    Organisation = Schaffen dauerhafter Regelungen über Struktur und Abläufe eines Betriebs.
+    Zwei Hauptbereiche: <strong>Aufbauorganisation</strong> (Struktur) & <strong>Ablauforganisation</strong> (Prozesse/Abläufe = Prozessmanagement).
+  </div>
+
+  <div class="h2">Ziele der Organisation</div>
+  <div class="cards">
+    <div class="card"><h3><span class="accent-green">💰</span> Effizienz</h3><p>Kostensenkung, Beschleunigung von Abläufen (kürzere Durchlaufzeiten) und Qualitätsverbesserung.</p></div>
+    <div class="card"><h3><span class="accent-yellow">🔄</span> Anpassung</h3><p>Anpassung an geänderte Markt-, Beschaffungs-, Gesetzes- oder Technologiebedingungen.</p></div>
+    <div class="card"><h3><span class="accent-purple">🤝</span> Koordination</h3><p>Vermeidung von Chaos, Grundlage für gemeinsame Tätigkeit mehrerer Menschen.</p></div>
+  </div>
+
+  <div class="h2">Aufgabengliederung (Analyse → Synthese)</div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Schritt</th><th>Was passiert?</th><th>Gliederungsprinzip</th></tr></thead>
+      <tbody>
+        <tr><td><strong>1. Analyse</strong></td><td>Gesamtaufgabe wird zerlegt (Differenzierung)</td><td>Nach <strong>Verrichtung</strong> (Was?), <strong>Objekt</strong> (Woran?), <strong>Phase</strong> (Planung/Durchführung/Kontrolle), <strong>Rangstufe</strong></td></tr>
+        <tr><td><strong>2. Synthese</strong></td><td>Teilaufgaben → Stellen zusammenfassen (Integration)</td><td>Grundsatz der Zweckmäßigkeit</td></tr>
+        <tr><td><strong>3. Abteilungsbildung</strong></td><td>Stellen → Abteilungen gruppieren</td><td>Gleicher Grundsatz wie Synthese</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="h2">Organisationsformen</div>
+  <div class="cards">
+    <div class="card">
+      <h3><span class="tag tag-purple">FORM 1</span> Funktionalorganisation</h3>
+      <p>Abteilungen nach betriebswirtschaftlichen <strong>Funktionen</strong> gegliedert (Beschaffung, Produktion, Absatz, Verwaltung).</p>
+      <div class="pro-con" style="margin-top:0.75rem">
+        <div><h4 class="accent-green">✅ Vorteile</h4><ul><li>Klare Spezialisierung</li><li>Einfach strukturiert</li></ul></div>
+        <div><h4 class="accent-red">❌ Nachteile</h4><ul><li>Wenig Flexibilität</li><li>Spartendenken</li></ul></div>
+      </div>
+    </div>
+    <div class="card">
+      <h3><span class="tag tag-green">FORM 2</span> Divisional-/Spartenorganisation</h3>
+      <p>Relativ <strong>autonome Bereiche</strong> nach Produkten, Märkten oder Regionen. Sparten = Profitcenter.</p>
+      <div class="pro-con" style="margin-top:0.75rem">
+        <div><h4 class="accent-green">✅ Vorteile</h4><ul><li>Marktflexibilität</li><li>Eigenverantwortung</li></ul></div>
+        <div><h4 class="accent-red">❌ Nachteile</h4><ul><li>Ressourcendopplung</li><li>Koordinationsaufwand</li></ul></div>
+      </div>
+    </div>
+    <div class="card">
+      <h3><span class="tag tag-yellow">FORM 3</span> Matrixorganisation</h3>
+      <p>Kombination aus Funktional- und Spartenorganisation. <strong>Bewusste Kompetenzüberschneidungen</strong> → mehr Kreativität, Innovationsverhalten.</p>
+      <div class="pro-con" style="margin-top:0.75rem">
+        <div><h4 class="accent-green">✅ Vorteile</h4><ul><li>Flexibel, innovativ</li><li>Spartenübergreifend</li></ul></div>
+        <div><h4 class="accent-red">❌ Nachteile</h4><ul><li>Kompetenzkonflikt</li><li>Mehrere Vorgesetzte</li></ul></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="h2">Leitungsstrukturen (Grundtypen)</div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>System</th><th>Prinzip</th><th>Vorteil</th><th>Nachteil</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Einliniensystem</strong></td><td>Jede Stelle hat <em>genau eine</em> übergeordnete Instanz</td><td>Klare Verantwortung, keine Konflikte</td><td>Langer Dienstweg über alle Instanzen</td></tr>
+        <tr><td><strong>Mehrliniensystem</strong></td><td>Stellen können von <em>mehreren</em> Instanzen Weisungen erhalten</td><td>Kürzerer Dienstweg, schneller</td><td>Widersprüchliche Weisungen möglich</td></tr>
+        <tr><td><strong>Stabliniensystem</strong></td><td>Zusätzliche <em>Stabsstellen</em> (beratend, keine Weisungsbefugnis)</td><td>Expertenwissen ohne Hierarchiekonflikt</td><td>Stab kann Einfluss verlieren</td></tr>
+        <tr><td><strong>Gruppenkonzepte</strong></td><td>Aufgaben rotieren innerhalb der Gruppe (z.B. Scrum)</td><td>Flexibel, agil, selbstorganisierend</td><td>Koordinationsaufwand in der Gruppe</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="notice notice-yellow">
+    <strong>🔑 DEFINITIONEN</strong>
+    <strong>Instanz</strong> = Stelle mit Weisungsbefugnis | <strong>Instanzentiefe</strong> = Anzahl Führungsebenen | <strong>Instanzenbreite</strong> = Anzahl Instanzen pro Ebene | <strong>Leitungsspanne</strong> = Anzahl direkt untergeordneter Stellen | <strong>Stab</strong> = beratend, keine Weisungsbefugnis (Kreis im Organigramm)
+  </div>
+
+  <div class="h2">Stellenbeschreibung – Inhalte</div>
+  <div class="pill-row">
+    <span class="pill tag-purple">Stellenbezeichnung</span>
+    <span class="pill tag-purple">Stelleneinordnung</span>
+    <span class="pill tag-green">Stellenaufgaben</span>
+    <span class="pill tag-green">Stellenziele</span>
+    <span class="pill tag-yellow">Stellenbefugnisse</span>
+    <span class="pill tag-yellow">Stellenverantwortung</span>
+    <span class="pill tag-red">Stellenanforderungen</span>
+  </div>
+</div>
+
+<!-- ===================== VOLLMACHTEN ===================== -->
+<div id="vollmacht" class="section">
+  <div class="section-title">
+    <span class="icon icon-red">📜</span>
+    Vollmachten & Handlungsbefugnisse
+  </div>
+
+  <div class="notice notice-red">
+    <strong>📌 GRUNDPRINZIP</strong>
+    Vollmachten regeln, wer im Namen des Unternehmens welche Rechtsgeschäfte abschließen darf. Je höher die Vollmacht, desto größer der Handlungsspielraum.
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Vollmacht</th>
+          <th>Gesellschafter aufnehmen / Bilanz</th>
+          <th>Grundstück kaufen/verkaufen</th>
+          <th>Prokura erteilen</th>
+          <th>Darlehen aufnehmen</th>
+          <th>Mitarbeiter einstellen</th>
+          <th>Einkäufe tätigen</th>
+          <th>Einen bestimmten Einkauf</th>
+          <th>Verkäufe tätigen</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Geschäftsführer</strong></td>
+          <td class="accent-red">Nur Gesellschafterversammlung</td>
+          <td class="accent-green">✔</td>
+          <td class="accent-green">✔</td>
+          <td class="accent-green">✔</td>
+          <td class="accent-green">✔</td>
+          <td class="accent-green">✔</td>
+          <td class="accent-green">✔</td>
+          <td class="accent-green">✔</td>
+        </tr>
+        <tr>
+          <td><strong>Prokurist</strong></td>
+          <td class="accent-red">✗</td>
+          <td class="accent-yellow">Mit Sondervollmacht</td>
+          <td class="accent-red">✗</td>
+          <td class="accent-green">✔</td>
+          <td class="accent-green">✔</td>
+          <td class="accent-green">✔</td>
+          <td class="accent-green">✔</td>
+          <td class="accent-green">✔</td>
+        </tr>
+        <tr>
+          <td><strong>Generalhandlungsvollmacht</strong></td>
+          <td class="accent-red">✗</td>
+          <td class="accent-yellow">Mit Sondervollmacht</td>
+          <td class="accent-red">✗</td>
+          <td class="accent-red">✗</td>
+          <td class="accent-red">✗</td>
+          <td class="accent-green">✔</td>
+          <td class="accent-green">✔</td>
+          <td class="accent-green">✔</td>
+        </tr>
+        <tr>
+          <td><strong>Arthandlungsvollmacht (Einkauf)</strong></td>
+          <td class="accent-red">✗</td>
+          <td class="accent-red">✗</td>
+          <td class="accent-red">✗</td>
+          <td class="accent-red">✗</td>
+          <td class="accent-red">✗</td>
+          <td class="accent-green">✔</td>
+          <td class="accent-green">✔</td>
+          <td class="accent-red">✗</td>
+        </tr>
+        <tr>
+          <td><strong>Einzelhandlungsvollmacht (best. Einkauf)</strong></td>
+          <td class="accent-red">✗</td>
+          <td class="accent-red">✗</td>
+          <td class="accent-red">✗</td>
+          <td class="accent-red">✗</td>
+          <td class="accent-red">✗</td>
+          <td class="accent-red">✗</td>
+          <td class="accent-green">✔</td>
+          <td class="accent-red">✗</td>
+        </tr>
+        <tr>
+          <td><strong>Verkaufsberechtigung (Laden/Lager)</strong></td>
+          <td class="accent-red">✗</td>
+          <td class="accent-red">✗</td>
+          <td class="accent-red">✗</td>
+          <td class="accent-red">✗</td>
+          <td class="accent-red">✗</td>
+          <td class="accent-red">✗</td>
+          <td class="accent-red">✗</td>
+          <td class="accent-green">✔</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="h2">Vollmachten in Kürze</div>
+  <div class="cards">
+    <div class="card">
+      <h3><span class="tag tag-purple">HÖCHSTE</span> Prokura</h3>
+      <ul>
+        <li>Weitreichendste kaufmännische Vollmacht</li>
+        <li>Fast alle Handelsgeschäfte erlaubt</li>
+        <li>Ausnahme: Grundstücksgeschäfte nur mit Sondervollmacht</li>
+        <li>Prokura erteilen = nur Geschäftsführer</li>
+        <li>Eingetragen ins Handelsregister</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3><span class="tag tag-green">MITTEL</span> Generalhandlungsvollmacht</h3>
+      <ul>
+        <li>Alle üblichen Handelsgeschäfte des Betriebs</li>
+        <li>Kein Darlehen aufnehmen, keine Mitarbeiter einstellen</li>
+        <li>Kein Grundstückskauf (ohne Sondervollmacht)</li>
+        <li>Breit, aber unterhalb der Prokura</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3><span class="tag tag-yellow">EINGESCHRÄNKT</span> Arthandlungsvollmacht</h3>
+      <ul>
+        <li>Nur für eine <em>Art</em> von Geschäften (z. B. Einkauf)</li>
+        <li>Kein Verkauf, keine Personalsache, kein Darlehen</li>
+        <li>Typisch: Einkäufer</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3><span class="tag tag-red">ENGST</span> Einzelhandlungsvollmacht</h3>
+      <ul>
+        <li>Nur für <em>ein konkretes</em> Rechtsgeschäft</li>
+        <li>Endet nach Durchführung des Geschäfts</li>
+        <li>Sehr eingeschränkter Umfang</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== PROZESSMANAGEMENT ===================== -->
+<div id="prozess" class="section">
+  <div class="section-title">
+    <span class="icon icon-green">⚙️</span>
+    Einführung Prozessmanagement
+  </div>
+
+  <div class="notice notice-green">
+    <strong>📌 DEFINITION PROZESS</strong>
+    Ein Prozess ist eine Folge logisch zusammenhängender Aktivitäten zur Erstellung einer Leistung. Er hat einen definierten <strong>Input</strong> (Auslöser/Anfang) und einen definierten <strong>Output</strong> (Ergebnis/Ende) und generiert <strong>Mehrwert für den Kunden</strong>.
+  </div>
+
+  <div class="h2">Merkmale eines Prozesses</div>
+  <div class="pill-row">
+    <span class="pill tag-green">Messbar & leistungsgetrieben</span>
+    <span class="pill tag-green">Reagiert auf Ereignis (Input)</span>
+    <span class="pill tag-green">Hat genau ein Ergebnis (Output)</span>
+    <span class="pill tag-green">Hat einen Kunden</span>
+    <span class="pill tag-green">Mehrfach wiederholbar</span>
+    <span class="pill tag-green">Generiert Mehrwert</span>
+  </div>
+
+  <div class="notice notice-yellow">
+    <strong>⚡ PROZESS vs. PROJEKT</strong>
+    Prozess = regelmäßig wiederholt (z.B. Kundenanfrage bearbeiten). Projekt = einmalig, zeitlich befristet (z.B. neues Gebäude bauen).
+  </div>
+
+  <div class="h2">Prozesskategorien</div>
+  <div class="cards">
+    <div class="card">
+      <h3><span class="tag tag-purple">STEUERUNG</span> Führungsprozesse</h3>
+      <p>Regeln das Zusammenspiel aller Geschäftsprozesse. Z.B. Strategieentwicklung, Unternehmensplanung. Stellen Vorgaben für die anderen Prozesse.</p>
+    </div>
+    <div class="card">
+      <h3><span class="tag tag-green">KERN</span> Kernprozesse / Leistungsprozesse</h3>
+      <p>Kennzeichnen das Wesen des Unternehmens. Berücksichtigen Kundenwünsche, werden vom Kunden <strong>direkt wahrgenommen</strong>. Z.B. Pizza verkaufen, Auto reparieren.</p>
+    </div>
+    <div class="card">
+      <h3><span class="tag tag-yellow">SUPPORT</span> Unterstützungsprozesse</h3>
+      <p>Kaum Wertschöpfungsanteil, vom Kunden <strong>nicht direkt</strong> wahrgenommen. Z.B. IT, Buchhaltung, Verwaltung. Gelten für das gesamte Unternehmen.</p>
+    </div>
+  </div>
+
+  <div class="h2">Kunden eines Prozesses</div>
+  <div class="cards">
+    <div class="card">
+      <h3><span class="accent-green">👤</span> Externer Kunde</h3>
+      <p>Potenzieller Abnehmer/Verwender des Produkts oder der Dienstleistung. Kann Endkunde, Zwischenhändler oder Einkäufer sein. Ein Prozess kann <em>mehrere</em> externe Kunden haben.</p>
+    </div>
+    <div class="card">
+      <h3><span class="accent-purple">🏭</span> Interner Kunde</h3>
+      <p>Abnehmer von <em>Teilprozessen</em> innerhalb des Unternehmens. Benötigt den Output, um wiederum einen externen Kunden zu beliefern. Der „Kollege von nebenan" ist auch ein Kunde!</p>
+    </div>
+  </div>
+
+  <div class="h2">Geschäftsprozess vs. Workflow</div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Kriterium</th><th>Geschäftsprozess</th><th>Workflow</th></tr></thead>
+      <tbody>
+        <tr><td>Steuerung</td><td>Mensch steuert den Ablauf</td><td>Computer steuert den Ablauf</td></tr>
+        <tr><td>Fokus</td><td>„Was" ist zu tun? (fachlich-konzeptionell)</td><td>„Wie" wird es umgesetzt? (technisch-operativ)</td></tr>
+        <tr><td>Detailtiefe</td><td>Bis Mitarbeiter Arbeitsschritt in einem Zug ausführen kann</td><td>So konkret, dass Anwendungssystem es ausführen kann</td></tr>
+        <tr><td>Definition</td><td>Kette zusammenhängender Aktivitäten mit Kundennutzen</td><td>Formal beschriebener, (teil-)automatisierter Geschäftsprozess</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="h2">Prozesslandkarte</div>
+  <div class="notice notice-purple">
+    <strong>📌 KONZEPT</strong>
+    Eine Prozesslandkarte fasst alle Prozesse eines Unternehmens zusammen (ähnlich einem Organigramm, aber für Prozesse). Aufbau: Führungsprozesse oben → Kernprozesse mittig (mit Kunde links und rechts) → Unterstützungsprozesse unten.
+  </div>
+
+  <div class="h2">Rollen im Prozessmanagement (RACI)</div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Rolle</th><th>Bedeutung</th><th>RACI-Buchstabe</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Process Sponsor</strong></td><td>Genehmigt Investitionen, stellt Finanzmittel bereit</td><td>–</td></tr>
+        <tr><td><strong>Process Owner</strong></td><td>Verantwortlich für Design & Weiterentwicklung, legt KPIs fest</td><td><strong>A</strong> – Accountable</td></tr>
+        <tr><td><strong>Process Manager</strong></td><td>Verantwortlich für täglichen Betrieb, Einhaltung der Abläufe</td><td><strong>R</strong> – Responsible</td></tr>
+        <tr><td><strong>Process Performer</strong></td><td>Führt Aktivitäten im Prozessablauf aus</td><td><strong>R</strong> – Responsible</td></tr>
+        <tr><td><strong>Process Coach</strong></td><td>Berät mit Erfahrung, hilft Ziele zu erreichen</td><td><strong>C</strong> – Consulting</td></tr>
+        <tr><td><em>(Zu Informierende)</em></td><td>Erhalten Informationen über den Prozess</td><td><strong>I</strong> – Informed</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ===================== EPK ===================== -->
+<div id="epk" class="section">
+  <div class="section-title">
+    <span class="icon icon-yellow">📊</span>
+    Prozessvisualisierung & EPK
+  </div>
+
+  <div class="h2">Modellierungsmethoden im Überblick</div>
+  <div class="cards">
+    <div class="card"><h3><span class="tag tag-purple">EINFACH</span> Tabellarische Modellierung</h3><p>Prozessschritte mit Verantwortlichem, Input, Output, IT-Einsatz und Messgröße in Tabellenform. Leicht verständlich, schnell zu erstellen.</p></div>
+    <div class="card"><h3><span class="tag tag-green">MITTEL</span> Tabellarisches Ablaufdiagramm</h3><p>Prozessschritte in Zeilen, Rollen/Abteilungen in Spalten. X markiert Zuständigkeit. Visualisiert Abteilungswechsel einfach und anschaulich.</p></div>
+    <div class="card"><h3><span class="tag tag-yellow">STANDARD</span> EPK / eEPK</h3><p>Ereignisgesteuerte Prozesskette. Grafisch, semi-formal. Klärt: „Wer macht was, mit welchen Hilfsmitteln und mit welchem Ergebnis?"</p></div>
+    <div class="card"><h3><span class="tag tag-red">INTERNATIONAL</span> BPMN 2.0</h3><p>Business Process Model and Notation. Internationaler Standard (OMG 2011). Pools & Swimlanes für Rollen/Abteilungen. Gut für Abteilungswechsel.</p></div>
+  </div>
+
+  <div class="h2">EPK – Symbole & Bedeutung</div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Symbol</th><th>Bezeichnung</th><th>Sicht</th><th>Beschreibung & Namenskonvention</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><div style="width:50px;height:30px;background:rgba(108,99,255,0.2);border:2px solid #6c63ff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.6rem;color:#6c63ff;font-weight:700;">Event</div></td>
+          <td><strong>Ereignis</strong></td>
+          <td>Datensicht</td>
+          <td>Zustand oder Auslöser. Passiv. <br><em>Namenskonvention: Substantiv + Verb im Perfekt</em> → „Auftrag <u>angelegt</u>"</td>
+        </tr>
+        <tr>
+          <td><div style="width:50px;height:30px;background:rgba(67,233,123,0.15);border:2px solid #43e97b;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:0.6rem;color:#43e97b;font-weight:700;">Funktion</div></td>
+          <td><strong>Funktion</strong></td>
+          <td>Funktionssicht</td>
+          <td>Tätigkeit, die ausgeführt wird. Aktiv. <br><em>Namenskonvention: Substantiv + Verb im Infinitiv</em> → „Auftrag <u>anlegen</u>"</td>
+        </tr>
+        <tr>
+          <td><div style="width:50px;height:30px;background:rgba(249,202,36,0.15);border:2px solid #f9ca24;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:0.6rem;color:#f9ca24;font-weight:700;">Ressource</div></td>
+          <td><strong>Ressource / Dokument</strong></td>
+          <td>Ressourcensicht</td>
+          <td>Objekte, die zur Ausführung benötigt werden. Z.B. Abrechnungsformular, Lieferschein.</td>
+        </tr>
+        <tr>
+          <td><div style="width:50px;height:30px;background:rgba(255,107,107,0.15);border:2px solid #ff6b6b;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.6rem;color:#ff6b6b;font-weight:700;">Org</div></td>
+          <td><strong>Organisationseinheit</strong></td>
+          <td>Organisationssicht</td>
+          <td>Interne Person, Stelle oder Abteilung. Z.B. Sachbearbeiter, Abteilung. <em>Kunden sind keine OE!</em></td>
+        </tr>
+        <tr>
+          <td><div style="font-size:1.2rem; text-align:center;">→</div></td>
+          <td><strong>Kante (Kontrollfluss)</strong></td>
+          <td>Steuerungssicht</td>
+          <td>Richtung des Prozesses. Von oben nach unten. Kantenrichtung = Input/Output von Ressourcen.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="h2">EPK – Konnektoren (Operatoren)</div>
+  <div class="cards">
+    <div class="card">
+      <h3>
+        <div style="width:36px;height:36px;border-radius:50%;background:rgba(249,202,36,0.15);border:2px solid #f9ca24;display:inline-flex;align-items:center;justify-content:center;font-weight:900;font-size:0.9rem;color:#f9ca24;flex-shrink:0;">XOR</div>
+        &nbsp;Disjunktion (XOR)
+      </h3>
+      <p><strong>Ausschließendes ODER</strong> – entweder A oder B (nicht beide). Exakte Entweder-oder-Entscheidung. Z.B.: Rechnung bezahlt <em>oder</em> noch offen.</p>
+      <div class="notice notice-red" style="margin-top:0.75rem;font-size:0.8rem;">Hinter einem <strong>Ereignis</strong> ist XOR <u>nicht erlaubt</u>! (Ereignisse treffen keine Entscheidungen)</div>
+    </div>
+    <div class="card">
+      <h3>
+        <div style="width:36px;height:36px;border-radius:50%;background:rgba(108,99,255,0.15);border:2px solid #6c63ff;display:inline-flex;align-items:center;justify-content:center;font-weight:900;font-size:1.1rem;color:#6c63ff;flex-shrink:0;">∨</div>
+        &nbsp;Adjunktion (ODER)
+      </h3>
+      <p><strong>Inklusives ODER</strong> – mindestens einer, oder auch mehrere Pfade aktiv. Z.B.: Kunde beanstandet Ware, oder gibt neue Bestellung auf, oder beides.</p>
+      <div class="notice notice-red" style="margin-top:0.75rem;font-size:0.8rem;">Hinter einem <strong>Ereignis</strong> ebenfalls <u>nicht erlaubt</u>!</div>
+    </div>
+    <div class="card">
+      <h3>
+        <div style="width:36px;height:36px;border-radius:50%;background:rgba(67,233,123,0.15);border:2px solid #43e97b;display:inline-flex;align-items:center;justify-content:center;font-weight:900;font-size:1.1rem;color:#43e97b;flex-shrink:0;">∧</div>
+        &nbsp;Konjunktion (UND)
+      </h3>
+      <p><strong>UND</strong> – alle Pfade werden gleichzeitig aktiviert (Parallelisierung) oder alle Pfade müssen zusammenkommen. Keine Entscheidung, nur Aufteilung/Zusammenführung.</p>
+      <div class="notice notice-green" style="margin-top:0.75rem;font-size:0.8rem;">Hinter einem Ereignis <u>erlaubt</u>, weil keine Entscheidung nötig!</div>
+    </div>
+  </div>
+
+  <div class="h2">EPK – Regeln (Pflichtliste!)</div>
+  <div class="notice notice-purple">
+    <strong>📌 WICHTIGE EPK-REGELN</strong>
+  </div>
+  <div class="cards">
+    <div class="card"><h3>1️⃣ Start/Ende</h3><p>Jede EPK beginnt mit einem <strong>Ereignis</strong> und endet mit einem <strong>Ereignis</strong>.</p></div>
+    <div class="card"><h3>2️⃣ Abwechslung</h3><p>Ereignis → aktiviert Funktion → führt zu neuem Ereignis. <strong>Ereignis und Funktion wechseln sich immer ab.</strong></p></div>
+    <div class="card"><h3>3️⃣ Eine Linie</h3><p>Ereignisse und Funktionen dürfen nur <strong>jeweils eine Ein- und eine Ausgangslinie</strong> haben (ohne Konnektoren).</p></div>
+    <div class="card"><h3>4️⃣ Entscheidungen</h3><p>Entscheidungen trifft nur die <strong>Funktion</strong> (Mensch). Der Konnektor <em>realisiert</em> die Verzweigung, trifft aber selbst keine Entscheidung.</p></div>
+    <div class="card"><h3>5️⃣ Richtung</h3><p>Prozessdarstellung erfolgt <strong>von oben nach unten</strong>.</p></div>
+    <div class="card"><h3>6️⃣ XOR/ODER nach Ereignis</h3><p><strong>Kein XOR oder ODER nach einem Ereignis</strong> – nur UND ist hinter Ereignissen erlaubt.</p></div>
+  </div>
+
+  <div class="h2">Informationsfluss (Ressourcen in eEPK)</div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Pfeilrichtung</th><th>Bedeutung</th><th>Beispiel</th></tr></thead>
+      <tbody>
+        <tr><td>Ressource <strong>→</strong> Funktion</td><td>Ressource ist notwendiger <strong>Input</strong></td><td>Bestellzettel wird für Pizzabacken benötigt</td></tr>
+        <tr><td>Funktion <strong>→</strong> Ressource</td><td>Ressource ist erzeugter <strong>Output</strong></td><td>Funktion erstellt die Rechnung</td></tr>
+        <tr><td>Ressource <strong>↔</strong> Funktion (ungerichtet)</td><td><strong>Dialog</strong> mit IT-System (Ein- und Ausgabe)</td><td>Funktion greift auf Datenbank lesend und schreibend zu</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="h2">Prozessschnittstellen</div>
+  <div class="cards">
+    <div class="card"><h3>Auslagerung ohne Rückführung</h3><p>Ursprungsprozess wird verlassen. Weiterbearbeitung komplett im Teilprozess. <strong>Keine Rückführung</strong> in den Originalprozess.</p></div>
+    <div class="card"><h3>Auslagerung mit Rückführung</h3><p>Weiterbearbeitung im Teilprozess. Endergebnis <strong>fließt zurück</strong> in den Ursprungsprozess. Sprungziel wird mit „von" und „nach" beschrieben.</p></div>
+    <div class="card"><h3>Auslagerung (vereinfacht)</h3><p>Entspricht Auslagerung mit Rückführung, aber weniger Details. Rückführung genau an der Stelle der Auslagerung.</p></div>
+  </div>
+
+  <div class="h2">Beispiel: Einfacher EPK-Aufbau</div>
+  <div class="epk-demo">
+    <div class="epk-event-shape">Kundenauftrag ist eingegangen</div>
+    <div class="epk-arrow"></div>
+    <div class="epk-func">Auftrag prüfen</div>
+    <div class="epk-arrow"></div>
+    <div class="epk-connector">XOR</div>
+    <div style="height:16px"></div>
+    <div class="epk-branch">
+      <div class="epk-branch-item">
+        <div class="epk-event-shape" style="font-size:0.7rem;">Auftrag ist machbar</div>
+        <div class="epk-label">PFAD A</div>
+      </div>
+      <div class="epk-branch-item">
+        <div class="epk-event-shape" style="font-size:0.7rem;border-color:#ff6b6b;background:rgba(255,107,107,0.1);color:#ff6b6b;">Auftrag ist nicht machbar</div>
+        <div class="epk-label">PFAD B</div>
+      </div>
+    </div>
+    <div style="margin-top:1rem;font-size:0.75rem;color:var(--muted);font-family:'Space Mono',monospace;text-align:center;">XOR = entweder A oder B – nie beide</div>
+  </div>
+
+  <div class="h2">BPMN 2.0 – Wichtige Symbole</div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Symbol</th><th>Bezeichnung</th><th>Entspricht in EPK</th></tr></thead>
+      <tbody>
+        <tr><td>⬤ (grün, leer)</td><td>Blanko-Startereignis</td><td>Startereignis</td></tr>
+        <tr><td>⬤ (rot, gefüllt)</td><td>Blanko-Endereignis</td><td>Endereignis</td></tr>
+        <tr><td>♦ (gelb, leer)</td><td>Exklusives Gateway</td><td>XOR-Konnektor</td></tr>
+        <tr><td>♦ (gelb, +)</td><td>Paralleles Gateway</td><td>UND-Konnektor</td></tr>
+        <tr><td>♦ (gelb, ○)</td><td>Inklusives Gateway</td><td>ODER-Konnektor</td></tr>
+        <tr><td>□ Aufgabe 1</td><td>Blanko-Aufgabe (Task)</td><td>Funktion</td></tr>
+        <tr><td>Pool / Lane</td><td>Swimlane-Bereich</td><td>Organisationseinheit (Spalte)</td></tr>
+        <tr><td>────→</td><td>Sequenzfluss</td><td>Kontrollfluss (Kante)</td></tr>
+        <tr><td>- - -→</td><td>Nachrichtenfluss</td><td>Kommunikation zwischen Pools</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ===================== QUIZ ===================== -->
+<div id="quiz" class="section">
+  <div class="section-title">
+    <span class="icon icon-red">🎯</span>
+    Wissensquiz
+  </div>
+  <div class="quiz-container" id="quizContainer">
+    <!-- rendered by JS -->
+  </div>
+</div>
+
+</main>
+
+<script>
+// NAV
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+  window.scrollTo({top: 0, behavior: 'smooth'});
+  if (id === 'quiz') initQuiz();
+}
+
+// QUIZ DATA
+const questions = [
+  {
+    q: "Was ist der Unterschied zwischen Aufbauorganisation und Ablauforganisation?",
+    opts: [
+      "Aufbau = Struktur/Hierarchie des Unternehmens; Ablauf = Regelung der Prozesse und Abläufe (= Prozessmanagement)",
+      "Aufbau = Abläufe und Prozesse; Ablauf = Organigramm und Hierarchie",
+      "Beide Begriffe sind Synonyme und bedeuten dasselbe",
+      "Aufbau betrifft nur die IT, Ablauf betrifft die Mitarbeiter"
+    ],
+    correct: 0,
+    explanation: "Die Aufbauorganisation legt die Struktur und Hierarchie fest (Organigramm). Die Ablauforganisation regelt die Prozesse und Abläufe innerhalb der Zuständigkeiten – das entspricht dem Prozessmanagement."
+  },
+  {
+    q: "Welche Aussage zur Prokura ist KORREKT?",
+    opts: [
+      "Ein Prokurist darf Grundstücke ohne Einschränkung kaufen und verkaufen",
+      "Prokura kann von jedem Mitarbeiter erteilt werden",
+      "Ein Prokurist darf keine Mitarbeiter einstellen und braucht für Grundstücksgeschäfte eine Sondervollmacht",
+      "Prokura ist schwächer als eine Generalhandlungsvollmacht"
+    ],
+    correct: 2,
+    explanation: "Der Prokurist hat weitreichende Befugnisse, darf aber keine Prokura erteilen und benötigt für Grundstücksgeschäfte eine Sondervollmacht. Die Prokura ist stärker als eine Generalhandlungsvollmacht. Erteilt werden kann sie nur vom Geschäftsführer."
+  },
+  {
+    q: "Was unterscheidet den XOR-Konnektor vom ODER-Konnektor in einer EPK?",
+    opts: [
+      "XOR erlaubt mehrere gleichzeitige Pfade, ODER nur einen",
+      "XOR wählt genau einen Pfad (entweder-oder), ODER erlaubt einen oder mehrere Pfade gleichzeitig",
+      "Beide Konnektoren haben dieselbe Bedeutung",
+      "XOR ist für Parallelverarbeitung, ODER für sequenzielle Abläufe"
+    ],
+    correct: 1,
+    explanation: "XOR = ausschließendes ODER: genau ein Pfad wird gewählt (entweder A oder B). ODER = inklusives ODER: mindestens ein Pfad, aber auch mehrere gleichzeitig möglich."
+  },
+  {
+    q: "Welche Aussage zu EPK-Regeln ist FALSCH?",
+    opts: [
+      "Jede EPK beginnt und endet mit einem Ereignis",
+      "Ereignisse und Funktionen wechseln sich immer ab",
+      "Nach einem Ereignis kann ein XOR-Konnektor stehen, weil Ereignisse Entscheidungen treffen",
+      "Konnektoren können keine Entscheidungen treffen"
+    ],
+    correct: 2,
+    explanation: "FALSCH: Nach einem Ereignis darf KEIN XOR- oder ODER-Konnektor stehen, weil Ereignisse keine Entscheidungen treffen können (kein Mensch dahinter). Nur UND ist nach einem Ereignis erlaubt."
+  },
+  {
+    q: "Was versteht man unter einem 'Kernprozess'?",
+    opts: [
+      "Ein Prozess, der ausschließlich in der IT-Abteilung stattfindet",
+      "Ein Prozess, der das Wesen des Unternehmens kennzeichnet, Kundenwünsche berücksichtigt und vom Kunden direkt wahrgenommen wird",
+      "Ein Hilfsprozess, der die anderen Prozesse unterstützt, aber keinen Mehrwert schafft",
+      "Ein Prozess, der nur von der Geschäftsführung gesteuert wird"
+    ],
+    correct: 1,
+    explanation: "Kernprozesse (auch Leistungsprozesse) kennzeichnen das Wesen eines Unternehmens, sind auf den Kunden ausgerichtet und werden vom Kunden direkt wahrgenommen. Z.B. bei Giovanni die Pizzaproduktion und -lieferung."
+  },
+  {
+    q: "Was ist der Unterschied zwischen Geschäftsprozess und Workflow?",
+    opts: [
+      "Beim Geschäftsprozess steuert der Computer den Ablauf, beim Workflow der Mensch",
+      "Beim Workflow steuert der Computer den Ablauf ('wie'), beim Geschäftsprozess steuert der Mensch ('was')",
+      "Beide Begriffe bedeuten dasselbe – sie werden synonym verwendet",
+      "Workflows betreffen nur externe Prozesse, Geschäftsprozesse nur interne"
+    ],
+    correct: 1,
+    explanation: "Merksatz: 'Beim Workflow steuert der Computer, beim Geschäftsprozess steuert der Mensch.' Der Geschäftsprozess beschreibt WAS getan werden soll (fachlich-konzeptionell), der Workflow beschreibt WIE es umgesetzt wird (technisch-operativ)."
+  },
+  {
+    q: "Welche Leitungsstruktur beschreibt das Einliniensystem?",
+    opts: [
+      "Jede Stelle kann von mehreren Instanzen gleichzeitig Weisungen erhalten",
+      "Stabsstellen haben Weisungsbefugnis über alle Abteilungen",
+      "Jede Stelle hat genau eine übergeordnete Instanz, der Weg geht immer über alle Hierarchieebenen",
+      "Aufgaben rotieren innerhalb der Gruppe selbstorganisierend"
+    ],
+    correct: 2,
+    explanation: "Im Einliniensystem hat jede Stelle genau eine übergeordnete Instanz. Eine Anfrage muss immer den vollständigen Dienstweg durch alle Hierarchieebenen nehmen – was langsam, aber eindeutig in der Verantwortung ist."
+  },
+  {
+    q: "Was ist eine Prozessschnittstelle (Prozesswegweiser) in einer EPK?",
+    opts: [
+      "Ein Konnektor, der Pfade verzweigt oder zusammenführt",
+      "Ein Symbol zur Auslagerung von Teilprozessen, das Sprünge zwischen Prozessen ermöglicht",
+      "Eine Ressource, die als Input und Output dient",
+      "Eine Organisationseinheit, die externe Partner repräsentiert"
+    ],
+    correct: 1,
+    explanation: "Prozessschnittstellen ermöglichen die Auslagerung von Teilprozessen, um die Übersichtlichkeit zu wahren. Sie symbolisieren Sprünge zwischen Prozessen – auch zu externen Unternehmen (Black Box). Drei Varianten: ohne Rückführung, mit Rückführung, vereinfachte Auslagerung."
+  },
+  {
+    q: "Wer darf in der GmbH einen neuen Gesellschafter aufnehmen?",
+    opts: [
+      "Der Prokurist, da er die weitreichendste Handlungsvollmacht hat",
+      "Nur die Gesellschafterversammlung",
+      "Jeder mit Generalhandlungsvollmacht",
+      "Der Geschäftsführer allein, ohne weitere Zustimmung"
+    ],
+    correct: 1,
+    explanation: "Die Aufnahme neuer Gesellschafter ist eine so grundlegende Entscheidung, dass sie der Gesellschafterversammlung vorbehalten ist. Selbst der Geschäftsführer kann das nicht allein entscheiden."
+  },
+  {
+    q: "Welches Symbol wird in der EPK für eine FUNKTION verwendet?",
+    opts: [
+      "Eine Ellipse/Hexagonform mit abgerundeten Ecken",
+      "Ein Kreis",
+      "Ein Rechteck",
+      "Ein Oval mit Kreuzung"
+    ],
+    correct: 2,
+    explanation: "Funktionen werden als Rechteck dargestellt. Ereignisse werden als abgerundete Raute/Hexagonform dargestellt. Die Kante zeigt die Richtung des Kontrollflusses (von oben nach unten)."
+  },
+  {
+    q: "Was bedeutet 'A' im RACI-Modell?",
+    opts: [
+      "Responsible – führt die Aufgabe durch",
+      "Accountable – trägt die Gesamtverantwortung für die Prozessgestaltung",
+      "Available – ist bei Bedarf verfügbar",
+      "Authorized – hat die formale Genehmigung"
+    ],
+    correct: 1,
+    explanation: "RACI: R = Responsible (Durchführung), A = Accountable (Gesamtverantwortung/haftbar), C = Consulting (beratend), I = Informed (zu informieren). Pro Aktivität sollte es nur ein 'A' geben!"
+  },
+  {
+    q: "Was ist die Matrixorganisation?",
+    opts: [
+      "Eine reine Funktionalorganisation mit vielen Abteilungen",
+      "Eine Kombination aus Funktional- und Spartenorganisation mit bewussten Kompetenzüberschneidungen",
+      "Eine Organisationsform ohne Hierarchie, bei der alle gleich berechtigt sind",
+      "Ein Liniensystem, bei dem Stabsstellen Weisungsbefugnis haben"
+    ],
+    correct: 1,
+    explanation: "Die Matrixorganisation kombiniert Funktional- und Spartenorganisation. Bewusste Kompetenzüberschneidungen werden in Kauf genommen, weil man davon ausgeht, dass Konflikte die Kreativität und das Innovationsverhalten fördern."
+  },
+  {
+    q: "Welcher Konnektor darf laut EPK-Regeln NACH einem Ereignis stehen?",
+    opts: [
+      "XOR (Disjunktion)",
+      "ODER (Adjunktion)",
+      "UND (Konjunktion)",
+      "Keiner – Ereignisse haben immer nur einen Ausgang"
+    ],
+    correct: 2,
+    explanation: "Nach einem Ereignis ist nur der UND-Konnektor erlaubt, weil UND keine Entscheidung erfordert, sondern nur den Prozess aufteilt. XOR und ODER implizieren eine Entscheidung, die nur Funktionen (Menschen) treffen können."
+  },
+  {
+    q: "Was beschreibt eine Stellenbeschreibung?",
+    opts: [
+      "Nur die Aufgaben, die ein Mitarbeiter zu erledigen hat",
+      "Stellenbezeichnung, Einordnung, Aufgaben, Ziele, Befugnisse, Verantwortung und Anforderungen",
+      "Nur das Gehalt und die Arbeitszeiten",
+      "Die Organisationsform des gesamten Unternehmens"
+    ],
+    correct: 1,
+    explanation: "Eine Stellenbeschreibung umfasst: Stellenbezeichnung, Stelleneinordnung (Über-/Unterstellung), Stellenaufgaben, Stellenziele, Stellenbefugnisse, Stellenverantwortung und Stellenanforderungen."
+  },
+  {
+    q: "Was ist der Hauptunterschied zwischen empirischer und konzeptioneller Prozessmodellierung?",
+    opts: [
+      "Empirisch = neuer Prozess ohne Berücksichtigung vorhandener Schritte (Soll → Ist); konzeptionell = vorhandener Prozess wird übertragen (Ist → Soll)",
+      "Empirisch = vorhandener Prozess wird in ein Modell überführt (Ist → Soll); konzeptionell = neuer Prozess wird ohne Berücksichtigung vorhandener Schritte entwickelt (Soll → Ist)",
+      "Beide Methoden sind identisch und liefern dasselbe Ergebnis",
+      "Empirisch verwendet EPK, konzeptionell verwendet BPMN"
+    ],
+    correct: 1,
+    explanation: "Empirisch/induktiv: Ein vorhandener Prozess wird von der Realität in ein Modell überführt (Ist-Prozess → Soll-Prozess). Konzeptionell/deduktiv: Ein neuer Prozess wird entwickelt ohne Berücksichtigung vorhandener Schritte (Soll-Prozess → Ist-Prozess)."
+  }
+];
+
+let current = 0;
+let score = 0;
+let answered = false;
+let results = [];
+
+function initQuiz() {
+  current = 0;
+  score = 0;
+  answered = false;
+  results = new Array(questions.length).fill(null);
+  renderQuiz();
+}
+
+function renderQuiz() {
+  const container = document.getElementById('quizContainer');
+  if (current >= questions.length) {
+    renderScore(container);
+    return;
+  }
+  const q = questions[current];
+  const letters = ['A','B','C','D'];
+
+  let progressHTML = questions.map((_, i) => {
+    let cls = '';
+    if (i < current) cls = results[i] === 'correct' ? 'done' : 'wrong';
+    if (i === current) cls = 'current';
+    return `<div class="quiz-pip ${cls}"></div>`;
+  }).join('');
+
+  container.innerHTML = `
+    <div class="quiz-progress">${progressHTML}</div>
+    <div class="quiz-question-box">
+      <div class="quiz-num">FRAGE ${current + 1} / ${questions.length}</div>
+      <div class="quiz-q">${q.q}</div>
+      <div class="quiz-options">
+        ${q.opts.map((opt, i) => `
+          <button class="quiz-opt" id="opt${i}" onclick="selectAnswer(${i})">
+            <span class="letter">${letters[i]}</span>
+            ${opt}
+          </button>
+        `).join('')}
+      </div>
+      <div class="quiz-feedback" id="feedback"></div>
+    </div>
+    <div class="quiz-controls">
+      <span style="font-family:'Space Mono',monospace;font-size:0.8rem;color:var(--muted);">
+        ✓ ${score} richtig
+      </span>
+      <button class="btn btn-primary" id="nextBtn" onclick="nextQuestion()" disabled>
+        ${current < questions.length - 1 ? 'Nächste Frage →' : 'Auswertung anzeigen'}
+      </button>
+    </div>
+  `;
+}
+
+function selectAnswer(idx) {
+  if (answered) return;
+  answered = true;
+  const q = questions[current];
+  const isCorrect = idx === q.correct;
+  if (isCorrect) {
+    score++;
+    results[current] = 'correct';
+  } else {
+    results[current] = 'wrong';
+  }
+
+  document.querySelectorAll('.quiz-opt').forEach((btn, i) => {
+    btn.disabled = true;
+    if (i === q.correct) btn.classList.add('correct');
+    if (i === idx && !isCorrect) btn.classList.add('wrong');
+  });
+
+  const fb = document.getElementById('feedback');
+  fb.classList.add('show', isCorrect ? 'correct-fb' : 'wrong-fb');
+  fb.innerHTML = `<strong>${isCorrect ? '✅ Richtig!' : '❌ Leider falsch.'}</strong><br>${q.explanation}`;
+  document.getElementById('nextBtn').disabled = false;
+}
+
+function nextQuestion() {
+  current++;
+  answered = false;
+  renderQuiz();
+}
+
+function renderScore(container) {
+  const pct = Math.round((score / questions.length) * 100);
+  let emoji = pct >= 80 ? '🎉' : pct >= 60 ? '💪' : '📚';
+  let msg = pct >= 80 ? 'Ausgezeichnet! Du bist gut vorbereitet.' : pct >= 60 ? 'Gutes Ergebnis! Noch ein bisschen üben.' : 'Nochmal die Lernzettel lesen und wiederholen!';
+  let color = pct >= 80 ? 'var(--accent3)' : pct >= 60 ? 'var(--accent4)' : 'var(--accent2)';
+
+  container.innerHTML = `
+    <div class="quiz-score">
+      <div style="font-size:3rem;">${emoji}</div>
+      <h2>Quiz abgeschlossen!</h2>
+      <div class="score-num" style="color:${color};">${score}/${questions.length}</div>
+      <p style="font-size:1.1rem;margin-bottom:0.5rem;color:#fff;">${pct}% richtig</p>
+      <p>${msg}</p>
+      <div style="margin-top:2rem;">
+        <button class="btn btn-primary" onclick="initQuiz()">🔄 Nochmal versuchen</button>
+      </div>
+    </div>
+  `;
+}
+
+// Init quiz when first visiting
+document.querySelector('#quiz').addEventListener('show', initQuiz);
+</script>
+</body>
+</html>
