@@ -126,3 +126,10 @@ footer p a img {
 footer p a img:hover {
     filter: none;
 }
+
+@media (max-width: 900px) {
+    body {
+        margin-left: 10%;
+        margin-right: 10%;
+    }
+}
