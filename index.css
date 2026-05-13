@@ -1,3 +1,13 @@
+::-moz-selection {
+    color: black;
+    background-color: #fa807299;
+}
+
+::selection {
+    color: black;
+    background-color: #fa807299;
+}
+
 body {
     font-family: "DM Sans", serif;
     font-style: normal;
