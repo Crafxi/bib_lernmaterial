@@ -1,0 +1,1291 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ITIL & QM — Klausurvorbereitung</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Syne:wght@400;700;800&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0e1a;
+    --surface: #111827;
+    --surface2: #1a2235;
+    --border: #1e2d45;
+    --accent: #00d4ff;
+    --accent2: #7c3aed;
+    --accent3: #10b981;
+    --warn: #f59e0b;
+    --danger: #ef4444;
+    --text: #e2e8f0;
+    --muted: #64748b;
+    --tag-bg: rgba(0,212,255,0.1);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Instrument Sans', sans-serif;
+    min-height: 100vh;
+    line-height: 1.6;
+  }
+
+  /* === HEADER === */
+  header {
+    background: linear-gradient(135deg, #0a0e1a 0%, #0f1b2d 50%, #0a0e1a 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 2.5rem 2rem 2rem;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute;
+    top: -80px; right: -80px;
+    width: 300px; height: 300px;
+    background: radial-gradient(circle, rgba(0,212,255,0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  header::after {
+    content: '';
+    position: absolute;
+    bottom: -60px; left: 10%;
+    width: 200px; height: 200px;
+    background: radial-gradient(circle, rgba(124,58,237,0.1) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .header-badge {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--accent);
+    background: rgba(0,212,255,0.08);
+    border: 1px solid rgba(0,212,255,0.3);
+    padding: 0.25rem 0.75rem;
+    border-radius: 2px;
+    display: inline-block;
+    margin-bottom: 1rem;
+    letter-spacing: 0.1em;
+  }
+  h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(1.8rem, 5vw, 3rem);
+    font-weight: 800;
+    line-height: 1.1;
+    background: linear-gradient(135deg, #e2e8f0 0%, #00d4ff 60%, #7c3aed 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 0.5rem;
+  }
+  .subtitle {
+    color: var(--muted);
+    font-size: 0.95rem;
+  }
+
+  /* === NAV === */
+  nav {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 1rem;
+    display: flex;
+    gap: 0;
+    overflow-x: auto;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  nav button {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+    padding: 1rem 1.25rem;
+    background: none;
+    border: none;
+    color: var(--muted);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    white-space: nowrap;
+    transition: all 0.2s;
+  }
+  nav button:hover { color: var(--text); }
+  nav button.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+  /* === LAYOUT === */
+  main { max-width: 960px; margin: 0 auto; padding: 2rem 1.5rem; }
+
+  .section { display: none; }
+  .section.active { display: block; }
+
+  /* === CARDS === */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    position: relative;
+    transition: border-color 0.2s;
+  }
+  .card:hover { border-color: rgba(0,212,255,0.3); }
+  .card-accent { border-left: 3px solid var(--accent); }
+  .card-purple { border-left: 3px solid var(--accent2); }
+  .card-green { border-left: 3px solid var(--accent3); }
+  .card-warn { border-left: 3px solid var(--warn); }
+
+  .card h2 {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .card h2.purple { color: var(--accent2); }
+  .card h2.green { color: var(--accent3); }
+  .card h2.warn { color: var(--warn); }
+
+  .definition {
+    background: rgba(0,212,255,0.05);
+    border: 1px solid rgba(0,212,255,0.15);
+    border-radius: 6px;
+    padding: 1rem;
+    margin: 0.75rem 0;
+    font-style: italic;
+    color: #cbd5e1;
+  }
+  .definition strong { color: var(--accent); font-style: normal; }
+
+  .tag {
+    display: inline-block;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.65rem;
+    padding: 0.15rem 0.5rem;
+    border-radius: 3px;
+    margin-right: 0.4rem;
+    margin-bottom: 0.3rem;
+    letter-spacing: 0.05em;
+    background: var(--tag-bg);
+    color: var(--accent);
+    border: 1px solid rgba(0,212,255,0.2);
+  }
+  .tag.purple { background: rgba(124,58,237,0.12); color: #a78bfa; border-color: rgba(124,58,237,0.2); }
+  .tag.green { background: rgba(16,185,129,0.1); color: #34d399; border-color: rgba(16,185,129,0.2); }
+
+  ul.checklist { list-style: none; padding: 0; }
+  ul.checklist li {
+    padding: 0.35rem 0 0.35rem 1.5rem;
+    position: relative;
+    color: #cbd5e1;
+    font-size: 0.95rem;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+  ul.checklist li:last-child { border-bottom: none; }
+  ul.checklist li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+    font-family: 'IBM Plex Mono', monospace;
+  }
+  ul.checklist.purple li::before { color: #a78bfa; }
+  ul.checklist.green li::before { color: #34d399; }
+
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  @media(max-width: 600px) { .grid2 { grid-template-columns: 1fr; } }
+
+  .highlight-box {
+    background: linear-gradient(135deg, rgba(0,212,255,0.08), rgba(124,58,237,0.06));
+    border: 1px solid rgba(0,212,255,0.2);
+    border-radius: 8px;
+    padding: 1.25rem;
+    margin: 1rem 0;
+  }
+
+  .mono {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.85rem;
+    color: var(--accent);
+  }
+
+  /* === SECTION TITLES === */
+  .section-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 800;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* === ACCORDION === */
+  details {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    margin-bottom: 0.5rem;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  details:hover { border-color: rgba(0,212,255,0.25); }
+  details[open] { border-color: rgba(0,212,255,0.4); }
+  summary {
+    padding: 1rem 1.25rem;
+    cursor: pointer;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    list-style: none;
+    user-select: none;
+    font-size: 0.95rem;
+  }
+  summary::-webkit-details-marker { display: none; }
+  summary::before {
+    content: '+';
+    font-family: 'IBM Plex Mono', monospace;
+    color: var(--accent);
+    font-size: 1.1rem;
+    width: 20px;
+    text-align: center;
+    transition: transform 0.2s;
+  }
+  details[open] summary::before { content: '−'; }
+  .details-body { padding: 0 1.25rem 1.25rem; color: #cbd5e1; font-size: 0.93rem; }
+
+  /* === QUIZ === */
+  .quiz-container { max-width: 700px; margin: 0 auto; }
+  .quiz-progress {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  .progress-bar {
+    flex: 1;
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    border-radius: 2px;
+    transition: width 0.4s ease;
+  }
+  .quiz-score-badge {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--accent);
+    white-space: nowrap;
+  }
+
+  .question-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 2rem;
+    margin-bottom: 1rem;
+    min-height: 300px;
+    display: flex;
+    flex-direction: column;
+  }
+  .q-number {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--muted);
+    margin-bottom: 0.75rem;
+  }
+  .q-text {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    flex: 1;
+    line-height: 1.4;
+  }
+  .q-options { display: flex; flex-direction: column; gap: 0.6rem; }
+  .q-option {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.85rem 1rem;
+    cursor: pointer;
+    transition: all 0.15s;
+    text-align: left;
+    color: var(--text);
+    font-size: 0.9rem;
+    font-family: 'Instrument Sans', sans-serif;
+    display: flex;
+    gap: 0.75rem;
+    align-items: flex-start;
+  }
+  .q-option:hover:not(:disabled) {
+    border-color: var(--accent);
+    background: rgba(0,212,255,0.06);
+  }
+  .q-option.correct {
+    border-color: var(--accent3);
+    background: rgba(16,185,129,0.1);
+    color: #34d399;
+  }
+  .q-option.wrong {
+    border-color: var(--danger);
+    background: rgba(239,68,68,0.1);
+    color: #fca5a5;
+  }
+  .q-option:disabled { cursor: default; }
+  .opt-letter {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--muted);
+    min-width: 18px;
+    margin-top: 2px;
+  }
+  .q-option.correct .opt-letter { color: var(--accent3); }
+  .q-option.wrong .opt-letter { color: var(--danger); }
+
+  .feedback-box {
+    border-radius: 6px;
+    padding: 0.9rem 1rem;
+    margin-top: 1rem;
+    font-size: 0.88rem;
+    line-height: 1.5;
+    display: none;
+  }
+  .feedback-box.show { display: block; }
+  .feedback-box.correct-fb {
+    background: rgba(16,185,129,0.1);
+    border: 1px solid rgba(16,185,129,0.3);
+    color: #6ee7b7;
+  }
+  .feedback-box.wrong-fb {
+    background: rgba(239,68,68,0.08);
+    border: 1px solid rgba(239,68,68,0.25);
+    color: #fca5a5;
+  }
+
+  .quiz-controls { display: flex; gap: 1rem; margin-top: 1rem; justify-content: flex-end; }
+  .btn {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.8rem;
+    letter-spacing: 0.05em;
+    padding: 0.65rem 1.5rem;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .btn-primary {
+    background: var(--accent);
+    color: #000;
+    font-weight: 600;
+  }
+  .btn-primary:hover { background: #00b8e0; transform: translateY(-1px); }
+  .btn-secondary {
+    background: transparent;
+    color: var(--muted);
+    border: 1px solid var(--border);
+  }
+  .btn-secondary:hover { color: var(--text); border-color: var(--muted); }
+
+  .quiz-result {
+    text-align: center;
+    padding: 3rem 1rem;
+    display: none;
+  }
+  .quiz-result.show { display: block; }
+  .result-score {
+    font-family: 'Syne', sans-serif;
+    font-size: 5rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .result-label {
+    font-size: 1.2rem;
+    color: var(--muted);
+    margin-bottom: 1rem;
+  }
+  .result-msg {
+    font-size: 1rem;
+    margin-bottom: 2rem;
+    color: var(--text);
+  }
+
+  /* === OVERVIEW / MIND MAP === */
+  .overview-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+  .ov-card {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.25rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .ov-card:hover { transform: translateY(-2px); border-color: rgba(0,212,255,0.3); }
+  .ov-icon { font-size: 2rem; margin-bottom: 0.5rem; }
+  .ov-card h3 {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--text);
+  }
+  .ov-card p { font-size: 0.75rem; color: var(--muted); margin-top: 0.25rem; }
+
+  /* PDCA visual */
+  .pdca-visual {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    margin: 1.5rem 0;
+  }
+  .pdca-cell {
+    background: var(--surface2);
+    padding: 1.25rem;
+    text-align: center;
+  }
+  .pdca-letter {
+    font-family: 'Syne', sans-serif;
+    font-size: 2.5rem;
+    font-weight: 800;
+  }
+  .pdca-cell:nth-child(1) .pdca-letter { color: var(--accent); }
+  .pdca-cell:nth-child(2) .pdca-letter { color: var(--accent2); }
+  .pdca-cell:nth-child(3) .pdca-letter { color: var(--accent3); }
+  .pdca-cell:nth-child(4) .pdca-letter { color: var(--warn); }
+  .pdca-word { font-weight: 700; margin-bottom: 0.3rem; }
+  .pdca-desc { font-size: 0.8rem; color: var(--muted); }
+
+  .scroll-top {
+    position: fixed;
+    bottom: 1.5rem;
+    right: 1.5rem;
+    background: var(--accent);
+    color: #000;
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 15px rgba(0,212,255,0.3);
+    z-index: 200;
+  }
+  .scroll-top.show { display: flex; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-badge">KLAUSURVORBEREITUNG // IT-QUALITÄTSMANAGEMENT</div>
+  <h1>ITIL & QM Lernzettel</h1>
+  <p class="subtitle">Knowledge Management · Continual Improvement · Incident & Problem Management · Service Desk & mehr</p>
+</header>
+
+<nav>
+  <button class="active" onclick="showSection('overview', this)">📊 Übersicht</button>
+  <button onclick="showSection('basics', this)">📐 Grundlagen QM</button>
+  <button onclick="showSection('practices', this)">⚙️ ITIL Practices</button>
+  <button onclick="showSection('svs', this)">🏗️ SVS & Dimensionen</button>
+  <button onclick="showSection('quiz', this)">🎯 Quiz</button>
+</nav>
+
+<main>
+
+<!-- ===== OVERVIEW ===== -->
+<div id="overview" class="section active">
+  <p class="section-title">Schnellübersicht</p>
+
+  <div class="overview-grid">
+    <div class="ov-card" onclick="showSection('practices', document.querySelector('nav button:nth-child(3)'))">
+      <div class="ov-icon">🧠</div>
+      <h3>Knowledge Management</h3>
+      <p>Wissen im Unternehmen sichern & nutzen</p>
+    </div>
+    <div class="ov-card" onclick="showSection('practices', document.querySelector('nav button:nth-child(3)'))">
+      <div class="ov-icon">🔄</div>
+      <h3>Continual Improvement</h3>
+      <p>KVP / PDCA in ITIL</p>
+    </div>
+    <div class="ov-card" onclick="showSection('practices', document.querySelector('nav button:nth-child(3)'))">
+      <div class="ov-icon">🔥</div>
+      <h3>Incident Management</h3>
+      <p>Störungen schnell beheben</p>
+    </div>
+    <div class="ov-card" onclick="showSection('practices', document.querySelector('nav button:nth-child(3)'))">
+      <div class="ov-icon">🔍</div>
+      <h3>Problem Management</h3>
+      <p>Ursachen dauerhaft eliminieren</p>
+    </div>
+    <div class="ov-card" onclick="showSection('practices', document.querySelector('nav button:nth-child(3)'))">
+      <div class="ov-icon">🖥️</div>
+      <h3>Service Desk</h3>
+      <p>Single Point of Contact</p>
+    </div>
+    <div class="ov-card" onclick="showSection('practices', document.querySelector('nav button:nth-child(3)'))">
+      <div class="ov-icon">🗄️</div>
+      <h3>Service Configuration</h3>
+      <p>CMDB & CIs verwalten</p>
+    </div>
+    <div class="ov-card" onclick="showSection('practices', document.querySelector('nav button:nth-child(3)'))">
+      <div class="ov-icon">🔒</div>
+      <h3>Information Security</h3>
+      <p>CIA-Triade schützen</p>
+    </div>
+    <div class="ov-card" onclick="showSection('practices', document.querySelector('nav button:nth-child(3)'))">
+      <div class="ov-icon">🚀</div>
+      <h3>Service Enablement</h3>
+      <p>OCM & Freigabe steuern</p>
+    </div>
+  </div>
+
+  <div class="card card-accent">
+    <h2>🔑 Qualität — Kerndefinition</h2>
+    <div class="definition">
+      <strong>DIN EN ISO 9000:2015</strong>: „Grad, in dem ein Satz inhärenter Merkmale eines Objekts <strong>Anforderungen erfüllt</strong>."
+    </div>
+    <p style="color: var(--muted); font-size: 0.88rem;">→ Qualität = wie gut ein Produkt / eine Dienstleistung den Erwartungen entspricht. Subjektive Kundenwahrnehmung spielt eine zentrale Rolle.</p>
+  </div>
+
+  <div class="card card-purple">
+    <h2 class="purple">🏗️ PDCA-Zyklus (Deming-Kreis)</h2>
+    <div class="pdca-visual">
+      <div class="pdca-cell">
+        <div class="pdca-letter">P</div>
+        <div class="pdca-word">Plan</div>
+        <div class="pdca-desc">Ziele & Maßnahmen definieren (SMART)</div>
+      </div>
+      <div class="pdca-cell">
+        <div class="pdca-letter">D</div>
+        <div class="pdca-word">Do</div>
+        <div class="pdca-desc">Maßnahmen umsetzen</div>
+      </div>
+      <div class="pdca-cell">
+        <div class="pdca-letter">C</div>
+        <div class="pdca-word">Check</div>
+        <div class="pdca-desc">Ergebnisse überprüfen & messen</div>
+      </div>
+      <div class="pdca-cell">
+        <div class="pdca-letter">A</div>
+        <div class="pdca-word">Act</div>
+        <div class="pdca-desc">Standardisieren oder anpassen</div>
+      </div>
+    </div>
+    <p style="color: var(--muted); font-size:0.85rem;">Erweiterung: <span class="mono">SDCA</span> = Standardize–Do–Check–Act (wenn ein Standard festgeschrieben wird)</p>
+  </div>
+
+  <div class="highlight-box">
+    <p style="font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem; color: var(--accent); margin-bottom: 0.5rem;">// MERKHILFE — ITIL SVS Kernkomponenten</p>
+    <p style="font-size: 0.9rem;">
+      <span class="tag">Grundprinzipien</span>
+      <span class="tag">Governance</span>
+      <span class="tag">Service-Wertschöpfungskette</span>
+      <span class="tag">Practices</span>
+      <span class="tag">Kontinuierliche Verbesserung</span>
+    </p>
+    <p style="font-size: 0.85rem; color: var(--muted); margin-top: 0.75rem;">Die 4 Dimensionen: <strong style="color:var(--text)">Organisationen & Menschen</strong> · <strong style="color:var(--text)">Information & Technologie</strong> · <strong style="color:var(--text)">Partner & Lieferanten</strong> · <strong style="color:var(--text)">Wertströme & Prozesse</strong></p>
+  </div>
+</div>
+
+<!-- ===== BASICS ===== -->
+<div id="basics" class="section">
+  <p class="section-title">Grundlagen Qualitätsmanagement</p>
+
+  <div class="card card-accent">
+    <h2>📖 Definitionen & Begriffe</h2>
+    <div class="definition">
+      <strong>Qualität</strong> (ISO 9000:2015): „Grad, in dem ein Satz inhärenter Merkmale eines Objekts Anforderungen erfüllt." — Die subjektive Kundenwahrnehmung kann von objektiven Merkmalen abweichen.
+    </div>
+    <div class="definition">
+      <strong>TQM – Total Quality Management</strong>: Qualitätsmanagement, das die <em>gesamte Organisation</em> einschließt. Ziel: Kundenzufriedenheit + langfristiger Geschäftserfolg durch Mitwirkung aller Mitglieder.
+    </div>
+    <div class="definition">
+      <strong>Six Sigma</strong>: Strategie zur Qualitätsverbesserung durch Verminderung von Fehlern in Prozessen. Ziel: &lt; 3,4 Fehler pro Million Möglichkeiten (ppm). Basiert auf <strong>DMAIC</strong>-Prinzip.
+    </div>
+    <div class="definition">
+      <strong>KVP / Kaizen</strong>: Kontinuierlicher Verbesserungsprozess. Kai (Veränderung) + Zen (zum Besseren). Stetige Generierung kleiner Verbesserungen durch alle Mitarbeiter.
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div class="card card-purple">
+      <h2 class="purple">🎯 SMART-Ziele</h2>
+      <ul class="checklist purple">
+        <li><strong>S</strong>pezifisch</li>
+        <li><strong>M</strong>essbar</li>
+        <li><strong>A</strong>ttraktiv</li>
+        <li><strong>R</strong>ealistisch</li>
+        <li><strong>T</strong>erminiert</li>
+      </ul>
+    </div>
+    <div class="card card-green">
+      <h2 class="green">📋 ISO 9001 Abschnitte</h2>
+      <ul class="checklist green">
+        <li>4: Kontext der Organisation</li>
+        <li>5: Führung</li>
+        <li>6: Planung</li>
+        <li>7: Unterstützung</li>
+        <li>8: Betrieb</li>
+        <li>9: Bewertung der Leistung</li>
+        <li>10: Verbesserung</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card card-warn">
+    <h2 class="warn">⚠️ Nichtqualität — Risiken & Beispiele</h2>
+    <ul class="checklist">
+      <li>Fehlerhafte Planung, mangelnde Überwachung & Kommunikation</li>
+      <li>Fehlende Motivation und Arbeitsverantwortung</li>
+      <li>Nichtbeachtung von Kundenforderungen</li>
+    </ul>
+    <div style="margin-top: 0.75rem; font-size: 0.83rem; color: var(--muted);">
+      <strong style="color: var(--warn)">Praxisbeispiel VW:</strong> Abgasskandal — Softwaremanipulation auf Prüfstand. Folge: Strafen in Milliardenhöhe, Glaubwürdigkeitsverlust, politischer Schaden für Verbrennungsmotor.
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>📜 Geschichte des QM</h2>
+    <details>
+      <summary>Antike & Mittelalter</summary>
+      <div class="details-body">Normung von Längen & Gewichten als erste objektive Qualitätsgarantie. Im Mittelalter überwachten Gilden & Zünfte die Qualität — Meister war für Erstellung UND Qualität selbst verantwortlich.</div>
+    </details>
+    <details>
+      <summary>Industrialisierung (19. Jh.) & Taylorismus</summary>
+      <div class="details-body">Taylor: Arbeitsteilung durch Bewegungs- und Zeitstudien → Trennung von Arbeitsausführung und -kontrolle. Qualität durch Endkontrolle gesichert.</div>
+    </details>
+    <details>
+      <summary>Nach 1945 — Japan & Deming</summary>
+      <div class="details-body">Japanische Industrie adoptiert mit Hilfe von <strong>Dr. Deming & Dr. Juran</strong> einen neuen Weg: Qualität als Managementaufgabe. Geburt des PDCA-Zyklus und von Kaizen.</div>
+    </details>
+    <details>
+      <summary>Heute — ISO & TQM</summary>
+      <div class="details-body">ISO 9000-Reihe seit 1987. Über 917.000 zertifizierte Unternehmen weltweit. Trend zu Business Excellence (TQM). Neue Faktoren: Nachhaltigkeit, Lieferkettensicherung, Klimaverträglichkeit.</div>
+    </details>
+  </div>
+</div>
+
+<!-- ===== PRACTICES ===== -->
+<div id="practices" class="section">
+  <p class="section-title">ITIL Practices — Definitionen</p>
+
+  <div class="card card-accent">
+    <h2>🧠 Knowledge Management</h2>
+    <span class="tag">Practice</span><span class="tag">Wissensmanagement</span>
+    <div class="definition">
+      <strong>Definition</strong>: Sicherstellung, dass die Organisation im richtigen Moment über die richtigen Informationen und das richtige Wissen verfügt, um die Wertschöpfung zu verbessern.
+    </div>
+    <ul class="checklist">
+      <li>Ziel: Wissen sammeln, analysieren, speichern & zugänglich machen</li>
+      <li>Vermeidet Wissensverlust beim Ausscheiden von Mitarbeitern</li>
+      <li>Schlüsselwerkzeug: <strong>SKMS</strong> (Service Knowledge Management System)</li>
+      <li>Unterstützt alle anderen Practices — besonders Incident & Problem Management</li>
+      <li>Known-Error-Datenbank (KEDB) als wichtiges Teilelement</li>
+    </ul>
+  </div>
+
+  <div class="card card-purple">
+    <h2 class="purple">🔄 Continual Improvement</h2>
+    <span class="tag purple">Practice</span><span class="tag purple">KVP</span>
+    <div class="definition">
+      <strong>Definition</strong>: Wiederkehrende organisatorische Tätigkeit auf allen Ebenen, um sicherzustellen, dass die Leistung eines Unternehmens <em>kontinuierlich den Erwartungen der Stakeholder entspricht</em>.
+    </div>
+    <ul class="checklist purple">
+      <li>ITIL-Umsetzung des PDCA-/KVP-Gedankens</li>
+      <li>Gilt für alle SVS-Komponenten (nicht nur IT)</li>
+      <li>7-Schritte-Modell: Was soll verbessert werden? → Wie wird Erfolg gemessen?</li>
+      <li>Führt ein <strong>Continual Improvement Register (CIR)</strong></li>
+      <li>Verbindet Verbesserungen mit Unternehmenszielen und Stakeholder-Erwartungen</li>
+    </ul>
+    <div class="highlight-box" style="margin-top:0.75rem">
+      <p style="font-size:0.83rem; color:var(--muted)">Zusammenhang mit ISO 9001 Abschnitt 10 (Verbesserung) und KVP/Kaizen</p>
+    </div>
+  </div>
+
+  <div class="card card-green">
+    <h2 class="green">🔀 Organizational Change Management (OCM)</h2>
+    <span class="tag green">Practice</span><span class="tag green">Change</span>
+    <div class="definition">
+      <strong>Definition</strong>: Steuerung der menschlichen Aspekte bei Veränderungen in der Organisation, um sicherzustellen, dass Verbesserungen erfolgreich umgesetzt werden und nicht scheitern.
+    </div>
+    <ul class="checklist green">
+      <li>Unterschied zu Change Control: OCM fokussiert auf <em>Menschen</em>, nicht auf Technik</li>
+      <li>Ziel: Widerstände abbauen, Akzeptanz schaffen</li>
+      <li>Maßnahmen: Kommunikation, Schulung, Stakeholder-Einbindung</li>
+      <li>Ohne OCM scheitern viele ITIL-Einführungen ("Technology is the easy part")</li>
+      <li>Direkt verknüpft mit Continual Improvement</li>
+    </ul>
+  </div>
+
+  <div class="card card-warn">
+    <h2 class="warn">🔥 Incident Management</h2>
+    <span class="tag" style="background:rgba(245,158,11,0.1);color:var(--warn);border-color:rgba(245,158,11,0.25)">Practice</span>
+    <div class="definition">
+      <strong>Definition</strong>: Minimierung der negativen Auswirkung von Störungen (<em>Incidents</em>) durch schnellstmögliche Wiederherstellung des normalen Servicebetriebs.
+    </div>
+    <div class="grid2" style="margin-top:0.75rem">
+      <div>
+        <p style="font-size:0.8rem; color:var(--muted); margin-bottom:0.4rem; font-family:'IBM Plex Mono',monospace">// BEGRIFFE</p>
+        <ul class="checklist">
+          <li><strong>Incident</strong>: Ungeplante Unterbrechung oder Qualitätsminderung eines Service</li>
+          <li><strong>Major Incident</strong>: Kritischer Incident mit höchster Priorität</li>
+          <li><strong>Workaround</strong>: Temporäre Lösung, bis echte Lösung steht</li>
+        </ul>
+      </div>
+      <div>
+        <p style="font-size:0.8rem; color:var(--muted); margin-bottom:0.4rem; font-family:'IBM Plex Mono',monospace">// ABLAUF</p>
+        <ul class="checklist">
+          <li>Erkennung & Protokollierung</li>
+          <li>Klassifizierung & Priorisierung</li>
+          <li>Diagnose & Eskalation</li>
+          <li>Behebung & Schließung</li>
+        </ul>
+      </div>
+    </div>
+    <div style="margin-top:0.75rem; padding:0.75rem; background:rgba(245,158,11,0.06); border-radius:6px; font-size:0.83rem; color:var(--muted)">
+      ⚡ Primäres Ziel: <strong style="color:var(--text)">Wiederherstellung</strong> (nicht Ursachenbehebung — das ist Problem Management!)
+    </div>
+  </div>
+
+  <div class="card card-accent">
+    <h2>🔍 Problem Management</h2>
+    <span class="tag">Practice</span>
+    <div class="definition">
+      <strong>Definition</strong>: Reduzierung der Wahrscheinlichkeit und Auswirkung von Incidents durch Identifizierung <em>tatsächlicher und potenzieller Ursachen</em> von Störungen und das Management bekannter Fehler.
+    </div>
+    <div class="grid2" style="margin-top:0.75rem">
+      <div>
+        <p style="font-size:0.8rem; color:var(--accent); margin-bottom:0.4rem; font-family:'IBM Plex Mono',monospace">// 3 PHASEN</p>
+        <ul class="checklist">
+          <li><strong>Proaktiv</strong>: Probleme finden, bevor sie zu Incidents werden</li>
+          <li><strong>Reaktiv</strong>: Ursachen von Incidents analysieren</li>
+          <li><strong>Fehlersteuerung</strong>: Known Errors verwalten</li>
+        </ul>
+      </div>
+      <div>
+        <p style="font-size:0.8rem; color:var(--accent); margin-bottom:0.4rem; font-family:'IBM Plex Mono',monospace">// SCHLÜSSELBEGRIFFE</p>
+        <ul class="checklist">
+          <li><strong>Problem</strong>: Unbekannte Ursache eines oder mehrerer Incidents</li>
+          <li><strong>Known Error</strong>: Problem mit dokumentierter Ursache (auch ohne Lösung)</li>
+          <li><strong>Root Cause Analysis (RCA)</strong>: Ursachenanalyse</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="card card-purple">
+    <h2 class="purple">🖥️ Service Desk</h2>
+    <span class="tag purple">Practice</span><span class="tag purple">SPOC</span>
+    <div class="definition">
+      <strong>Definition</strong>: Der Service Desk ist der <em>Single Point of Contact (SPOC)</em> zwischen dem IT-Dienstleister und allen Nutzern. Er erfasst, priorisiert und koordiniert alle Anfragen und Incidents.
+    </div>
+    <ul class="checklist purple">
+      <li>Empfängt und registriert alle Incidents & Service Requests</li>
+      <li>Kommuniziert Updates an Nutzer</li>
+      <li>Eskaliert an 2nd/3rd Level Support wenn nötig</li>
+      <li>Typen: Lokal · Zentralisiert · Virtuell · Follow-the-sun</li>
+      <li>Wichtige KPIs: First-Call-Resolution-Rate, Durchschnittliche Bearbeitungszeit</li>
+    </ul>
+    <div class="highlight-box" style="margin-top:0.75rem">
+      <p style="font-size:0.83rem">💡 Der Service Desk ist keine reine Telefon-Hotline — er ist das <strong>Gesicht des IT-Dienstleisters</strong> gegenüber dem Nutzer.</p>
+    </div>
+  </div>
+
+  <div class="card card-green">
+    <h2 class="green">🗄️ Service Configuration Management</h2>
+    <span class="tag green">Practice</span><span class="tag green">CMDB</span>
+    <div class="definition">
+      <strong>Definition</strong>: Sicherstellung, dass genaue und zuverlässige Informationen über die Konfiguration von Services und deren unterstützenden <em>Configuration Items (CIs)</em> verfügbar sind.
+    </div>
+    <ul class="checklist green">
+      <li><strong>CI (Configuration Item)</strong>: Jede Komponente, die gemanagt werden muss (Server, Software, Dokumente…)</li>
+      <li><strong>CMDB</strong> (Configuration Management Database): Zentrale Datenbank aller CIs und ihrer Beziehungen</li>
+      <li><strong>CMS</strong> (Configuration Management System): Umfasst CMDB + weitere Datenquellen</li>
+      <li>Unterstützt: Incident, Problem, Change, Release Management</li>
+      <li>Zeigt Abhängigkeiten zwischen CIs → Impact-Analyse bei Störungen</li>
+    </ul>
+  </div>
+
+  <div class="card" style="border-left: 3px solid #ef4444;">
+    <h2 style="color:#ef4444;">🔒 Information Security Management</h2>
+    <span class="tag" style="background:rgba(239,68,68,0.1);color:#f87171;border-color:rgba(239,68,68,0.25)">Practice</span>
+    <div class="definition">
+      <strong>Definition</strong>: Schutz der Informationen einer Organisation, die von dieser benötigt werden, um ihren Geschäftsbetrieb aufrechtzuerhalten. Basiert auf der <strong>CIA-Triade</strong>.
+    </div>
+    <div class="grid2" style="margin-top:0.75rem">
+      <div style="background:rgba(239,68,68,0.06); border:1px solid rgba(239,68,68,0.2); border-radius:6px; padding:1rem;">
+        <p style="font-family:'IBM Plex Mono',monospace; font-size:0.75rem; color:#f87171; margin-bottom:0.5rem">// CIA-TRIADE</p>
+        <ul class="checklist">
+          <li><strong>C</strong>onfidentiality (Vertraulichkeit): Nur Berechtigte dürfen auf Infos zugreifen</li>
+          <li><strong>I</strong>ntegrity (Integrität): Infos sind korrekt & unverändert</li>
+          <li><strong>A</strong>vailability (Verfügbarkeit): Infos sind zugänglich, wenn benötigt</li>
+        </ul>
+      </div>
+      <div>
+        <p style="font-family:'IBM Plex Mono',monospace; font-size:0.75rem; color:#f87171; margin-bottom:0.5rem">// MASSNAHMEN</p>
+        <ul class="checklist">
+          <li>Risikobewertung & -behandlung</li>
+          <li>Sicherheitsrichtlinien & Zugangskontrollen</li>
+          <li>Awareness-Schulungen</li>
+          <li>Incident Response für Sicherheitsvorfälle</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="card card-accent">
+    <h2>🚀 Service Enablement / Change Enablement</h2>
+    <span class="tag">Practice</span>
+    <div class="definition">
+      <strong>Definition</strong>: Maximierung der Anzahl erfolgreicher Service- und Produktänderungen durch Sicherstellung, dass Risiken angemessen bewertet, Changes autorisiert und der Änderungsplan verwaltet wird.
+    </div>
+    <ul class="checklist">
+      <li><strong>Change</strong>: Hinzufügung, Modifikation oder Entfernung von etwas, das direkte oder indirekte Auswirkungen auf Services hat</li>
+      <li>3 Change-Typen: <strong>Standard</strong> (vorab genehmigt, geringes Risiko) · <strong>Normal</strong> (muss geplant & genehmigt werden) · <strong>Emergency</strong> (schnell, bei kritischen Störungen)</li>
+      <li><strong>CAB</strong> (Change Advisory Board): Beratungsgremium für Normal Changes</li>
+      <li>Verknüpft mit OCM: Technische Änderung + menschliche Akzeptanz</li>
+    </ul>
+  </div>
+
+</div>
+
+<!-- ===== SVS ===== -->
+<div id="svs" class="section">
+  <p class="section-title">ITIL SVS & Dimensionen</p>
+
+  <div class="card card-accent">
+    <h2>🏗️ Service Value System (SVS)</h2>
+    <div class="definition">
+      <strong>Definition</strong>: Das SVS beschreibt, wie alle Komponenten und Aktivitäten einer Organisation zusammenarbeiten, um durch IT-gestützte Services <em>Wert zu erzeugen</em>.
+    </div>
+    <div style="margin: 1rem 0;">
+      <p style="font-family:'IBM Plex Mono',monospace; font-size:0.75rem; color:var(--muted); margin-bottom:0.75rem">// INPUT → SYSTEM → OUTPUT</p>
+      <div style="display:flex; gap:1rem; align-items:center; flex-wrap:wrap;">
+        <div style="background:rgba(0,212,255,0.1); border:1px solid rgba(0,212,255,0.3); border-radius:6px; padding:0.75rem 1rem; flex:1; min-width:120px;">
+          <p style="font-size:0.75rem; color:var(--muted)">INPUT</p>
+          <p style="font-weight:700">Chancen & Bedarf</p>
+        </div>
+        <div style="font-size:1.5rem; color:var(--accent)">→</div>
+        <div style="background:var(--surface2); border:1px solid var(--border); border-radius:6px; padding:0.75rem 1rem; flex:2; min-width:150px;">
+          <p style="font-size:0.75rem; color:var(--muted)">SVS KOMPONENTEN</p>
+          <p style="font-weight:700; font-size:0.85rem">Grundprinzipien · Governance · Wertschöpfungskette · Practices · Kont. Verbesserung</p>
+        </div>
+        <div style="font-size:1.5rem; color:var(--accent)">→</div>
+        <div style="background:rgba(16,185,129,0.1); border:1px solid rgba(16,185,129,0.3); border-radius:6px; padding:0.75rem 1rem; flex:1; min-width:120px;">
+          <p style="font-size:0.75rem; color:var(--muted)">OUTPUT</p>
+          <p style="font-weight:700">Wertschöpfung</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card card-purple">
+    <h2 class="purple">🔮 7 Grundprinzipien (Guiding Principles)</h2>
+    <ul class="checklist purple">
+      <li><strong>Focus on Value</strong> — Alles, was das Unternehmen tut, muss einen Wert für Stakeholder schaffen</li>
+      <li><strong>Start Where You Are</strong> — Vorhandenes sorgfältig beobachten & nutzen, nicht bei null anfangen</li>
+      <li><strong>Progress Iteratively with Feedback</strong> — In kleinen Schritten mit Feedback verbessern</li>
+      <li><strong>Collaborate and Promote Visibility</strong> — Zusammenarbeiten, Transparenz fördern</li>
+      <li><strong>Think and Work Holistically</strong> — Ganzheitlich denken, keine Silos</li>
+      <li><strong>Keep It Simple and Practical</strong> — Einfachheit vor Komplexität</li>
+      <li><strong>Optimize and Automate</strong> — Menschliche Arbeit für komplexe Dinge, Automatisierung für Routinen</li>
+    </ul>
+  </div>
+
+  <div class="card card-green">
+    <h2 class="green">🌐 Die 4 Dimensionen</h2>
+    <div class="grid2">
+      <div style="background:var(--surface2); border-radius:6px; padding:1rem;">
+        <p class="mono" style="margin-bottom:0.5rem">01 // Organisationen & Menschen</p>
+        <p style="font-size:0.85rem; color:var(--muted)">Rollen, Verantwortlichkeiten, Strukturen, Kultur. Ohne die richtigen Menschen funktioniert kein System.</p>
+      </div>
+      <div style="background:var(--surface2); border-radius:6px; padding:1rem;">
+        <p class="mono" style="margin-bottom:0.5rem">02 // Information & Technologie</p>
+        <p style="font-size:0.85rem; color:var(--muted)">Welche Informationen werden benötigt? Welche Technologien unterstützen die Services?</p>
+      </div>
+      <div style="background:var(--surface2); border-radius:6px; padding:1rem;">
+        <p class="mono" style="margin-bottom:0.5rem">03 // Partner & Lieferanten</p>
+        <p style="font-size:0.85rem; color:var(--muted)">Externe Organisationen, die zur Serviceerbringung beitragen. Verträge & Beziehungen managen.</p>
+      </div>
+      <div style="background:var(--surface2); border-radius:6px; padding:1rem;">
+        <p class="mono" style="margin-bottom:0.5rem">04 // Wertströme & Prozesse</p>
+        <p style="font-size:0.85rem; color:var(--muted)">Wie werden Aktivitäten koordiniert, um Wert zu schaffen? Workflows & Prozessmodelle.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>👥 Stakeholder in ITIL</h2>
+    <div class="definition">
+      <strong>Stakeholder</strong>: Alle Personen und Gruppen, die ein Interesse an IT-Diensten haben und von ihnen betroffen sind.
+    </div>
+    <div class="grid2" style="margin-top:0.75rem">
+      <div>
+        <p style="font-size:0.8rem; color:var(--accent); margin-bottom:0.5rem; font-family:'IBM Plex Mono',monospace">// 4 HAUPTAKTEURE</p>
+        <ul class="checklist">
+          <li><strong>Dienstleister</strong>: Erbringt IT-Services</li>
+          <li><strong>Kunde</strong>: Bezahlt & definiert Service Levels</li>
+          <li><strong>Endbenutzer</strong>: Nutzt die Services</li>
+          <li><strong>Lieferant</strong>: Liefert Produkte/Services an den Dienstleister</li>
+        </ul>
+      </div>
+      <div>
+        <p style="font-size:0.8rem; color:var(--accent); margin-bottom:0.5rem; font-family:'IBM Plex Mono',monospace">// INTERN vs. EXTERN</p>
+        <ul class="checklist">
+          <li><strong>Intern</strong>: Mitarbeiter, Teams, Management, interne Kunden</li>
+          <li><strong>Extern</strong>: Externe Kunden, Endnutzer, Lieferanten, Anbieter</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== QUIZ ===== -->
+<div id="quiz" class="section">
+  <p class="section-title">🎯 Klausur-Quiz</p>
+
+  <div class="quiz-container">
+    <div class="quiz-progress">
+      <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+      <div class="quiz-score-badge" id="scoreDisplay">0 / 0</div>
+    </div>
+
+    <div id="questionArea">
+      <div class="question-card" id="questionCard">
+        <div class="q-number" id="qNumber">FRAGE 1 / 15</div>
+        <div class="q-text" id="qText">Laden…</div>
+        <div class="q-options" id="qOptions"></div>
+        <div class="feedback-box" id="feedbackBox"></div>
+      </div>
+      <div class="quiz-controls">
+        <button class="btn btn-secondary" id="restartBtn" onclick="restartQuiz()" style="display:none">↺ Neustart</button>
+        <button class="btn btn-primary" id="nextBtn" onclick="nextQuestion()" style="display:none">Weiter →</button>
+      </div>
+    </div>
+
+    <div class="quiz-result" id="quizResult">
+      <div class="result-score" id="resultScore">0/15</div>
+      <div class="result-label">Punkte erreicht</div>
+      <div class="result-msg" id="resultMsg"></div>
+      <button class="btn btn-primary" onclick="restartQuiz()">↺ Quiz wiederholen</button>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<button class="scroll-top" id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<script>
+// ===== NAVIGATION =====
+function showSection(id, btn) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  if(btn) btn.classList.add('active');
+  else document.querySelectorAll('nav button').forEach((b,i) => {
+    if(['overview','basics','practices','svs','quiz'][i] === id) b.classList.add('active');
+  });
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+// Scroll to top button
+window.addEventListener('scroll', () => {
+  document.getElementById('scrollTop').classList.toggle('show', window.scrollY > 400);
+});
+
+// ===== QUIZ =====
+const questions = [
+  {
+    q: "Wie definiert die DIN EN ISO 9000:2015 den Begriff 'Qualität'?",
+    opts: [
+      "Die Abwesenheit von Fehlern in einem Produkt",
+      "Grad, in dem ein Satz inhärenter Merkmale eines Objekts Anforderungen erfüllt",
+      "Die Übereinstimmung eines Produkts mit seinem Design",
+      "Der Grad der Kundenzufriedenheit nach dem Kauf"
+    ],
+    correct: 1,
+    explanation: "Qualität laut ISO 9000:2015: 'Grad, in dem ein Satz inhärenter Merkmale eines Objekts Anforderungen erfüllt.' Wichtig: Subjektive Kundenwahrnehmung kann von objektiven Merkmalen abweichen!"
+  },
+  {
+    q: "Was bedeutet der Begriff 'Incident' im ITIL-Kontext?",
+    opts: [
+      "Eine geplante Änderung an einem IT-Service",
+      "Eine unbekannte Ursache einer Störung",
+      "Eine ungeplante Unterbrechung oder Qualitätsminderung eines Service",
+      "Ein dokumentierter bekannter Fehler"
+    ],
+    correct: 2,
+    explanation: "Ein Incident ist eine ungeplante Unterbrechung oder Qualitätsminderung eines IT-Service. Das primäre Ziel des Incident Managements ist die schnellstmögliche Wiederherstellung — nicht die Ursachenbehebung!"
+  },
+  {
+    q: "Was ist der Unterschied zwischen einem 'Problem' und einem 'Known Error' in ITIL?",
+    opts: [
+      "Es gibt keinen Unterschied, die Begriffe sind synonym",
+      "Ein Problem ist eine geplante Störung; ein Known Error ist ungeplant",
+      "Ein Problem hat eine unbekannte Ursache; ein Known Error hat eine bekannte Ursache (auch ohne Lösung)",
+      "Ein Known Error ist schwerwiegender als ein Problem"
+    ],
+    correct: 2,
+    explanation: "Problem = Unbekannte Ursache eines oder mehrerer Incidents. Known Error = Problem, bei dem die Ursache bereits analysiert und dokumentiert wurde — auch wenn noch kein Fix existiert. Der Known Error wird in der KEDB gespeichert."
+  },
+  {
+    q: "Wofür steht die Abkürzung 'CMDB' im Service Configuration Management?",
+    opts: [
+      "Continual Management Data Base",
+      "Configuration Management Database",
+      "Change Management Decision Board",
+      "Central Monitoring and Deployment Base"
+    ],
+    correct: 1,
+    explanation: "CMDB = Configuration Management Database. Sie enthält alle Configuration Items (CIs) und deren Beziehungen zueinander. Dies ermöglicht Impact-Analysen bei Incidents und Changes."
+  },
+  {
+    q: "Was beschreibt die CIA-Triade im Information Security Management?",
+    opts: [
+      "Change, Incident, Availability",
+      "Confidentiality, Integrity, Availability",
+      "Configuration, Integration, Authorization",
+      "Continuity, Improvement, Automation"
+    ],
+    correct: 1,
+    explanation: "CIA-Triade: Confidentiality (Vertraulichkeit) · Integrity (Integrität) · Availability (Verfügbarkeit). Diese drei Schutzziele bilden das Fundament des Information Security Managements."
+  },
+  {
+    q: "Der Service Desk gilt als 'Single Point of Contact (SPOC)'. Was bedeutet das?",
+    opts: [
+      "Es gibt nur einen einzigen Service-Desk-Mitarbeiter im Unternehmen",
+      "Der Service Desk ist der einzige Kommunikationskanal zwischen IT-Dienstleister und Nutzern",
+      "Jeder Vorfall darf nur einmal gemeldet werden",
+      "Der Service Desk entscheidet alleine über alle Änderungen"
+    ],
+    correct: 1,
+    explanation: "SPOC bedeutet: Nutzer wenden sich immer an den Service Desk — nicht direkt an Spezialisten. Der Service Desk koordiniert, priorisiert und eskaliert. Er ist das 'Gesicht' des IT-Dienstleisters."
+  },
+  {
+    q: "Was ist das primäre Ziel des Incident Managements?",
+    opts: [
+      "Die dauerhafte Eliminierung der Fehlerursache",
+      "Die Dokumentation aller bekannten Fehler in einer Datenbank",
+      "Die schnellstmögliche Wiederherstellung des normalen Servicebetriebs",
+      "Die Genehmigung von Änderungen an der IT-Infrastruktur"
+    ],
+    correct: 2,
+    explanation: "Incident Management zielt auf schnelle Wiederherstellung (Restore). Die Ursachenanalyse und dauerhafte Lösung ist Aufgabe des Problem Managements!"
+  },
+  {
+    q: "Welche Aussage zum PDCA-Zyklus ist FALSCH?",
+    opts: [
+      "PDCA steht für Plan, Do, Check, Act",
+      "Nach einer erfolgreichen Verbesserung wird diese als Standard festgelegt",
+      "Der PDCA-Zyklus ist ein einmaliger Prozess, der nach Abschluss beendet wird",
+      "Der Zyklus ist Bestandteil von KVP/Kaizen und Continual Improvement"
+    ],
+    correct: 2,
+    explanation: "FALSCH ist: 'einmaliger Prozess'. Der PDCA ist ein kontinuierlicher, sich wiederholender Zyklus! Verbesserungen werden als Standard festgelegt (→ SDCA) und dann erneut verbessert. Das ist der Kern von KVP."
+  },
+  {
+    q: "Wofür steht SMART bei der Zieldefinition?",
+    opts: [
+      "Standardisiert, Messbar, Ausführbar, Realistisch, Terminiert",
+      "Spezifisch, Messbar, Attraktiv, Realistisch, Terminiert",
+      "Systemisch, Modular, Analytisch, Rationell, Taktisch",
+      "Strukturiert, Minimal, Anwendbar, Robust, Testbar"
+    ],
+    correct: 1,
+    explanation: "SMART = Spezifisch · Messbar · Attraktiv · Realistisch · Terminiert. Nur Ziele, die alle 5 Kriterien erfüllen, sind erreichbar und überprüfbar. SMART ist besonders wichtig in Plan-Phase des PDCA!"
+  },
+  {
+    q: "Was ist der Hauptunterschied zwischen Incident Management und Problem Management?",
+    opts: [
+      "Incident Management ist für Software, Problem Management für Hardware",
+      "Incident Management stellt den Service schnell wieder her; Problem Management beseitigt die Ursachen dauerhaft",
+      "Problem Management ist für interne Störungen, Incident Management für externe",
+      "Es gibt keinen Unterschied — beide Begriffe sind synonym"
+    ],
+    correct: 1,
+    explanation: "Kernunterschied: Incident Management = kurzfristig, schnelle Wiederherstellung (Workaround ok). Problem Management = langfristig, Root Cause Analysis, dauerhafte Lösung. Problem Management nutzt die Known-Error-Datenbank (KEDB)."
+  },
+  {
+    q: "Was verwaltet das Knowledge Management in ITIL?",
+    opts: [
+      "Nur technische Dokumentationen und Handbücher",
+      "Ausschließlich Kundendaten und SLAs",
+      "Informationen und Wissen, das die Organisation benötigt, um Wert zu schaffen",
+      "Nur die Daten der CMDB"
+    ],
+    correct: 2,
+    explanation: "Knowledge Management stellt sicher, dass die Organisation im richtigen Moment über die richtigen Informationen verfügt. Key-Tool: SKMS (Service Knowledge Management System), beinhaltet auch die KEDB."
+  },
+  {
+    q: "Was ist der Fokus des Organizational Change Managements (OCM)?",
+    opts: [
+      "Die technische Verwaltung von Changes in der IT-Infrastruktur",
+      "Die menschlichen Aspekte bei Veränderungen — Akzeptanz, Kommunikation, Schulung",
+      "Die Genehmigung von Emergency Changes durch das CAB",
+      "Die Versionierung von Software-Deployments"
+    ],
+    correct: 1,
+    explanation: "OCM fokussiert auf Menschen, nicht auf Technik! Ziel: Widerstände abbauen, Akzeptanz für Veränderungen schaffen. Ohne OCM scheitern viele Transformationsprojekte — die Technik ist oft das kleinste Problem."
+  },
+  {
+    q: "Welche der folgenden ist KEINE der 4 ITIL-Dimensionen des Servicemanagements?",
+    opts: [
+      "Organisationen und Menschen",
+      "Wertströme und Prozesse",
+      "Partner und Lieferanten",
+      "Kosten und Budget"
+    ],
+    correct: 3,
+    explanation: "Die 4 Dimensionen sind: (1) Organisationen & Menschen · (2) Information & Technologie · (3) Partner & Lieferanten · (4) Wertströme & Prozesse. 'Kosten und Budget' ist KEINE Dimension — obwohl natürlich relevant!"
+  },
+  {
+    q: "Was bedeutet 'Continual Improvement' in ITIL?",
+    opts: [
+      "Ein einmaliges großes Upgrade der IT-Infrastruktur pro Jahr",
+      "Wiederkehrende Tätigkeit auf allen Ebenen, um Leistung kontinuierlich an Stakeholder-Erwartungen anzupassen",
+      "Die jährliche ISO-Zertifizierungsprüfung",
+      "Ausschließlich die Verbesserung des Service Desks"
+    ],
+    correct: 1,
+    explanation: "Continual Improvement ist ITIL's Umsetzung des KVP-Gedankens: wiederkehrend, auf allen Ebenen, für alle SVS-Komponenten. Führt ein Continual Improvement Register (CIR). Verbindet Verbesserungen mit Unternehmenszielen."
+  },
+  {
+    q: "Welche 3 Change-Typen unterscheidet ITIL im Change Enablement?",
+    opts: [
+      "Klein, Mittel, Groß",
+      "Standard, Normal, Emergency",
+      "Intern, Extern, Hybrid",
+      "Operativ, Taktisch, Strategisch"
+    ],
+    correct: 1,
+    explanation: "Die 3 Change-Typen: Standard (vorab genehmigt, geringes Risiko, Routine), Normal (muss geplant & durch CAB genehmigt werden), Emergency (schnell, bei kritischen Störungen, nachträgliche Dokumentation)."
+  }
+];
+
+let currentQ = 0;
+let score = 0;
+let answered = false;
+
+function renderQuestion() {
+  const q = questions[currentQ];
+  document.getElementById('qNumber').textContent = `FRAGE ${currentQ+1} / ${questions.length}`;
+  document.getElementById('qText').textContent = q.q;
+  document.getElementById('progressFill').style.width = `${(currentQ/questions.length)*100}%`;
+  document.getElementById('scoreDisplay').textContent = `${score} / ${currentQ}`;
+
+  const opts = document.getElementById('qOptions');
+  opts.innerHTML = '';
+  const letters = ['A','B','C','D'];
+  q.opts.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'q-option';
+    btn.innerHTML = `<span class="opt-letter">${letters[i]}</span><span>${opt}</span>`;
+    btn.onclick = () => selectAnswer(i);
+    opts.appendChild(btn);
+  });
+
+  const fb = document.getElementById('feedbackBox');
+  fb.classList.remove('show','correct-fb','wrong-fb');
+  fb.textContent = '';
+  document.getElementById('nextBtn').style.display = 'none';
+  document.getElementById('restartBtn').style.display = 'none';
+  answered = false;
+}
+
+function selectAnswer(idx) {
+  if(answered) return;
+  answered = true;
+  const q = questions[currentQ];
+  const opts = document.querySelectorAll('.q-option');
+  const fb = document.getElementById('feedbackBox');
+
+  opts.forEach(o => o.disabled = true);
+  opts[q.correct].classList.add('correct');
+
+  if(idx === q.correct) {
+    score++;
+    fb.textContent = '✓ Richtig! — ' + q.explanation;
+    fb.classList.add('correct-fb','show');
+  } else {
+    opts[idx].classList.add('wrong');
+    fb.textContent = '✗ Leider falsch. — ' + q.explanation;
+    fb.classList.add('wrong-fb','show');
+  }
+  document.getElementById('scoreDisplay').textContent = `${score} / ${currentQ+1}`;
+
+  if(currentQ < questions.length - 1) {
+    document.getElementById('nextBtn').style.display = 'block';
+  } else {
+    document.getElementById('nextBtn').textContent = 'Ergebnis anzeigen →';
+    document.getElementById('nextBtn').style.display = 'block';
+    document.getElementById('nextBtn').onclick = showResult;
+  }
+}
+
+function nextQuestion() {
+  currentQ++;
+  renderQuestion();
+}
+
+function showResult() {
+  document.getElementById('questionArea').style.display = 'none';
+  const res = document.getElementById('quizResult');
+  res.classList.add('show');
+  document.getElementById('resultScore').textContent = `${score}/${questions.length}`;
+  const pct = Math.round((score/questions.length)*100);
+  let msg = '';
+  if(pct >= 90) msg = '🏆 Ausgezeichnet! Du bist bereit für die Klausur!';
+  else if(pct >= 70) msg = '👍 Gut gemacht! Noch ein paar Details wiederholen und du bist fit.';
+  else if(pct >= 50) msg = '📚 Solide Basis, aber noch Lernbedarf. Wiederhole vor allem die Definitionen!';
+  else msg = '💪 Nicht aufgeben! Noch einmal durch den Lernzettel und dann nochmal den Quiz versuchen.';
+  document.getElementById('resultMsg').textContent = msg;
+  document.getElementById('progressFill').style.width = '100%';
+}
+
+function restartQuiz() {
+  currentQ = 0;
+  score = 0;
+  answered = false;
+  // Shuffle questions
+  for(let i = questions.length-1; i > 0; i--) {
+    const j = Math.floor(Math.random()*(i+1));
+    [questions[i], questions[j]] = [questions[j], questions[i]];
+  }
+  document.getElementById('questionArea').style.display = 'block';
+  document.getElementById('quizResult').classList.remove('show');
+  document.getElementById('nextBtn').textContent = 'Weiter →';
+  document.getElementById('nextBtn').onclick = nextQuestion;
+  renderQuestion();
+}
+
+// Init quiz
+renderQuestion();
+</script>
+</body>
+</html>
