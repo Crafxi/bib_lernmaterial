@@ -127,6 +127,31 @@ footer p a img:hover {
     filter: none;
 }
 
+table {
+    border-collapse: collapse;
+    width: 100%;
+    max-width: 1000px;
+    margin-bottom: 24px;
+}
+
+th,
+td {
+    padding: 10px 16px;
+    text-align: left;
+}
+
+tr {
+    border-bottom: 1px solid #44444444;
+}
+
+thead th {
+    font-weight: bold;
+}
+
+tbody tr:last-child {
+    border-bottom: none;
+}
+
 @media (max-width: 900px) {
     body {
         margin-left: 10%;
