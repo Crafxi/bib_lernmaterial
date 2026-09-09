@@ -1,0 +1,1492 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lernseite: VPN/IPsec, Datensicherheit &amp; Datensicherung</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Sans+Condensed:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ground:#dfe4ec;
+  --panel:#ffffff;
+  --panel2:#f2f5f9;
+  --ink:#14203a;
+  --soft:#4d5b76;
+  --wire:#b6c1d2;
+  --indigo:#2a31a8;
+  --indigo-deep:#1a1e63;
+  --magenta:#bb1568;
+  --ok:#12704b;
+  --ok-bg:#e2f3ea;
+  --bad:#a3182f;
+  --bad-bg:#fbe7e9;
+  --sans:"IBM Plex Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  --cond:"IBM Plex Sans Condensed","IBM Plex Sans",-apple-system,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Consolas,monospace;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:76px}
+body{
+  margin:0;background:var(--ground);color:var(--ink);
+  font-family:var(--sans);font-size:16px;line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1000px;margin:0 auto;padding:0 20px}
+h1,h2,h3,h4{font-family:var(--cond);font-weight:700;line-height:1.12;margin:0}
+p{margin:0 0 .8em}
+p:last-child{margin-bottom:0}
+a{color:var(--indigo)}
+button{font-family:inherit;font-size:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--magenta);outline-offset:2px}
+
+/* ---------- Kopf ---------- */
+.masthead{background:var(--indigo-deep);color:#eef1f8;padding:44px 0 30px;border-bottom:4px solid var(--magenta)}
+.masthead h1{font-size:clamp(30px,6vw,54px);letter-spacing:-.015em;color:#fff;max-width:20ch}
+.masthead .sub{margin-top:14px;max-width:62ch;color:#b9c2e2;font-size:17px}
+.kurs{font-family:var(--mono);font-size:12.5px;color:#8f9bd0;margin-bottom:16px}
+
+/* ---------- Navigation ---------- */
+nav{position:sticky;top:0;z-index:40;background:rgba(223,228,236,.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--wire)}
+nav ul{display:flex;gap:2px;list-style:none;margin:0;padding:0;overflow-x:auto;max-width:1000px;margin:0 auto}
+nav a{display:block;padding:13px 14px;font-size:14px;font-weight:600;text-decoration:none;color:var(--soft);white-space:nowrap;border-bottom:3px solid transparent}
+nav a:hover{color:var(--indigo)}
+nav a.on{color:var(--indigo-deep);border-bottom-color:var(--magenta)}
+
+/* ---------- Sektionen ---------- */
+section{padding:52px 0 8px}
+.eyebrow{font-family:var(--mono);font-size:12.5px;color:var(--magenta);margin-bottom:8px}
+section>.wrap>h2{font-size:clamp(24px,4vw,34px);letter-spacing:-.01em;margin-bottom:10px}
+.lede{max-width:68ch;color:var(--soft);margin-bottom:26px}
+.panel{background:var(--panel);border:1px solid var(--wire);padding:22px;margin-bottom:22px}
+.panel h3{font-size:20px;margin-bottom:6px}
+.panel h4{font-size:15px;font-family:var(--sans);font-weight:700;margin:16px 0 6px}
+.hint{font-size:14.5px;color:var(--soft)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+@media(max-width:720px){.grid2{grid-template-columns:1fr}}
+
+.merk{border-left:4px solid var(--magenta);background:var(--panel2);padding:12px 16px;margin-top:16px;font-size:15px}
+.merk b{color:var(--indigo-deep)}
+.warn{border-left:4px solid #d08c00;background:#fdf5e3;padding:12px 16px;margin-top:14px;font-size:15px}
+
+/* ---------- Buttons ---------- */
+.btn{background:var(--indigo);color:#fff;border:none;padding:10px 18px;font-weight:600;cursor:pointer;font-size:15px}
+.btn:hover{background:var(--indigo-deep)}
+.btn.ghost{background:transparent;color:var(--indigo);border:1.5px solid var(--indigo)}
+.btn.ghost:hover{background:#e8eaf8}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.seg{display:inline-flex;border:1.5px solid var(--indigo);flex-wrap:wrap}
+.seg button{background:transparent;border:none;padding:9px 16px;cursor:pointer;font-weight:600;font-size:14.5px;color:var(--indigo)}
+.seg button+button{border-left:1.5px solid var(--indigo)}
+.seg button[aria-pressed="true"]{background:var(--indigo);color:#fff}
+.controls{display:flex;gap:14px;flex-wrap:wrap;align-items:center;margin-bottom:20px}
+.ctl-label{font-size:13px;font-weight:600;color:var(--soft);display:block;margin-bottom:5px}
+
+/* ---------- Paket-Visualisierung ---------- */
+.packet{display:flex;gap:3px;align-items:stretch;min-height:74px;margin-top:8px}
+.seg-box{
+  border:1.5px solid var(--ink);background:var(--panel2);
+  display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;
+  padding:8px 6px;font-family:var(--mono);font-size:11.5px;line-height:1.3;
+  transition:flex-grow .35s ease,background .25s ease,opacity .25s ease;
+}
+.seg-box small{display:block;font-family:var(--sans);font-size:10px;color:var(--soft);margin-top:3px}
+.seg-box.new{background:#e6e8f8;border-color:var(--indigo);color:var(--indigo-deep)}
+.seg-box.sec{background:var(--indigo);border-color:var(--indigo);color:#fff}
+.seg-box.sec small{color:#c3c8ee}
+.seg-box.payload{background:#fff}
+.seg-box.hidden-data{background:repeating-linear-gradient(45deg,#eceffa,#eceffa 6px,#dfe3f6 6px,#dfe3f6 12px);color:var(--indigo-deep)}
+.bracket{position:relative;margin-top:6px;height:30px}
+.bracket .bar{position:absolute;top:6px;height:12px;border:1.5px solid var(--magenta);border-top:none;transition:left .35s ease,width .35s ease}
+.bracket .lbl{position:absolute;top:19px;font-family:var(--mono);font-size:11px;color:var(--magenta);transform:translateX(-50%);white-space:nowrap;transition:left .35s ease}
+.readout{margin-top:34px;background:var(--panel2);border-left:4px solid var(--indigo);padding:12px 16px;font-size:15px;min-height:64px}
+.masthead .packet .seg-box{border-color:#5a67c9;background:#252a7d;color:#dfe3ff}
+.masthead .packet .seg-box small{color:#9aa3d8}
+.masthead .packet .seg-box.new{background:#3b43c4;border-color:#7a83e0;color:#fff}
+.masthead .packet .seg-box.sec{background:var(--magenta);border-color:#e4589b;color:#fff}
+.masthead .packet .seg-box.sec small{color:#f7c5dd}
+.masthead .packet .seg-box.hidden-data{background:repeating-linear-gradient(45deg,#2f3690,#2f3690 6px,#272d7d 6px,#272d7d 12px);color:#cdd3ff}
+.masthead .readout{background:#252a7d;border-left-color:var(--magenta);color:#d7dcf5}
+.masthead .seg{border-color:#7a83e0}
+.masthead .seg button{color:#cdd3ff}
+.masthead .seg button+button{border-left-color:#7a83e0}
+.masthead .seg button[aria-pressed="true"]{background:#fff;color:var(--indigo-deep)}
+.masthead .ctl-label{color:#9aa3d8}
+.masthead .bracket .bar{border-color:#ff9ec9}
+.masthead .bracket .lbl{color:#ff9ec9}
+
+/* ---------- Zuordnungsübung ---------- */
+.modes{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+@media(max-width:760px){.modes{grid-template-columns:1fr}}
+.mode-card{border:1px solid var(--wire);background:var(--panel2);padding:12px}
+.mode-card svg{width:100%;height:auto;display:block;background:#fff;border:1px solid var(--wire)}
+.opt-row{display:flex;flex-direction:column;gap:5px;margin-top:10px}
+.opt{border:1.5px solid var(--wire);background:#fff;padding:7px 11px;cursor:pointer;text-align:left;font-size:14px;font-weight:500}
+.opt:hover{border-color:var(--indigo)}
+.opt[aria-pressed="true"]{border-color:var(--indigo);background:#e8eaf8;font-weight:600}
+.opt.right{border-color:var(--ok);background:var(--ok-bg)}
+.opt.wrong{border-color:var(--bad);background:var(--bad-bg)}
+.verdict{margin-top:14px;font-size:15px;font-weight:600;min-height:24px}
+.verdict.good{color:var(--ok)}
+.verdict.bad{color:var(--bad)}
+
+/* ---------- Tabellen ---------- */
+table{width:100%;border-collapse:collapse;font-size:14.5px}
+th,td{border:1px solid var(--wire);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:var(--panel2);font-weight:600;font-size:13.5px}
+td.mono,th.mono{font-family:var(--mono);font-size:13px}
+.scroll{overflow-x:auto}
+.goal-btn{width:100%;border:1.5px solid var(--wire);background:#fff;padding:6px;cursor:pointer;font-size:13px;font-weight:600;color:var(--soft)}
+.goal-btn[aria-pressed="true"]{background:var(--indigo);border-color:var(--indigo);color:#fff}
+.goal-btn.right{background:var(--ok-bg);border-color:var(--ok);color:var(--ok)}
+.goal-btn.wrong{background:var(--bad-bg);border-color:var(--bad);color:var(--bad)}
+.why{font-size:13.5px;color:var(--soft)}
+
+/* ---------- Sortierübung Datenschutz ---------- */
+.bank{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px;min-height:44px}
+.chip{border:1.5px solid var(--indigo);background:#fff;color:var(--indigo-deep);padding:7px 12px;cursor:pointer;font-size:14px;font-weight:500}
+.chip:hover{background:#e8eaf8}
+.chip.placed{cursor:pointer}
+.chip.right{border-color:var(--ok);background:var(--ok-bg);color:var(--ok)}
+.chip.wrong{border-color:var(--bad);background:var(--bad-bg);color:var(--bad)}
+.bins{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+@media(max-width:760px){.bins{grid-template-columns:1fr}}
+.bin{border:1.5px dashed var(--wire);background:var(--panel2);padding:12px;min-height:130px}
+.bin.active{border-color:var(--indigo);border-style:solid}
+.bin h4{margin:0 0 4px;font-family:var(--cond);font-size:17px}
+.bin .desc{font-size:13px;color:var(--soft);margin-bottom:10px}
+.bin .drop{display:flex;flex-wrap:wrap;gap:6px}
+
+/* ---------- Rechner ---------- */
+.calc-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+@media(max-width:760px){.calc-grid{grid-template-columns:1fr}}
+input[type=range]{width:100%;accent-color:var(--indigo)}
+select,input[type=number],input[type=text]{
+  font-family:var(--sans);font-size:15px;padding:8px 10px;border:1.5px solid var(--wire);background:#fff;color:var(--ink);width:100%;
+}
+select:focus,input:focus{border-color:var(--indigo);outline:none}
+.bignum{font-family:var(--cond);font-size:clamp(30px,7vw,52px);line-height:1;color:var(--indigo-deep)}
+.bignum span{font-size:18px;color:var(--soft);font-family:var(--sans);font-weight:600}
+.status-line{margin-top:12px;padding:10px 14px;font-weight:600;font-size:14.5px}
+.status-line.ok{background:var(--ok-bg);color:var(--ok)}
+.status-line.bad{background:var(--bad-bg);color:var(--bad)}
+.flags{display:flex;flex-wrap:wrap;gap:8px}
+.flag{border:1.5px solid var(--wire);background:#fff;padding:8px 12px;cursor:pointer;font-family:var(--mono);font-size:13px}
+.flag[aria-pressed="true"]{background:var(--indigo);border-color:var(--indigo);color:#fff}
+pre.code{background:#171b3d;color:#dfe3ff;font-family:var(--mono);font-size:13px;padding:14px;overflow-x:auto;margin:12px 0 0;line-height:1.6}
+pre.code .k{color:#ff9ec9}
+pre.code .c{color:#8f9bd0}
+
+/* ---------- Backup ---------- */
+.days{display:flex;gap:6px;align-items:flex-end;height:190px;margin-top:10px}
+.day{flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;height:100%}
+.bar{width:100%;background:var(--indigo);transition:height .4s ease,background .3s ease;min-height:3px;position:relative}
+.bar.full{background:var(--indigo-deep)}
+.bar.sel{background:var(--magenta)}
+.bar-val{font-family:var(--mono);font-size:11px;color:var(--soft);margin-bottom:4px}
+.day-lbl{font-size:12.5px;font-weight:600;margin-top:6px;color:var(--soft);cursor:pointer;border:none;background:none;padding:2px 4px}
+.day-lbl.sel{color:var(--magenta);text-decoration:underline}
+.chain{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:6px}
+.tape{background:var(--panel2);border:1.5px solid var(--indigo);padding:5px 10px;font-family:var(--mono);font-size:12px}
+.tape.full{background:var(--indigo);color:#fff}
+.arrow{color:var(--soft);font-size:13px}
+
+/* ---------- Glossar ---------- */
+.gloss{display:grid;grid-template-columns:1fr 1fr;gap:0 20px}
+@media(max-width:760px){.gloss{grid-template-columns:1fr}}
+.term{border-bottom:1px solid var(--wire);padding:10px 0}
+.term dt{font-weight:700;font-size:15px}
+.term dd{margin:2px 0 0;font-size:14px;color:var(--soft)}
+
+/* ---------- Quiz ---------- */
+#quiz{padding-bottom:70px}
+.quizbox{background:var(--panel);border:1px solid var(--wire);border-top:4px solid var(--magenta)}
+.quiz-head{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 22px;border-bottom:1px solid var(--wire);background:var(--panel2);flex-wrap:wrap}
+.ticket-id{font-family:var(--mono);font-size:12.5px;color:var(--magenta)}
+.ticket-from{font-size:13px;color:var(--soft)}
+.score-pill{font-family:var(--mono);font-size:13px;background:var(--indigo-deep);color:#fff;padding:4px 10px}
+.progress{height:5px;background:var(--panel2)}
+.progress i{display:block;height:100%;background:var(--magenta);width:0;transition:width .35s ease}
+.quiz-body{padding:22px}
+.qtext{font-size:19px;font-family:var(--cond);font-weight:700;line-height:1.3;margin-bottom:6px}
+.qmeta{font-size:13.5px;color:var(--soft);margin-bottom:16px}
+.answers{display:flex;flex-direction:column;gap:8px}
+.answers.packetrow{flex-direction:row;flex-wrap:wrap;gap:3px}
+.answers.packetrow .ans{flex:1;min-width:130px;text-align:center;font-family:var(--mono);font-size:13px}
+.ans{border:1.5px solid var(--wire);background:#fff;padding:11px 14px;text-align:left;cursor:pointer;font-size:15px;display:flex;gap:10px;align-items:flex-start}
+.ans:hover:not(:disabled){border-color:var(--indigo);background:#f5f6fd}
+.ans .mark{font-family:var(--mono);font-weight:600;color:var(--soft);flex-shrink:0}
+.ans[aria-pressed="true"]{border-color:var(--indigo);background:#e8eaf8}
+.ans.right{border-color:var(--ok);background:var(--ok-bg)}
+.ans.wrong{border-color:var(--bad);background:var(--bad-bg)}
+.ans:disabled{cursor:default}
+.feedback{margin-top:16px;padding:14px 16px;font-size:15px;display:none}
+.feedback.show{display:block}
+.feedback.good{background:var(--ok-bg);border-left:4px solid var(--ok)}
+.feedback.bad{background:var(--bad-bg);border-left:4px solid var(--bad)}
+.feedback b{display:block;margin-bottom:4px}
+.quiz-foot{display:flex;justify-content:space-between;gap:12px;padding:16px 22px;border-top:1px solid var(--wire);background:var(--panel2);flex-wrap:wrap}
+.hintbox{background:#fdf5e3;border-left:4px solid #d08c00;padding:10px 14px;font-size:14.5px;margin-top:14px;display:none}
+.hintbox.show{display:block}
+.orderstrip{display:flex;flex-wrap:wrap;gap:6px;min-height:46px;border:1.5px dashed var(--wire);padding:8px;margin-bottom:10px;background:var(--panel2)}
+.fillrow{display:flex;gap:10px;flex-wrap:wrap}
+.fillrow>div{flex:1;min-width:180px}
+.result{padding:30px 22px;text-align:center;display:none}
+.result.show{display:block}
+.result .rank{font-family:var(--cond);font-size:clamp(26px,5vw,40px);color:var(--indigo-deep);margin:6px 0 8px}
+.result .pct{font-family:var(--cond);font-size:64px;line-height:1;color:var(--magenta)}
+.breakdown{max-width:420px;margin:22px auto 0;text-align:left}
+.brow{display:flex;justify-content:space-between;border-bottom:1px solid var(--wire);padding:7px 0;font-size:14.5px}
+.brow b{font-family:var(--mono);font-weight:600}
+footer{background:var(--indigo-deep);color:#9aa3d8;padding:26px 0;font-size:13.5px}
+@media(prefers-reduced-motion:reduce){
+  *{transition:none!important;scroll-behavior:auto!important}
+}
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="wrap">
+    <div class="kurs">Netzwerktechnik &middot; Fachinformatiker Systemintegration &middot; AP-Vorbereitung</div>
+    <h1>Was im Tunnel wirklich passiert</h1>
+    <p class="sub">VPN und IPsec, Datenschutz gegen Datensicherheit, Passwörter, die halten, und Backups, die sich zurückspielen lassen. Vier Prüfungsthemen zum Anfassen — mit Prüfungssimulation am Ende.</p>
+
+    <div class="controls" style="margin-top:30px">
+      <div>
+        <span class="ctl-label" id="lbl-modus">Modus</span>
+        <div class="seg" role="group" aria-labelledby="lbl-modus">
+          <button type="button" data-modus="transport" aria-pressed="false">Transportmodus</button>
+          <button type="button" data-modus="tunnel" aria-pressed="true">Tunnelmodus</button>
+        </div>
+      </div>
+      <div>
+        <span class="ctl-label" id="lbl-proto">Sicherheitsprotokoll</span>
+        <div class="seg" role="group" aria-labelledby="lbl-proto">
+          <button type="button" data-proto="ah" aria-pressed="false">AH</button>
+          <button type="button" data-proto="esp" aria-pressed="true">ESP</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="packet" id="pkt" aria-live="polite"></div>
+    <div class="bracket" id="brk"></div>
+    <div class="readout" id="pkt-read"></div>
+  </div>
+</header>
+
+<nav aria-label="Themen">
+  <ul>
+    <li><a href="#vpn">VPN &amp; IPsec</a></li>
+    <li><a href="#schutz">Datenschutz &amp; Schutzziele</a></li>
+    <li><a href="#pw">Passwörter</a></li>
+    <li><a href="#backup">Datensicherung</a></li>
+    <li><a href="#glossar">Glossar</a></li>
+    <li><a href="#quiz">Prüfungssimulation</a></li>
+  </ul>
+</nav>
+
+<!-- ===================== VPN ===================== -->
+<section id="vpn">
+  <div class="wrap">
+    <div class="eyebrow">Thema 1 — A_VPN_IPSec_1 &amp; _2</div>
+    <h2>VPN und IPsec</h2>
+    <p class="lede">Ein VPN legt auf Schicht 3 einen verschlüsselten Tunnel durch ein unsicheres Netz. Wer die drei Modi und die zwei Sicherheitsprotokolle sicher unterscheiden kann, hat den Großteil der Punkte schon.</p>
+
+    <div class="panel">
+      <h3>Welcher VPN-Modus ist das?</h3>
+      <p class="hint">Ordnen Sie jeder Skizze den passenden Modus zu und prüfen Sie Ihre Zuordnung.</p>
+      <div class="modes" id="modes"></div>
+      <div style="margin-top:16px;display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+        <button class="btn" id="modes-check">Zuordnung prüfen</button>
+        <button class="btn ghost" id="modes-reset">Neu versuchen</button>
+        <span class="verdict" id="modes-verdict"></span>
+      </div>
+      <div class="merk">
+        <b>Merksatz:</b> Der Name beschreibt die <b>Tunnelenden</b>. „Site“ ist ein VPN-Gateway mit einem ganzen Netz dahinter, „End“ (oder „Host“) ist ein einzelnes Gerät mit VPN-Client. Der Außendienstmitarbeiter am Notebook ist also immer <b>End-to-Site</b> — auch wenn IPsec dabei im <b>Tunnelmodus</b> läuft. Modus des VPNs und Modus von IPsec sind zwei verschiedene Fragen.
+      </div>
+    </div>
+
+    <div class="grid2">
+      <div class="panel">
+        <h3>AH oder ESP?</h3>
+        <table style="margin-top:12px">
+          <tr><th></th><th>AH</th><th>ESP</th></tr>
+          <tr><td>Protokollnummer</td><td class="mono">51</td><td class="mono">50</td></tr>
+          <tr><td>Authentifizierung</td><td>ja, über das <b>gesamte</b> Paket</td><td>ja, ab dem ESP-Header</td></tr>
+          <tr><td>Verschlüsselung</td><td><b>nein</b></td><td><b>ja</b></td></tr>
+          <tr><td>NAT-tauglich</td><td>nein</td><td>ja (mit NAT-T)</td></tr>
+        </table>
+        <p class="hint" style="margin-top:12px">Prüfungsfrage „Woran erkennen Sie im Mitschnitt, dass verschlüsselt wird?“ — am Feld <b>Protocol</b> bzw. <b>Next Header</b> mit dem Wert <b>50 (ESP)</b>. Zusätzlich: die Nutzdaten sind nicht mehr interpretierbar und sehen aus wie Zufallsbytes.</p>
+      </div>
+
+      <div class="panel">
+        <h3>Die NAT-Falle</h3>
+        <p class="hint">AH bildet die Prüfsumme über das gesamte IP-Paket. Was passiert, wenn unterwegs ein Router die Adressen umschreibt?</p>
+        <div style="margin-top:14px">
+          <div style="display:flex;gap:4px;align-items:stretch;font-family:var(--mono);font-size:12px;text-align:center">
+            <div class="seg-box" style="flex:1.2" id="nat-ip">Quell-IP<br><b id="nat-src">192.168.4.103</b></div>
+            <div class="seg-box sec" style="flex:1">AH<br><small>ICV <span id="nat-icv">a91f</span></small></div>
+            <div class="seg-box payload" style="flex:1.4">Daten</div>
+          </div>
+          <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap">
+            <button class="btn" id="nat-go">Paket durch NAT schicken</button>
+            <button class="btn ghost" id="nat-reset">Zurücksetzen</button>
+          </div>
+          <div class="status-line" id="nat-status" style="background:var(--panel2);color:var(--soft)">Noch nichts gesendet. Der Empfänger rechnet die Prüfsumme neu und vergleicht sie mit dem ICV im AH-Header.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid2">
+      <div class="panel">
+        <h3>TTL und die AH-Prüfsumme</h3>
+        <p>Der äußere IP-Header enthält Felder, die sich auf dem Weg <b>zwangsläufig</b> ändern — allen voran die TTL, die jeder Router um 1 verringert. Würde die TTL in die Prüfsumme einfließen, wäre der Wert schon nach dem ersten Hop ein anderer als der mitgesendete. Jedes Paket würde als manipuliert verworfen. AH lässt solche veränderlichen Felder deshalb bewusst außen vor und rechnet sie als Null.</p>
+      </div>
+      <div class="panel">
+        <h3>VPN gegen HTTPS</h3>
+        <p><b>HTTPS</b> sichert eine einzelne Verbindung zwischen Client und einem bestimmten Dienst ab — auf Anwendungsebene, Schicht 7. <b>VPN</b> baut auf Netzwerkebene einen Tunnel in das gesamte entfernte Netz auf.</p>
+        <p><b>Vorteil VPN:</b> Der Client ist danach Teil des Firmennetzes und erreicht alle Dienste — Dateifreigaben, Drucker, interne Datenbanken — ohne dass jeder Dienst eine eigene, von außen erreichbare HTTPS-Schnittstelle bekommen muss.</p>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3>Der Klassiker: Tunnel steht, Server nicht erreichbar</h3>
+      <p class="hint">Ping auf das VPN-Gateway funktioniert, aber <span class="mono" style="font-family:var(--mono)">10.10.0.100</span> in der Zentrale antwortet nicht. Die Routing-Tabelle des Clients:</p>
+      <div class="scroll" style="margin-top:12px">
+      <table>
+        <tr><th>Netzwerkziel</th><th>Netzwerkmaske</th><th>Gateway</th><th>Schnittstelle</th></tr>
+        <tr><td class="mono">0.0.0.0</td><td class="mono">0.0.0.0 (/0)</td><td class="mono">192.168.4.254</td><td class="mono">192.168.4.103</td></tr>
+        <tr><td class="mono">127.0.0.0</td><td class="mono">255.0.0.0 (/8)</td><td class="mono">Auf Verbindung</td><td class="mono">127.0.0.1</td></tr>
+        <tr><td class="mono">172.16.137.20</td><td class="mono">255.255.255.252 (/30)</td><td class="mono">Auf Verbindung</td><td class="mono">172.16.137.22</td></tr>
+        <tr id="fix-row"><td colspan="4" style="text-align:center;color:var(--soft)">— hier fehlt eine Zeile —</td></tr>
+      </table>
+      </div>
+      <button class="btn" id="fix-go" style="margin-top:14px">Fehlende Route einblenden</button>
+      <div class="merk" id="fix-note" style="display:none">
+        <b>Fehler:</b> Es gibt keinen Eintrag für das Zielnetz der Zentrale. Alles außer dem /30-Tunnelnetz läuft über die Default-Route ins Internet — deshalb geht der Ping ans Tunnelende noch, der Server dahinter aber nicht. <b>Korrektur:</b> Route für <span style="font-family:var(--mono)">10.10.0.0/22</span> über den Tunnel-Gateway <span style="font-family:var(--mono)">172.16.137.21</span> auf der Schnittstelle <span style="font-family:var(--mono)">172.16.137.22</span> eintragen.
+      </div>
+    </div>
+
+    <div class="grid2">
+      <div class="panel">
+        <h3>PSK — und der häufigste Denkfehler</h3>
+        <p>Ein Pre-Shared Key ist ein geheimer Wert, der auf beiden Seiten vorher identisch hinterlegt wird. Beim Verbindungsaufbau (IKE) beweisen beide Seiten <b>kryptografisch</b>, dass sie ihn kennen: Jede Seite bildet einen Hash bzw. HMAC über Zufallswerte der Gegenseite und den PSK. Stimmen die Ergebnisse überein, gelten beide als authentifiziert.</p>
+        <div class="warn"><b>Achtung:</b> Der Schlüssel selbst wird dabei <b>nie übertragen</b> und auch nicht „abgeglichen“. Übertragen wird nur das Rechenergebnis. Eine Antwort wie „beide tauschen die Schlüssel aus und vergleichen sie“ kostet in der Prüfung Punkte.</div>
+      </div>
+      <div class="panel">
+        <h3>Warum MTU auf 1400?</h3>
+        <p>IPsec packt zusätzliche Header und einen Trailer um jedes Paket. Bei einer Standard-MTU von 1500 Byte überschreitet das gekapselte Paket dadurch die zulässige Größe.</p>
+        <p>Die Folge wäre Fragmentierung — oder bei gesetztem DF-Bit ein stiller Verwurf durch den Router. Beides bedeutet Paketverluste und einbrechenden Durchsatz. Wer die MTU vorab senkt, lässt Platz für den IPsec-Overhead und vermeidet das.</p>
+        <div class="warn"><b>Nicht:</b> „Bandbreite sparen“. Es geht um Fragmentierung, nicht um Volumen.</div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3>OpenVPN-Konfiguration lesen</h3>
+      <div class="scroll">
+      <table>
+        <tr><th style="width:32%">Zeile</th><th>Bedeutung</th></tr>
+        <tr><td class="mono">dev tun</td><td>Tunnel-Interface auf Schicht 3 (geroutet). Gegenstück wäre <span style="font-family:var(--mono)">dev tap</span> für ein gebrücktes Interface auf Schicht 2.</td></tr>
+        <tr><td class="mono">cipher AES-256</td><td>Symmetrische Verschlüsselung der Nutzdaten mit AES bei 256 Bit Schlüssellänge.</td></tr>
+        <tr><td class="mono">auth SHA</td><td>Hashverfahren zur Integritätsprüfung und Authentifizierung der Pakete (HMAC-SHA).</td></tr>
+        <tr><td class="mono">remote 80.90.100.2</td><td>Öffentliche IP-Adresse des VPN-Servers, zu dem der Client die Verbindung aufbaut.</td></tr>
+      </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== SCHUTZZIELE ===================== -->
+<section id="schutz">
+  <div class="wrap">
+    <div class="eyebrow">Thema 2 — A_Datensicherheit_IT-Sicherheit</div>
+    <h2>Datenschutz, Datensicherheit, Datensicherung</h2>
+    <p class="lede">Drei Begriffe, die im Alltag durcheinandergehen und in der Prüfung sauber getrennt gehören.</p>
+
+    <div class="panel">
+      <h3>Sortierübung</h3>
+      <p class="hint">Wählen Sie unten einen Behälter aus und klicken Sie dann die Aussagen an, die dorthin gehören. Ein Klick auf einen einsortierten Begriff holt ihn zurück.</p>
+      <div class="bank" id="sort-bank"></div>
+      <div class="bins" id="sort-bins">
+        <div class="bin" data-bin="schutz">
+          <h4>Datenschutz</h4>
+          <div class="desc">Schutz der Privatsphäre — wessen Daten?</div>
+          <div class="drop"></div>
+        </div>
+        <div class="bin" data-bin="sicherheit">
+          <h4>Datensicherheit</h4>
+          <div class="desc">Schutz aller Daten — welche Ziele?</div>
+          <div class="drop"></div>
+        </div>
+        <div class="bin" data-bin="sicherung">
+          <h4>Datensicherung</h4>
+          <div class="desc">Kopien anlegen — wie zurückholen?</div>
+          <div class="drop"></div>
+        </div>
+      </div>
+      <div style="margin-top:16px;display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+        <button class="btn" id="sort-check">Sortierung prüfen</button>
+        <button class="btn ghost" id="sort-reset">Neu mischen</button>
+        <span class="verdict" id="sort-verdict"></span>
+      </div>
+      <div class="merk"><b>Kurzformel:</b> Datenschutz schützt <b>Menschen</b> vor dem Missbrauch ihrer Daten (Rechtsgrundlage DSGVO, BDSG). Datensicherheit schützt <b>Daten</b> — mit oder ohne Personenbezug — und verfolgt dabei Vertraulichkeit, Integrität und Verfügbarkeit. Die Datensicherung ist eine einzelne <b>Maßnahme</b> der Datensicherheit und zahlt vor allem auf die Verfügbarkeit ein.</div>
+    </div>
+
+    <div class="panel">
+      <h3>Schutzziel zuordnen</h3>
+      <p class="hint">Aus der Abschlussprüfung Teil 1, Herbst 2021: Welches Schutzziel steht bei der jeweiligen Maßnahme im Vordergrund? Setzen Sie pro Zeile ein Kreuz.</p>
+      <div class="scroll" style="margin-top:12px">
+        <table id="goal-table">
+          <thead><tr><th style="width:30%">Sicherheitsmaßnahme</th><th style="width:15%">Vertraulichkeit</th><th style="width:15%">Integrität</th><th style="width:15%">Verfügbarkeit</th><th>Begründung</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <div style="margin-top:16px;display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+        <button class="btn" id="goal-check">Kreuze prüfen</button>
+        <button class="btn ghost" id="goal-reset">Zurücksetzen</button>
+        <span class="verdict" id="goal-verdict"></span>
+      </div>
+    </div>
+
+    <div class="grid2">
+      <div class="panel">
+        <h3>Arbeitsplätze absichern</h3>
+        <p class="hint">Vier Maßnahmen gegen unbefugte Anmeldung am PC-Arbeitsplatz:</p>
+        <ul style="margin:10px 0 0;padding-left:20px;font-size:15px">
+          <li>Bildschirmsperre mit Passwort nach kurzer Inaktivität, Sperren beim Verlassen erzwingen</li>
+          <li>Passwortrichtlinie mit Mindestlänge, Komplexität und Sperre nach Fehlversuchen</li>
+          <li>Benutzerkonten ohne Administratorrechte, Rollentrennung nach Aufgabe</li>
+          <li>BIOS-/UEFI-Passwort und deaktivierter Boot von USB, dazu Festplattenverschlüsselung</li>
+          <li>Zwei-Faktor-Authentifizierung, etwa per Chipkarte oder Authenticator-App</li>
+        </ul>
+      </div>
+      <div class="panel">
+        <h3>Fernwartung durch einen Dienstleister</h3>
+        <p class="hint">Datenschutz <b>und</b> Datensicherheit gleichzeitig gewährleisten:</p>
+        <ul style="margin:10px 0 0;padding-left:20px;font-size:15px">
+          <li>Auftragsverarbeitungsvertrag nach Art. 28 DSGVO mit dem Dienstleister, inklusive Verpflichtung auf Vertraulichkeit</li>
+          <li>Zugriff nur nach ausdrücklicher Freigabe durch den Mitarbeiter, Sitzung am Bildschirm sichtbar, jederzeit abbrechbar</li>
+          <li>Verschlüsselte Verbindung (VPN oder TLS) statt offener Fernwartungsports</li>
+          <li>Protokollierung aller Sitzungen und persönliche, zeitlich begrenzte Zugangskonten</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== PASSWÖRTER ===================== -->
+<section id="pw">
+  <div class="wrap">
+    <div class="eyebrow">Thema 3 — IT-Sicherheit / Passwort</div>
+    <h2>Passwörter, die halten</h2>
+    <p class="lede">Die Prüfungsaufgabe rechnet vor, warum acht Zeichen zu wenig sind. Der Rechner unten arbeitet mit genau derselben Annahme: ein Passwort aus 8 Zeichen mit 94 möglichen Zeichen pro Stelle fällt in 30 Sekunden.</p>
+
+    <div class="panel">
+      <h3>Brute-Force-Rechner</h3>
+      <div class="calc-grid" style="margin-top:16px">
+        <div>
+          <label class="ctl-label" for="pw-len">Passwortlänge: <b id="pw-len-out">10</b> Zeichen</label>
+          <input type="range" id="pw-len" min="4" max="20" value="10">
+
+          <label class="ctl-label" for="pw-pool" style="margin-top:18px">Zeichenvorrat</label>
+          <select id="pw-pool">
+            <option value="10">Nur Ziffern (10)</option>
+            <option value="26">Nur Kleinbuchstaben (26)</option>
+            <option value="52">Groß- und Kleinbuchstaben (52)</option>
+            <option value="62">Buchstaben und Ziffern (62)</option>
+            <option value="94" selected>Alle druckbaren ASCII-Zeichen (94)</option>
+          </select>
+
+          <label class="ctl-label" for="pw-days" style="margin-top:18px">Passwort wird gewechselt alle <b id="pw-days-out">30</b> Tage</label>
+          <input type="range" id="pw-days" min="1" max="365" value="30">
+        </div>
+        <div>
+          <div class="ctl-label">Rechnerische Dauer bis zum Treffer</div>
+          <div class="bignum" id="pw-time">3,1 <span>Tage</span></div>
+          <div class="hint" style="margin-top:8px;font-family:var(--mono);font-size:12.5px" id="pw-combos"></div>
+          <div class="status-line" id="pw-status"></div>
+        </div>
+      </div>
+      <div class="merk">
+        <b>Die Rechnung aus der Prüfung:</b> Jedes zusätzliche Zeichen multipliziert die Möglichkeiten mit 94. Von 8 auf 10 Zeichen sind das 94 &times; 94 = 8.836. Aus 30 Sekunden werden also 30 &times; 8.836 = 265.080 Sekunden — rund 3,1 Tage. Das liegt deutlich unter dem Wechselintervall von 30 Tagen, die Richtlinie schützt also nicht.
+      </div>
+    </div>
+
+    <div class="grid2">
+      <div class="panel">
+        <h3>Richtlinienprüfer: drei von vier</h3>
+        <p class="hint">Schalten Sie die erfüllten Bedingungen an und beobachten Sie, wie die if-Anweisung entscheidet.</p>
+        <div class="flags" id="pw-flags" style="margin-top:14px">
+          <button class="flag" type="button" data-f="GrBu" aria-pressed="true">GrBu <span style="color:inherit;opacity:.7">≥4 Großbuchst.</span></button>
+          <button class="flag" type="button" data-f="KlBu" aria-pressed="true">KlBu <span style="opacity:.7">≥3 Kleinbuchst.</span></button>
+          <button class="flag" type="button" data-f="SoZe" aria-pressed="false">SoZe <span style="opacity:.7">≥2 Sonderz.</span></button>
+          <button class="flag" type="button" data-f="Ziff" aria-pressed="true">Ziff <span style="opacity:.7">≥1 Ziffer</span></button>
+        </div>
+        <div class="status-line" id="pw-policy"></div>
+        <pre class="code">if ( (GrBu <span class="k">&amp;&amp;</span> KlBu <span class="k">&amp;&amp;</span> SoZe) <span class="k">||</span>
+     (GrBu <span class="k">&amp;&amp;</span> KlBu <span class="k">&amp;&amp;</span> Ziff) <span class="k">||</span>
+     (GrBu <span class="k">&amp;&amp;</span> SoZe <span class="k">&amp;&amp;</span> Ziff) <span class="k">||</span>
+     (KlBu <span class="k">&amp;&amp;</span> SoZe <span class="k">&amp;&amp;</span> Ziff) ) {
+    <span class="c">// Passwort akzeptieren</span>
+} else {
+    <span class="c">// Passwort ablehnen</span>
+};</pre>
+      </div>
+      <div class="panel">
+        <h3>Passwortgenerator im Pseudocode</h3>
+        <p class="hint">Aufgabe: acht zufällige ASCII-Zeichen, die alle vier Kriterien erfüllen. <span style="font-family:var(--mono)">Random(94) + 33</span> trifft genau den druckbaren Bereich von <span style="font-family:var(--mono)">!</span> (33) bis <span style="font-family:var(--mono)">~</span> (126).</p>
+<pre class="code">ANZAHL_CHARS = 8
+fertig = <span class="k">false</span>
+
+<span class="k">solange</span> nicht fertig:
+    pw = ""
+    hatGross = hatKlein = hatZiffer = hatSonder = <span class="k">false</span>
+
+    <span class="k">für</span> i <span class="k">von</span> 1 <span class="k">bis</span> ANZAHL_CHARS:
+        zahl = Random(94) + 33   <span class="c">// 33..126</span>
+        pw  = pw + ChangeChar(zahl)
+
+    <span class="k">für jedes</span> zeichen <span class="k">in</span> pw:
+        <span class="k">wenn</span> zeichen ist Großbuchstabe: hatGross  = <span class="k">true</span>
+        <span class="k">wenn</span> zeichen ist Kleinbuchstabe: hatKlein = <span class="k">true</span>
+        <span class="k">wenn</span> zeichen ist Ziffer:        hatZiffer = <span class="k">true</span>
+        <span class="k">wenn</span> zeichen ist Sonderzeichen: hatSonder = <span class="k">true</span>
+
+    fertig = hatGross <span class="k">und</span> hatKlein <span class="k">und</span> hatZiffer <span class="k">und</span> hatSonder
+
+<span class="k">ausgabe</span> pw</pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== BACKUP ===================== -->
+<section id="backup">
+  <div class="wrap">
+    <div class="eyebrow">Thema 4 — Block 3, Grundlagen der Datensicherung</div>
+    <h2>Datensicherung</h2>
+    <p class="lede">Die Frage in der Prüfung lautet fast nie „was ist ein inkrementelles Backup“, sondern „wie lange dauert die Sicherung“ und „wie viele Sicherungen brauchen Sie zum Wiederherstellen“. Genau das zeigt der Simulator.</p>
+
+    <div class="panel">
+      <h3>Backup-Simulator: eine Arbeitswoche</h3>
+      <p class="hint">Sonntagnacht läuft ein Vollbackup über 100 GB. Werktags ändern sich unterschiedlich viele Daten. Wählen Sie eine Strategie und einen Tag, an dem der Server ausfällt.</p>
+      <div class="controls" style="margin-top:16px">
+        <div>
+          <span class="ctl-label" id="lbl-strat">Strategie werktags</span>
+          <div class="seg" role="group" aria-labelledby="lbl-strat">
+            <button type="button" data-strat="voll" aria-pressed="false">Voll</button>
+            <button type="button" data-strat="diff" aria-pressed="true">Differenziell</button>
+            <button type="button" data-strat="inkr" aria-pressed="false">Inkrementell</button>
+          </div>
+        </div>
+      </div>
+      <div class="ctl-label">Gesichertes Datenvolumen je Tag in GB</div>
+      <div class="days" id="bk-days"></div>
+      <div style="display:flex;gap:6px" id="bk-labels"></div>
+
+      <div class="merk" style="margin-top:20px">
+        <b id="bk-title">Ausfall am Freitag</b>
+        <div style="margin-top:8px" id="bk-text"></div>
+        <div class="chain" id="bk-chain"></div>
+      </div>
+    </div>
+
+    <div class="grid2">
+      <div class="panel">
+        <h3>Die drei Verfahren im Vergleich</h3>
+        <div class="scroll">
+        <table style="margin-top:10px">
+          <tr><th></th><th>Sicherung</th><th>Wiederherstellung</th><th>Archiv-Bit</th></tr>
+          <tr><td><b>Voll</b></td><td>langsam, hoher Speicherbedarf</td><td>1 Sicherung</td><td>wird zurückgesetzt</td></tr>
+          <tr><td><b>Differenziell</b></td><td>wächst bis zum nächsten Vollbackup</td><td>Voll + letzte Differenz</td><td>bleibt gesetzt</td></tr>
+          <tr><td><b>Inkrementell</b></td><td>schnell, wenig Speicher</td><td>Voll + <b>alle</b> Inkremente der Kette</td><td>wird zurückgesetzt</td></tr>
+        </table>
+        </div>
+        <p class="hint" style="margin-top:12px">Übliche Praxis ist die Kombination: wöchentlich ein Vollbackup, täglich inkrementell oder differenziell. Dazu das <b>Generationenprinzip</b> (Großvater-Vater-Sohn) mit Tages-, Wochen- und Monatssicherungen im Rotationsverfahren.</p>
+      </div>
+      <div class="panel">
+        <h3>Verfügbarkeit über Hardware</h3>
+        <table style="margin-top:10px">
+          <tr><td><b>USV</b></td><td>überbrückt kurze Stromausfälle und fährt den Server geordnet herunter</td></tr>
+          <tr><td><b>Notstromaggregat</b></td><td>Weiterbetrieb über längere Ausfälle</td></tr>
+          <tr><td><b>Redundante Netzteile</b></td><td>ein Netzteil darf sterben, ohne dass der Server steht</td></tr>
+          <tr><td><b>RAID</b></td><td>Plattenverbund, verkraftet den Ausfall einzelner Platten</td></tr>
+          <tr><td><b>ECC-RAM</b></td><td>erkennt und korrigiert Speicherfehler</td></tr>
+          <tr><td><b>Failover-Server</b></td><td>übernimmt automatisch bei Störung</td></tr>
+        </table>
+        <div class="warn"><b>Kein Backup-Ersatz:</b> RAID schützt vor Plattendefekten, nicht vor gelöschten Dateien, Verschlüsselungstrojanern oder Brand. Genau darauf zielt die Prüfungsfrage nach den Risiken einer Sicherung „auf eine Partition derselben Festplatte“.</div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3>Sicherung auf derselben Festplatte — welche Risiken?</h3>
+      <div class="grid2" style="margin-top:12px">
+        <div>
+          <h4>Risiken</h4>
+          <ul style="margin:6px 0 0;padding-left:20px;font-size:15px">
+            <li>Bei einem Defekt der Festplatte sind Original <b>und</b> Sicherung gleichzeitig weg</li>
+            <li>Ransomware oder Malware verschlüsselt die erreichbare Partition mit</li>
+            <li>Bei Brand, Wasser oder Diebstahl trifft es beide Kopien am selben Ort</li>
+            <li>Nur einmal pro Woche gesichert: bis zu fünf Arbeitstage Datenverlust</li>
+            <li>Sicherung nur beim Herunterfahren — bleibt der PC an, läuft gar kein Backup</li>
+          </ul>
+        </div>
+        <div>
+          <h4>Verbesserungsvorschlag</h4>
+          <p>Tägliche automatische Sicherung auf ein separates, vom Client getrenntes Medium — etwa einen NAS oder Backup-Server — kombiniert mit einer zusätzlichen Kopie außer Haus oder in einem Cloud-Speicher. Zeitgesteuert statt an das Herunterfahren gekoppelt, mit Generationenprinzip und regelmäßigem <b>Rücksicherungstest</b>. Ein Backup, das nie zurückgespielt wurde, ist nur eine Vermutung.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== GLOSSAR ===================== -->
+<section id="glossar">
+  <div class="wrap">
+    <div class="eyebrow">Neue Begriffe</div>
+    <h2>Glossar</h2>
+    <p class="lede">Die Arbeitsblätter verlangen, unbekannte Begriffe in eigenen Worten festzuhalten. Hier sind die aus allen vier Blättern — tippen Sie, um zu filtern.</p>
+    <div class="panel">
+      <label class="ctl-label" for="gl-search">Begriff suchen</label>
+      <input type="text" id="gl-search" placeholder="z. B. ESP, Archiv-Bit, Deduplizierung">
+      <dl class="gloss" id="gl-list" style="margin-top:18px"></dl>
+      <p class="hint" id="gl-empty" style="display:none;margin-top:14px">Kein Treffer. Andere Schreibweise probieren?</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== QUIZ ===================== -->
+<section id="quiz">
+  <div class="wrap">
+    <div class="eyebrow">Prüfungssimulation</div>
+    <h2>Schichtdienst bei der IT.SYS GmbH</h2>
+    <p class="lede">Sie haben Bereitschaft. Dreizehn Tickets liegen in der Warteschlange, quer durch alle vier Themen. Einmal pro Schicht dürfen Sie eine Kollegin fragen — danach lösen Sie allein.</p>
+
+    <div class="quizbox">
+      <div class="progress"><i id="q-prog"></i></div>
+      <div class="quiz-head" id="q-head">
+        <div>
+          <div class="ticket-id" id="q-ticket">TT-000</div>
+          <div class="ticket-from" id="q-from"></div>
+        </div>
+        <div class="score-pill" id="q-score">0 / 13 gelöst</div>
+      </div>
+      <div class="quiz-body" id="q-body">
+        <div class="qtext" id="q-text"></div>
+        <div class="qmeta" id="q-meta"></div>
+        <div class="answers" id="q-answers"></div>
+        <div class="hintbox" id="q-hint"></div>
+        <div class="feedback" id="q-feedback"></div>
+      </div>
+      <div class="quiz-foot">
+        <button class="btn ghost" id="q-hintbtn">Kollegin fragen (1&times;)</button>
+        <div style="display:flex;gap:10px">
+          <button class="btn ghost" id="q-submit">Antwort abgeben</button>
+          <button class="btn" id="q-next" disabled>Nächstes Ticket</button>
+        </div>
+      </div>
+      <div class="result" id="q-result">
+        <div class="ctl-label">Schicht beendet</div>
+        <div class="pct" id="r-pct">0 %</div>
+        <div class="rank" id="r-rank"></div>
+        <p class="hint" id="r-note" style="max-width:46ch;margin:0 auto"></p>
+        <div class="breakdown" id="r-breakdown"></div>
+        <button class="btn" id="q-restart" style="margin-top:24px">Neue Schicht beginnen</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">Lernseite zu den Arbeitsblättern A_VPN_IPSec_1 und _2, A_Datensicherheit_IT-Sicherheit sowie Block 3 Datensicherung. Prüfungsbezüge: AP Winter 2010/11, Sommer 2016, Winter 2016/17, Sommer 2019, Winter 2017/18, 2018/19, 2019/20 und AP Teil 1 Herbst 2021.</div>
+</footer>
+
+<script>
+(function(){
+"use strict";
+const $ = (s,r)=> (r||document).querySelector(s);
+const $$ = (s,r)=> Array.from((r||document).querySelectorAll(s));
+const de = n => n.toLocaleString('de-DE');
+
+/* ============ 1. Paket-Visualisierung ============ */
+const pktState = {modus:'tunnel', proto:'esp'};
+
+function buildPacket(){
+  const t = pktState.modus === 'tunnel';
+  const esp = pktState.proto === 'esp';
+  let segs = [];
+  if(t){
+    segs.push({t:'Neuer IP-Header', s:'Gateway → Gateway', f:1.5, c:'new'});
+  }else{
+    segs.push({t:'IP-Header', s:'Original, unverändert', f:1.5, c:''});
+  }
+  segs.push({t: esp?'ESP-Header':'AH-Header', s: esp?'SPI, Seq.-Nr.':'SPI, ICV', f:1, c:'sec'});
+  if(t) segs.push({t:'Orig. IP-Header', s: esp?'verborgen':'mitgeführt', f:1.4, c: esp?'hidden-data':'payload'});
+  segs.push({t:'TCP / UDP', s:'Ports', f:1.1, c: esp?'hidden-data':'payload'});
+  segs.push({t:'Nutzdaten', s: esp?'unlesbar':'im Klartext', f:2.2, c: esp?'hidden-data':'payload'});
+  if(esp) segs.push({t:'ESP-Trailer', s:'Padding, Auth', f:1, c:'sec'});
+
+  const host = $('#pkt');
+  host.innerHTML = '';
+  segs.forEach(s=>{
+    const d = document.createElement('div');
+    d.className = 'seg-box ' + s.c;
+    d.style.flex = s.f + ' 1 0';
+    d.innerHTML = '<b>'+s.t+'</b><small>'+s.s+'</small>';
+    host.appendChild(d);
+  });
+
+  // Klammer über die geschützten Segmente
+  requestAnimationFrame(()=>{
+    const boxes = $$('.seg-box', host);
+    const total = host.getBoundingClientRect().width;
+    let startIdx, endIdx, label;
+    if(esp){
+      startIdx = 2;                       // ab dem Inhalt hinter dem ESP-Header
+      endIdx   = boxes.length - 2;        // vor Trailer
+      label = 'verschlüsselt';
+    }else{
+      startIdx = 0; endIdx = boxes.length - 1;
+      label = 'authentifiziert (ganzes Paket)';
+    }
+    if(!esp && t){ label = 'authentifiziert (ganzes äußeres Paket)'; }
+    const a = boxes[startIdx].getBoundingClientRect();
+    const b = boxes[endIdx].getBoundingClientRect();
+    const hostBox = host.getBoundingClientRect();
+    const left = a.left - hostBox.left;
+    const width = b.right - a.left;
+    $('#brk').innerHTML = '<div class="bar" style="left:'+left+'px;width:'+Math.max(width,20)+'px"></div>'+
+      '<div class="lbl" style="left:'+(left+width/2)+'px">'+label+'</div>';
+  });
+
+  const texts = {
+    'tunnel-esp':'<b>Tunnelmodus mit ESP</b> — der Regelfall für ein Standort- oder Client-VPN. Das komplette ursprüngliche IP-Paket wird verschlüsselt und in ein neues Paket gekapselt. Von außen sind nur die beiden Gateway-Adressen sichtbar; die echten Quell- und Zieladressen bleiben verborgen.',
+    'tunnel-ah':'<b>Tunnelmodus mit AH</b> — das Paket wird gekapselt und über das gesamte äußere Paket authentifiziert, aber <b>nicht verschlüsselt</b>. Jeder auf dem Weg kann mitlesen, niemand kann unbemerkt verändern.',
+    'transport-esp':'<b>Transportmodus mit ESP</b> — der Original-IP-Header bleibt unverändert, nur die Nutzlast wird verschlüsselt. Absender und Empfänger sind für jeden im Netz sichtbar. Sinnvoll für Ende-zu-Ende-Verbindungen zwischen zwei Hosts, nicht für einen Standortverbund.',
+    'transport-ah':'<b>Transportmodus mit AH</b> — weder Kapselung noch Verschlüsselung, nur Integritätsschutz. Der schwächste der vier Fälle in Sachen Vertraulichkeit.'
+  };
+  $('#pkt-read').innerHTML = texts[pktState.modus+'-'+pktState.proto];
+}
+$$('[data-modus]').forEach(b=>b.addEventListener('click',()=>{
+  pktState.modus = b.dataset.modus;
+  $$('[data-modus]').forEach(x=>x.setAttribute('aria-pressed', String(x===b)));
+  buildPacket();
+}));
+$$('[data-proto]').forEach(b=>b.addEventListener('click',()=>{
+  pktState.proto = b.dataset.proto;
+  $$('[data-proto]').forEach(x=>x.setAttribute('aria-pressed', String(x===b)));
+  buildPacket();
+}));
+buildPacket();
+window.addEventListener('resize', ()=>{ clearTimeout(window.__rz); window.__rz=setTimeout(buildPacket,150); });
+
+/* ============ 2. VPN-Modi zuordnen ============ */
+const cloud = '<ellipse cx="150" cy="52" rx="56" ry="30" fill="#e8eaf8" stroke="#2a31a8" stroke-width="1.2"/><text x="150" y="56" font-size="10" fill="#2a31a8" text-anchor="middle" font-family="monospace">öffentliches Netz</text>';
+function pc(x,y,lbl){return '<rect x="'+x+'" y="'+y+'" width="26" height="18" rx="2" fill="#fff" stroke="#14203a" stroke-width="1.4"/><rect x="'+(x+4)+'" y="'+(y+20)+'" width="18" height="3" fill="#14203a"/><text x="'+(x+13)+'" y="'+(y+34)+'" font-size="9" fill="#4d5b76" text-anchor="middle">'+lbl+'</text>';}
+function gw(x,y,lbl){return '<rect x="'+x+'" y="'+y+'" width="30" height="22" rx="3" fill="#2a31a8"/><text x="'+(x+15)+'" y="'+(y+15)+'" font-size="9" fill="#fff" text-anchor="middle" font-family="monospace">GW</text><text x="'+(x+15)+'" y="'+(y+34)+'" font-size="9" fill="#4d5b76" text-anchor="middle">'+lbl+'</text>';}
+function lan(x,y,lbl){return '<rect x="'+x+'" y="'+y+'" width="52" height="40" rx="3" fill="none" stroke="#b6c1d2" stroke-dasharray="4 3"/><text x="'+(x+26)+'" y="'+(y+24)+'" font-size="9" fill="#4d5b76" text-anchor="middle">'+lbl+'</text>';}
+const tunnelLine = '<line x1="60" y1="52" x2="240" y2="52" stroke="#bb1568" stroke-width="2" stroke-dasharray="6 4"/><text x="150" y="90" font-size="9" fill="#bb1568" text-anchor="middle" font-family="monospace">Tunnel</text>';
+
+const modeCards = [
+  {id:'m1', correct:'End-to-End', svg:
+    '<svg viewBox="0 0 300 110">'+cloud+tunnelLine+pc(20,42,'Client 1')+pc(254,42,'Client 2')+'</svg>'},
+  {id:'m2', correct:'Site-to-Site', svg:
+    '<svg viewBox="0 0 300 110">'+cloud+tunnelLine+lan(2,32,'LAN 1')+gw(58,41,'GW 1')+gw(212,41,'GW 2')+lan(246,32,'LAN 2')+'</svg>'},
+  {id:'m3', correct:'End-to-Site', svg:
+    '<svg viewBox="0 0 300 110">'+cloud+tunnelLine+lan(2,32,'LAN')+gw(58,41,'VPN-GW')+pc(254,42,'Client')+'</svg>'}
+];
+const modeOpts = ['Site-to-Site','End-to-Site','End-to-End'];
+const modeAnswers = {};
+function renderModes(){
+  const host = $('#modes'); host.innerHTML='';
+  modeCards.forEach(c=>{
+    const d = document.createElement('div'); d.className='mode-card';
+    d.innerHTML = c.svg + '<div class="opt-row">' + modeOpts.map(o=>
+      '<button class="opt" type="button" data-card="'+c.id+'" data-val="'+o+'" aria-pressed="false">'+o+'</button>').join('') + '</div>';
+    host.appendChild(d);
+  });
+  $$('#modes .opt').forEach(b=>b.addEventListener('click',()=>{
+    modeAnswers[b.dataset.card] = b.dataset.val;
+    $$('#modes .opt[data-card="'+b.dataset.card+'"]').forEach(x=>{
+      x.setAttribute('aria-pressed', String(x===b));
+      x.classList.remove('right','wrong');
+    });
+    $('#modes-verdict').textContent='';
+  }));
+}
+renderModes();
+$('#modes-check').addEventListener('click',()=>{
+  let ok=0, done=0;
+  modeCards.forEach(c=>{
+    const sel = modeAnswers[c.id];
+    if(!sel) return; done++;
+    const btn = $('#modes .opt[data-card="'+c.id+'"][data-val="'+sel+'"]');
+    if(sel===c.correct){ btn.classList.add('right'); ok++; }
+    else{
+      btn.classList.add('wrong');
+      $('#modes .opt[data-card="'+c.id+'"][data-val="'+c.correct+'"]').classList.add('right');
+    }
+  });
+  const v = $('#modes-verdict');
+  if(done<3){ v.className='verdict bad'; v.textContent='Bitte alle drei Skizzen zuordnen.'; return; }
+  v.className = 'verdict ' + (ok===3?'good':'bad');
+  v.textContent = ok===3 ? 'Alle drei richtig.' : ok+' von 3 richtig — die korrekten Antworten sind markiert.';
+});
+$('#modes-reset').addEventListener('click',()=>{
+  Object.keys(modeAnswers).forEach(k=>delete modeAnswers[k]);
+  renderModes(); $('#modes-verdict').textContent='';
+});
+
+/* ============ 3. NAT-Demo ============ */
+$('#nat-go').addEventListener('click',()=>{
+  $('#nat-src').textContent = '84.12.9.77';
+  $('#nat-ip').style.background = '#fbe7e9';
+  $('#nat-ip').style.borderColor = '#a3182f';
+  const s = $('#nat-status');
+  s.className = 'status-line bad';
+  s.innerHTML = 'Der NAT-Router hat die Quell-IP ersetzt. Der Empfänger rechnet <b>c3d7</b>, im AH-Header steht aber <b>a91f</b> — Prüfsumme ungültig, Paket verworfen. <b>AH ist nicht NAT-fähig.</b> Abhilfe: ESP mit NAT-Traversal, das die IPsec-Pakete zusätzlich in UDP 4500 kapselt.';
+});
+$('#nat-reset').addEventListener('click',()=>{
+  $('#nat-src').textContent = '192.168.4.103';
+  $('#nat-ip').style.background = ''; $('#nat-ip').style.borderColor = '';
+  const s = $('#nat-status');
+  s.className='status-line'; s.style.background='var(--panel2)'; s.style.color='var(--soft)';
+  s.textContent = 'Noch nichts gesendet. Der Empfänger rechnet die Prüfsumme neu und vergleicht sie mit dem ICV im AH-Header.';
+});
+
+/* ============ 4. Routing-Fix ============ */
+$('#fix-go').addEventListener('click',()=>{
+  const row = $('#fix-row');
+  row.innerHTML = '<td class="mono">10.10.0.0</td><td class="mono">255.255.252.0 (/22)</td><td class="mono">172.16.137.21</td><td class="mono">172.16.137.22</td>';
+  row.style.background = 'var(--ok-bg)';
+  $('#fix-note').style.display = 'block';
+  $('#fix-go').disabled = true;
+});
+
+/* ============ 5. Sortierübung ============ */
+const sortItems = [
+  {t:'Recht auf informationelle Selbstbestimmung', bin:'schutz'},
+  {t:'Rechtsgrundlage DSGVO', bin:'schutz'},
+  {t:'Betrifft nur personenbezogene Daten', bin:'schutz'},
+  {t:'Vertraulichkeit, Integrität, Verfügbarkeit', bin:'sicherheit'},
+  {t:'Gilt auch für Daten ohne Personenbezug', bin:'sicherheit'},
+  {t:'Festplattenverschlüsselung', bin:'sicherheit'},
+  {t:'Generationenprinzip', bin:'sicherung'},
+  {t:'Archiv-Bit', bin:'sicherung'},
+  {t:'Vollbackup und Inkrement', bin:'sicherung'}
+];
+let activeBin = null;
+function renderSort(){
+  const bank = $('#sort-bank'); bank.innerHTML='';
+  $$('#sort-bins .drop').forEach(d=>d.innerHTML='');
+  sortItems.slice().sort(()=>Math.random()-.5).forEach((it,i)=>{
+    const b = document.createElement('button');
+    b.className='chip'; b.type='button'; b.textContent=it.t; b.dataset.bin=it.bin;
+    bank.appendChild(b);
+  });
+  bindChips();
+  $('#sort-verdict').textContent='';
+}
+function bindChips(){
+  $$('#sort-bank .chip').forEach(c=>{
+    c.onclick = ()=>{
+      if(!activeBin){ flash('Zuerst einen Behälter auswählen.'); return; }
+      $('#sort-bins .bin[data-bin="'+activeBin+'"] .drop').appendChild(c);
+      c.classList.add('placed'); c.dataset.placed = activeBin;
+      c.onclick = ()=>{ $('#sort-bank').appendChild(c); c.classList.remove('placed','right','wrong'); delete c.dataset.placed; bindChips(); };
+      $('#sort-verdict').textContent='';
+    };
+  });
+}
+function flash(msg){ const v=$('#sort-verdict'); v.className='verdict bad'; v.textContent=msg; }
+$$('#sort-bins .bin').forEach(b=>{
+  b.addEventListener('click',(e)=>{
+    if(e.target.classList.contains('chip')) return;
+    activeBin = b.dataset.bin;
+    $$('#sort-bins .bin').forEach(x=>x.classList.toggle('active', x===b));
+  });
+});
+$('#sort-check').addEventListener('click',()=>{
+  const placed = $$('#sort-bins .chip');
+  if(placed.length < sortItems.length){ flash('Es liegen noch '+(sortItems.length-placed.length)+' Aussagen in der Sammlung.'); return; }
+  let ok=0;
+  placed.forEach(c=>{
+    const right = c.dataset.placed === c.dataset.bin;
+    c.classList.toggle('right', right); c.classList.toggle('wrong', !right);
+    if(right) ok++;
+  });
+  const v=$('#sort-verdict'); v.className='verdict '+(ok===sortItems.length?'good':'bad');
+  v.textContent = ok===sortItems.length ? 'Alles korrekt einsortiert.' : ok+' von '+sortItems.length+' richtig.';
+});
+$('#sort-reset').addEventListener('click',()=>{ activeBin=null; $$('#sort-bins .bin').forEach(x=>x.classList.remove('active')); renderSort(); });
+renderSort();
+
+/* ============ 6. Schutzziel-Tabelle ============ */
+const goals = ['Vertraulichkeit','Integrität','Verfügbarkeit'];
+const goalRows = [
+  {m:'Sichere Passwörter wählen', c:'Vertraulichkeit', why:'Verhindert, dass Unbefugte sich anmelden und Daten einsehen können.'},
+  {m:'Regelmäßige Datensicherung der Patientendaten', c:'Verfügbarkeit', why:'Nach Ausfall oder Verlust lassen sich die Daten wiederherstellen und stehen wieder bereit.'},
+  {m:'Verschlüsselung der Festplatten', c:'Vertraulichkeit', why:'Bei Diebstahl des Geräts bleiben die Daten für Dritte unlesbar.'},
+  {m:'Zentrale Bearbeitung wichtiger Dokumente auf dem Server', c:'Integrität', why:'Es existiert nur eine gültige Fassung; abweichende lokale Kopien und Versionskonflikte entfallen.'},
+  {m:'Hashwertüberprüfung bei Softwareinstallation', c:'Integrität', why:'Zeigt, ob die Datei seit dem Herunterladen unverändert und unmanipuliert ist.'}
+];
+const goalPick = {};
+function renderGoals(){
+  const tb = $('#goal-table tbody'); tb.innerHTML='';
+  goalRows.forEach((r,i)=>{
+    const tr = document.createElement('tr');
+    tr.innerHTML = '<td>'+r.m+'</td>' + goals.map(g=>
+      '<td style="text-align:center"><button class="goal-btn" type="button" data-r="'+i+'" data-g="'+g+'" aria-pressed="false" aria-label="'+g+' für '+r.m+'">✕</button></td>').join('')
+      + '<td class="why" data-why="'+i+'"></td>';
+    tb.appendChild(tr);
+  });
+  $$('#goal-table .goal-btn').forEach(b=>b.addEventListener('click',()=>{
+    goalPick[b.dataset.r] = b.dataset.g;
+    $$('#goal-table .goal-btn[data-r="'+b.dataset.r+'"]').forEach(x=>{
+      x.setAttribute('aria-pressed', String(x===b)); x.classList.remove('right','wrong');
+    });
+    $('#goal-verdict').textContent='';
+  }));
+}
+renderGoals();
+$('#goal-check').addEventListener('click',()=>{
+  let ok=0, done=0;
+  goalRows.forEach((r,i)=>{
+    const sel = goalPick[i]; if(!sel) return; done++;
+    const btn = $('#goal-table .goal-btn[data-r="'+i+'"][data-g="'+sel+'"]');
+    if(sel===r.c){ btn.classList.add('right'); ok++; }
+    else{ btn.classList.add('wrong'); $('#goal-table .goal-btn[data-r="'+i+'"][data-g="'+r.c+'"]').classList.add('right'); }
+    $('#goal-table [data-why="'+i+'"]').textContent = r.why;
+  });
+  const v=$('#goal-verdict');
+  if(done<goalRows.length){ v.className='verdict bad'; v.textContent='Noch nicht alle Zeilen bearbeitet.'; return; }
+  v.className='verdict '+(ok===goalRows.length?'good':'bad');
+  v.textContent = ok===goalRows.length ? 'Alle Zuordnungen richtig.' : ok+' von '+goalRows.length+' richtig — Begründungen stehen rechts.';
+});
+$('#goal-reset').addEventListener('click',()=>{ Object.keys(goalPick).forEach(k=>delete goalPick[k]); renderGoals(); $('#goal-verdict').textContent=''; });
+
+/* ============ 7. Brute-Force-Rechner ============ */
+const RATE = Math.pow(94,8)/30; // Versuche pro Sekunde laut Aufgabenannahme
+function fmtTime(sec){
+  if(sec < 1) return [sec.toFixed(3),'Sekunden'];
+  if(sec < 120) return [sec.toFixed(1).replace('.',','),'Sekunden'];
+  if(sec < 7200) return [(sec/60).toFixed(1).replace('.',','),'Minuten'];
+  if(sec < 172800) return [(sec/3600).toFixed(1).replace('.',','),'Stunden'];
+  if(sec < 63072000) return [(sec/86400).toFixed(1).replace('.',','),'Tage'];
+  const y = sec/31536000;
+  if(y < 1e6) return [de(Math.round(y)),'Jahre'];
+  if(y < 1e9) return [(y/1e6).toFixed(1).replace('.',','),'Mio. Jahre'];
+  return [y.toExponential(1).replace('.',','),'Jahre'];
+}
+function calcPW(){
+  const len = +$('#pw-len').value, pool = +$('#pw-pool').value, days = +$('#pw-days').value;
+  $('#pw-len-out').textContent = len; $('#pw-days-out').textContent = days;
+  const combos = Math.pow(pool, len);
+  const sec = combos / RATE;
+  const [val,unit] = fmtTime(sec);
+  $('#pw-time').innerHTML = val + ' <span>'+unit+'</span>';
+  $('#pw-combos').textContent = 'Kombinationen: ' + pool + '^' + len + ' ≈ ' + combos.toExponential(2).replace('.',',');
+  const limit = days*86400;
+  const s = $('#pw-status');
+  if(sec < limit){
+    s.className='status-line bad';
+    s.innerHTML = 'Geknackt, bevor gewechselt wird. Das Passwort fällt in etwa '+val+' '+unit+' — das Wechselintervall von '+days+' Tagen greift zu spät.';
+  }else{
+    s.className='status-line ok';
+    s.innerHTML = 'Hält länger als das Wechselintervall von '+days+' Tagen. Der Angreifer kommt nicht rechtzeitig zum Treffer.';
+  }
+}
+['input','change'].forEach(ev=>{
+  $('#pw-len').addEventListener(ev,calcPW); $('#pw-pool').addEventListener(ev,calcPW); $('#pw-days').addEventListener(ev,calcPW);
+});
+calcPW();
+
+/* ============ 8. Richtlinienprüfer ============ */
+function checkPolicy(){
+  const on = $$('#pw-flags .flag').filter(f=>f.getAttribute('aria-pressed')==='true');
+  const n = on.length;
+  const s = $('#pw-policy');
+  if(n>=3){ s.className='status-line ok'; s.textContent = n+' von 4 Bedingungen erfüllt — Passwort wird akzeptiert.'; }
+  else{ s.className='status-line bad'; s.textContent = n+' von 4 Bedingungen erfüllt — Passwort wird abgelehnt, es fehlen mindestens '+(3-n)+'.'; }
+}
+$$('#pw-flags .flag').forEach(f=>f.addEventListener('click',()=>{
+  f.setAttribute('aria-pressed', String(f.getAttribute('aria-pressed')!=='true'));
+  checkPolicy();
+}));
+checkPolicy();
+
+/* ============ 9. Backup-Simulator ============ */
+const changes = [8,6,10,5,7];
+const dayNames = ['Mo','Di','Mi','Do','Fr'];
+const bk = {strat:'diff', day:4};
+function renderBackup(){
+  const vols = dayNames.map((d,i)=>{
+    if(bk.strat==='voll') return 100;
+    if(bk.strat==='inkr') return changes[i];
+    return changes.slice(0,i+1).reduce((a,b)=>a+b,0);
+  });
+  const max = Math.max(100, ...vols);
+  const host = $('#bk-days'); host.innerHTML='';
+  // Vollbackup So als erste Säule
+  const all = [{n:'So', v:100, full:true}].concat(vols.map((v,i)=>({n:dayNames[i], v:v, full:bk.strat==='voll', idx:i})));
+  all.forEach(d=>{
+    const col = document.createElement('div'); col.className='day';
+    const sel = (d.idx===bk.day);
+    col.innerHTML = '<div class="bar-val">'+d.v+'</div><div class="bar'+(d.full?' full':'')+(sel?' sel':'')+'" style="height:'+Math.max(3,(d.v/max)*140)+'px"></div>';
+    host.appendChild(col);
+  });
+  const lbls = $('#bk-labels'); lbls.innerHTML='';
+  all.forEach(d=>{
+    const w = document.createElement('div'); w.style.flex='1'; w.style.textAlign='center';
+    if(d.idx===undefined){ w.innerHTML = '<span class="day-lbl">So (voll)</span>'; }
+    else{
+      const b = document.createElement('button');
+      b.className = 'day-lbl'+(d.idx===bk.day?' sel':''); b.type='button'; b.textContent=d.n;
+      b.onclick = ()=>{ bk.day = d.idx; renderBackup(); };
+      w.appendChild(b);
+    }
+    lbls.appendChild(w);
+  });
+
+  const dn = dayNames[bk.day];
+  $('#bk-title').textContent = 'Ausfall am '+({Mo:'Montag',Di:'Dienstag',Mi:'Mittwoch',Do:'Donnerstag',Fr:'Freitag'})[dn]+'abend';
+  let chain=[], text='';
+  if(bk.strat==='voll'){
+    chain=[{t:'Vollbackup '+dn, full:true}];
+    text='Jeden Tag wird der gesamte Bestand gesichert: 100 GB pro Lauf, entsprechend lange Sicherungsfenster und hoher Speicherbedarf. Dafür ist die Wiederherstellung denkbar einfach — <b>eine einzige Sicherung</b> einlesen, fertig.';
+  }else if(bk.strat==='diff'){
+    chain=[{t:'Vollbackup So', full:true},{t:'Differenz '+dn}];
+    const v = changes.slice(0,bk.day+1).reduce((a,b)=>a+b,0);
+    text='Jede Sicherung enthält alles, was sich seit dem Vollbackup geändert hat — am '+dn+' also '+v+' GB. Die Datenmenge wächst über die Woche, aber zur Wiederherstellung brauchen Sie immer nur <b>zwei</b> Sicherungen: das Vollbackup und die letzte Differenz. Das Archiv-Bit bleibt dabei gesetzt.';
+  }else{
+    chain=[{t:'Vollbackup So', full:true}].concat(dayNames.slice(0,bk.day+1).map(d=>({t:'Inkrement '+d})));
+    text='Gesichert wird nur, was sich seit der letzten Sicherung geändert hat — am '+dn+' sind das '+changes[bk.day]+' GB. Sehr schnell und sparsam. Der Preis zeigt sich beim Restore: Sie brauchen das Vollbackup <b>und lückenlos alle</b> '+(bk.day+1)+' Inkremente. Fehlt eines davon, reißt die Kette.';
+  }
+  $('#bk-text').innerHTML = text + '<br><br><b>Benötigte Sicherungen: '+chain.length+'</b>';
+  $('#bk-chain').innerHTML = chain.map(c=>'<span class="tape'+(c.full?' full':'')+'">'+c.t+'</span>').join('<span class="arrow">→</span>');
+}
+$$('[data-strat]').forEach(b=>b.addEventListener('click',()=>{
+  bk.strat=b.dataset.strat;
+  $$('[data-strat]').forEach(x=>x.setAttribute('aria-pressed', String(x===b)));
+  renderBackup();
+}));
+renderBackup();
+
+/* ============ 10. Glossar ============ */
+const glossary = [
+  ['AH (Authentication Header)','IPsec-Protokoll Nr. 51: sichert Integrität und Authentizität über das gesamte Paket, verschlüsselt aber nichts und verträgt sich nicht mit NAT.'],
+  ['ESP (Encapsulating Security Payload)','IPsec-Protokoll Nr. 50: verschlüsselt die Nutzlast und authentifiziert sie ab dem ESP-Header.'],
+  ['Transportmodus','IPsec-Betriebsart, bei der der Original-IP-Header erhalten bleibt und nur die Nutzlast geschützt wird.'],
+  ['Tunnelmodus','IPsec-Betriebsart, bei der das komplette Original-Paket geschützt und in ein neues IP-Paket gekapselt wird.'],
+  ['Site-to-Site','VPN zwischen zwei Gateways, das zwei ganze Netze miteinander verbindet.'],
+  ['End-to-Site','VPN von einem einzelnen Gerät mit VPN-Client in ein Firmennetz, typisch für Homeoffice und Außendienst.'],
+  ['End-to-End','VPN direkt zwischen zwei Endgeräten, ohne Netz dahinter.'],
+  ['PSK (Pre-Shared Key)','Vorab auf beiden Seiten hinterlegtes gemeinsames Geheimnis, dessen Kenntnis beim Verbindungsaufbau per Hash nachgewiesen wird, ohne es zu übertragen.'],
+  ['IKE','Protokoll, das bei IPsec die Authentifizierung übernimmt und die Sitzungsschlüssel aushandelt.'],
+  ['ICV','Prüfwert im AH- oder ESP-Header, mit dem der Empfänger die Unversehrtheit des Pakets nachrechnet.'],
+  ['NAT-Traversal','Zusätzliche UDP-Kapselung (Port 4500), damit IPsec-Verkehr NAT-Router passieren kann.'],
+  ['MTU','Größte Nutzlast, die ein Netz pro Paket transportiert — meist 1500 Byte; bei IPsec wegen des Overheads oft auf 1400 gesenkt.'],
+  ['TTL','Zähler im IP-Header, den jeder Router verringert; er ist veränderlich und bleibt deshalb aus der AH-Prüfsumme ausgeklammert.'],
+  ['dev tun','OpenVPN-Interface, das auf Schicht 3 routet; das Gegenstück dev tap arbeitet auf Schicht 2.'],
+  ['Vertraulichkeit','Schutzziel: nur Befugte dürfen die Daten lesen.'],
+  ['Integrität','Schutzziel: Daten dürfen nicht unbemerkt verändert werden.'],
+  ['Verfügbarkeit','Schutzziel: Daten sind erreichbar, wenn sie gebraucht werden.'],
+  ['Datenschutz','Schutz personenbezogener Daten und damit der Privatsphäre; Rechtsgrundlage ist vor allem die DSGVO.'],
+  ['Datensicherheit','Schutz aller Daten unabhängig vom Personenbezug, gemessen an Vertraulichkeit, Integrität und Verfügbarkeit.'],
+  ['Schutzbedarfsanalyse','Bewertung, wie schwer ein Schaden an einer IT-Anwendung wiegt, um daraus das nötige Schutzniveau abzuleiten.'],
+  ['IT-Grundschutz','Methodik und Kompendium des BSI mit Standardanforderungen zur Absicherung von IT-Systemen.'],
+  ['Zwei-Faktor-Authentifizierung','Anmeldung mit zwei Nachweisen aus unterschiedlichen Kategorien, etwa Passwort plus Einmalcode aus einer Authenticator-App.'],
+  ['Vollbackup','Sicherung des gesamten Datenbestands; einfachste Wiederherstellung, größter Aufwand.'],
+  ['Differenzielles Backup','Sichert alle Änderungen seit dem letzten Vollbackup; Restore braucht Vollbackup plus letzte Differenz.'],
+  ['Inkrementelles Backup','Sichert nur die Änderungen seit der letzten Sicherung; Restore braucht Vollbackup plus die gesamte Kette.'],
+  ['Archiv-Bit','Dateiattribut unter Windows, das anzeigt, ob eine Datei seit der letzten Sicherung verändert wurde.'],
+  ['Generationenprinzip','Rotation der Sicherungen nach Großvater-Vater-Sohn über Monats-, Wochen- und Tagesstände.'],
+  ['Snapshot','Eingefrorene Momentaufnahme eines Datenbestands, wichtig für Systeme im Dauerbetrieb.'],
+  ['Deduplizierung','Speichertechnik, bei der mehrfach vorhandene Datenblöcke nur einmal abgelegt werden.'],
+  ['Datenreplikation','Laufende Spiegelung von Daten zwischen mehreren Servern.'],
+  ['USV','Unterbrechungsfreie Stromversorgung: hält den Betrieb kurz aufrecht und ermöglicht geordnetes Herunterfahren.'],
+  ['ECC-RAM','Arbeitsspeicher, der Bitfehler erkennt und einzelne korrigiert.'],
+  ['Failover-Server','Ersatzsystem, das bei Störung automatisch die Aufgaben übernimmt.'],
+  ['XCOPY','Windows-Kommandozeilenbefehl zum Kopieren von Dateien und Verzeichnissen, auch für einfache Sicherungen.']
+];
+function renderGloss(filter){
+  const f = (filter||'').trim().toLowerCase();
+  const list = glossary.filter(g=> !f || g[0].toLowerCase().includes(f) || g[1].toLowerCase().includes(f));
+  $('#gl-list').innerHTML = list.map(g=>'<div class="term"><dt>'+g[0]+'</dt><dd>'+g[1]+'</dd></div>').join('');
+  $('#gl-empty').style.display = list.length ? 'none':'block';
+}
+$('#gl-search').addEventListener('input', e=>renderGloss(e.target.value));
+renderGloss('');
+
+/* ============ 11. Quiz ============ */
+const QUESTIONS = [
+  {
+    ticket:'TT-041', from:'Kunde: zwei Standorte, IPsec läuft im Transportmodus', topic:'VPN',
+    type:'single',
+    q:'Der Kunde will den Verkehr zwischen seinen beiden Standorten verschlüsseln. Welche zusätzliche Sicherheit bietet ihm der Tunnelmodus gegenüber dem Transportmodus?',
+    opts:[
+      'Er verschlüsselt zusätzlich die Anmeldedaten der Benutzer.',
+      'Er verschlüsselt das komplette ursprüngliche IP-Paket und kapselt es in ein neues — die echten Quell- und Zieladressen bleiben verborgen.',
+      'Er erhöht die MTU, damit mehr Nutzdaten in ein Paket passen.',
+      'Er ersetzt das Protokoll AH durch das sicherere SHA-256.'
+    ],
+    a:1,
+    hint:'Schauen Sie sich oben im Kopf der Seite an, was beim Umschalten auf Tunnelmodus vor dem alten Header passiert.',
+    ex:'Im Tunnelmodus wird das gesamte Originalpaket inklusive Header verschlüsselt und mit einem neuen IP-Header versehen. Von außen sieht ein Mitleser nur die beiden Gateways. Im Transportmodus bleibt der Original-Header sichtbar, Absender und Ziel sind also lesbar.'
+  },
+  {
+    ticket:'TT-042', from:'Sicherheitsaudit: Mitschnitt prüfen', topic:'VPN',
+    type:'single', layout:'packet',
+    q:'Sie schneiden Pakete mit und sollen belegen, dass IPsec tatsächlich verschlüsselt arbeitet. Welches Feld beweist das?',
+    opts:['Version = 4','TTL = 63','Protocol = 50','Total Length = 1400'],
+    a:2,
+    hint:'Zwei Protokollnummern sind relevant: eine steht für reine Authentifizierung, die andere für Verschlüsselung.',
+    ex:'Das Feld Protocol beziehungsweise Next Header mit dem Wert 50 kennzeichnet ESP, und ESP ist das IPsec-Protokoll mit Verschlüsselung. Der Wert 51 stünde für AH und damit nur für Authentifizierung. Ergänzend spricht dafür, dass die Nutzdaten im Mitschnitt nicht mehr interpretierbar sind.'
+  },
+  {
+    ticket:'TT-043', from:'Netzplanung I-Net GmbH', topic:'VPN',
+    type:'tf',
+    q:'Behauptung eines Kollegen: „AH können wir bedenkenlos einsetzen, der Router davor macht zwar NAT, aber das stört IPsec nicht.“',
+    a:false,
+    hint:'AH bildet die Prüfsumme über welchen Teil des Pakets?',
+    ex:'Falsch. AH schützt das gesamte IP-Paket einschließlich der Adressen. NAT schreibt genau diese Adressen um, wodurch die Prüfsumme beim Empfänger nicht mehr passt und das Paket verworfen wird. AH und NAT vertragen sich nicht — hier wäre ESP mit NAT-Traversal die Lösung.'
+  },
+  {
+    ticket:'TT-044', from:'Geschäftsführung: Passwortrichtlinie', topic:'Passwörter',
+    type:'number',
+    q:'Ein 8-stelliges Passwort mit 94 möglichen Zeichen pro Stelle fällt per Brute Force in 30 Sekunden. Wie lange dauert es bei 10 Stellen? Antwort in Tagen, auf eine Nachkommastelle.',
+    a:3.1, tol:0.4, unit:'Tage',
+    hint:'Jede zusätzliche Stelle multipliziert die Möglichkeiten mit 94. Zwei Stellen mehr sind 94 × 94.',
+    ex:'30 s × 94 × 94 = 30 × 8.836 = 265.080 Sekunden, also rund 3,1 Tage. Damit ist das Passwort lange geknackt, bevor es nach 30 Tagen turnusmäßig gewechselt wird — die Richtlinie reicht nicht aus.'
+  },
+  {
+    ticket:'TT-045', from:'Notfall: Server ausgefallen, Freitag 19:40', topic:'Backup',
+    type:'order',
+    q:'Gesichert wird sonntags voll und werktags inkrementell. In welcher Reihenfolge spielen Sie zurück? Klicken Sie die Sicherungen in der richtigen Reihenfolge an.',
+    items:['Vollbackup Sonntag','Inkrement Montag','Inkrement Dienstag','Inkrement Mittwoch','Inkrement Donnerstag','Inkrement Freitag'],
+    hint:'Inkremente bauen jeweils auf dem Stand des Vortages auf. Die Kette darf keine Lücke haben und keine falsche Reihenfolge.',
+    ex:'Zuerst das Vollbackup, danach lückenlos alle Inkremente in chronologischer Reihenfolge. Bei differenzieller Sicherung wären es nur zwei Durchgänge gewesen: Vollbackup plus die Differenz vom Freitag.'
+  },
+  {
+    ticket:'TT-046', from:'Arztpraxis Care: Ausfallsicherheit', topic:'Grundlagen',
+    type:'multi',
+    q:'Welche Maßnahmen zahlen in erster Linie auf das Schutzziel Verfügbarkeit ein? Mehrfachauswahl.',
+    opts:['Unterbrechungsfreie Stromversorgung','Festplattenverschlüsselung','RAID-Verbund','Hashwertprüfung vor der Installation','Failover-Server'],
+    a:[0,2,4],
+    hint:'Verfügbarkeit heißt: das System läuft weiter oder ist schnell wieder da. Zwei der Optionen zielen auf ganz andere Schutzziele.',
+    ex:'USV, RAID und Failover-Server halten den Betrieb bei Störungen aufrecht — das ist Verfügbarkeit. Festplattenverschlüsselung dient der Vertraulichkeit, die Hashwertprüfung der Integrität.'
+  },
+  {
+    ticket:'TT-047', from:'Prüfungsvorbereitung: OSI', topic:'VPN',
+    type:'single',
+    q:'Auf welcher Schicht des OSI-Modells baut eine IPsec-VPN-Verbindung auf?',
+    opts:['Schicht 2, Sicherungsschicht','Schicht 3, Vermittlungsschicht','Schicht 3, Transportschicht','Schicht 7, Anwendungsschicht'],
+    a:1,
+    hint:'Der Name des Protokolls verrät die Schicht. Achten Sie außerdem auf die Bezeichnung der Schicht, nicht nur auf die Nummer.',
+    ex:'IPsec setzt auf IP auf und arbeitet damit auf Schicht 3. Diese heißt Vermittlungsschicht (englisch Network Layer). Die Transportschicht ist Schicht 4 — die Kombination „Schicht 3, Transport“ ist ein beliebter und teurer Flüchtigkeitsfehler.'
+  },
+  {
+    ticket:'TT-048', from:'Außendienst Lion GmbH: Tunnel steht, Server tot', topic:'VPN',
+    type:'fill',
+    q:'Der Ping auf das VPN-Gateway 172.16.137.21 funktioniert, der Server 10.10.0.100 in der Zentrale nicht. Ergänzen Sie die fehlende Route in der Routing-Tabelle des Clients.',
+    fields:[
+      {label:'Netzwerkziel', opts:['0.0.0.0/0','10.10.0.0/22','192.168.4.0/24','172.16.137.20/30'], a:1},
+      {label:'Gateway', opts:['192.168.4.254','127.0.0.1','172.16.137.21','10.10.0.100'], a:2}
+    ],
+    hint:'Der Client kennt nur sein lokales Netz, das /30-Tunnelnetz und die Default-Route ins Internet. Was fehlt, ist der Weg zum Zielnetz.',
+    ex:'Es fehlt der Eintrag für das Zentralnetz 10.10.0.0/22 mit dem Tunnelende 172.16.137.21 als Gateway. Ohne ihn greift die Default-Route und die Anfrage geht ins Internet statt in den Tunnel. Dass der Ping ans Gateway selbst klappt, liegt an der vorhandenen /30-Route.'
+  },
+  {
+    ticket:'TT-049', from:'Rezeption Arztpraxis: „Was ist eigentlich der Unterschied?“', topic:'Grundlagen',
+    type:'single',
+    q:'Wie erklären Sie den Unterschied zwischen Datenschutz und Datensicherheit?',
+    opts:[
+      'Datenschutz ist die technische Absicherung, Datensicherheit die rechtliche Vorgabe dazu.',
+      'Datenschutz schützt personenbezogene Daten und damit die Privatsphäre; Datensicherheit schützt alle Daten, unabhängig vom Personenbezug.',
+      'Datenschutz betrifft Backups, Datensicherheit betrifft Passwörter.',
+      'Beides meint dasselbe, die Begriffe unterscheiden sich nur nach Bundesland.'
+    ],
+    a:1,
+    hint:'Fragen Sie sich: Wen oder was schützt der jeweilige Begriff?',
+    ex:'Datenschutz garantiert das Recht auf informationelle Selbstbestimmung und schützt Menschen vor missbräuchlicher Verwendung ihrer Daten. Datensicherheit verfolgt Vertraulichkeit, Integrität und Verfügbarkeit für sämtliche Daten — auch für solche ohne jeden Personenbezug, etwa Maschinenprotokolle.'
+  },
+  {
+    ticket:'TT-050', from:'Azubi im zweiten Lehrjahr fragt nach', topic:'VPN',
+    type:'tf',
+    q:'Behauptung: „Bei der PSK-Authentifizierung schicken sich beide Seiten beim Verbindungsaufbau den Schlüssel zu und vergleichen ihn.“',
+    a:false,
+    hint:'Überlegen Sie, was ein Mitleser auf der Leitung mitbekommen würde, wenn das stimmen würde.',
+    ex:'Falsch. Der PSK wird niemals übertragen. Beide Seiten berechnen einen Hash beziehungsweise HMAC über Zufallswerte der Gegenstelle und den gemeinsamen Schlüssel und senden nur dieses Ergebnis. Stimmen die Werte überein, ist bewiesen, dass beide denselben Schlüssel kennen — ohne ihn preiszugeben.'
+  },
+  {
+    ticket:'TT-051', from:'Provider-Wartungszugang: Performance-Beschwerde', topic:'VPN',
+    type:'single',
+    q:'Für die IPsec-Verbindung wird die MTU auf 1.400 Byte gesenkt. Warum ist das sinnvoll?',
+    opts:[
+      'Um Bandbreite und damit Übertragungsvolumen einzusparen.',
+      'Weil IPsec zusätzliche Header anfügt und das Paket sonst die zulässige Größe überschreitet — es käme zu Fragmentierung oder zu verworfenen Paketen.',
+      'Weil AES-256 nur Pakete bis 1.400 Byte verschlüsseln kann.',
+      'Damit der VPN-Client mehr gleichzeitige Verbindungen aufbauen kann.'
+    ],
+    a:1,
+    hint:'Rechnen Sie mit: Standard-MTU 1500 Byte, dazu kommt der IPsec-Overhead. Was passiert mit einem zu großen Paket unterwegs?',
+    ex:'IPsec kapselt jedes Paket mit zusätzlichen Headern und einem Trailer. Bei einer MTU von 1500 überschreitet das gekapselte Paket die Grenze und muss fragmentiert werden — bei gesetztem DF-Bit wird es sogar verworfen. Beides kostet Durchsatz. Die abgesenkte MTU lässt Platz für den Overhead.'
+  },
+  {
+    ticket:'TT-052', from:'Entwicklung: Passwortrichtlinie im Code', topic:'Passwörter',
+    type:'single',
+    q:'Ein Passwort muss drei der vier Bedingungen GrBu, KlBu, SoZe und Ziff erfüllen. Welche if-Anweisung setzt das korrekt um?',
+    opts:[
+      'if (GrBu && KlBu && SoZe && Ziff)',
+      'if (GrBu || KlBu || SoZe || Ziff)',
+      'if ((GrBu&&KlBu&&SoZe) || (GrBu&&KlBu&&Ziff) || (GrBu&&SoZe&&Ziff) || (KlBu&&SoZe&&Ziff))',
+      'if (GrBu && (KlBu || SoZe || Ziff))'
+    ],
+    a:2,
+    mono:true,
+    hint:'Zählen Sie durch, wie viele verschiedene Dreierkombinationen es aus vier Bedingungen gibt.',
+    ex:'Aus vier Bedingungen lassen sich genau vier Dreiergruppen bilden. Jede davon wird mit UND verknüpft, die vier Gruppen untereinander mit ODER. Variante A verlangt alle vier, Variante B nur eine einzige, Variante D bevorzugt willkürlich GrBu.'
+  },
+  {
+    ticket:'TT-053', from:'AP Teil 1: Schutzziele zuordnen', topic:'Grundlagen',
+    type:'single',
+    q:'Vor der Installation einer Software wird deren Hashwert mit dem Wert auf der Herstellerseite verglichen. Welches Schutzziel steht dabei im Vordergrund?',
+    opts:['Vertraulichkeit','Integrität','Verfügbarkeit','Authentizität des Benutzers'],
+    a:1,
+    hint:'Der Vergleich beantwortet genau eine Frage: Ist die Datei noch dieselbe wie beim Hersteller?',
+    ex:'Der Hashvergleich zeigt, ob die Datei seit der Bereitstellung unverändert geblieben ist — also Integrität. Lesbar bleibt die Datei ohnehin für jeden, Vertraulichkeit spielt hier keine Rolle, und verfügbar ist sie unabhängig vom Hashwert.'
+  }
+];
+
+const RANKS = [
+  {min:0,   t:'Noch in der Einarbeitung', n:'Gehen Sie die markierten Themen oben noch einmal durch — vor allem die, bei denen die Tickets schiefgingen.'},
+  {min:.5,  t:'Solide Grundlage', n:'Die Basis sitzt. Die Details bei IPsec und den Backup-Ketten sind erfahrungsgemäß das, was in der Prüfung die Punkte macht.'},
+  {min:.7,  t:'Prüfungsreif', n:'Das würde in der Abschlussprüfung gut aussehen. Die verbliebenen Lücken lassen sich gezielt schließen.'},
+  {min:.85, t:'Second-Level-Verstärkung', n:'Sehr sicher. Sie könnten die Tickets vermutlich auch erklären, statt sie nur zu lösen — das ist die beste Vorbereitung.'},
+  {min:1,   t:'Schicht ohne einen Kratzer', n:'Dreizehn von dreizehn. Genau so soll das aussehen.'}
+];
+
+const qs = {i:0, score:0, hintUsed:false, answered:false, sel:null, multi:[], order:[], fill:{}, byTopic:{}};
+
+function renderQuestion(){
+  const q = QUESTIONS[qs.i];
+  qs.answered=false; qs.sel=null; qs.multi=[]; qs.order=[]; qs.fill={};
+  $('#q-ticket').textContent = q.ticket;
+  $('#q-from').textContent = q.from;
+  $('#q-score').textContent = qs.score + ' / ' + QUESTIONS.length + ' gelöst';
+  $('#q-prog').style.width = (qs.i/QUESTIONS.length*100)+'%';
+  $('#q-text').textContent = q.q;
+  $('#q-meta').textContent = 'Thema: '+q.topic+'  ·  Ticket '+(qs.i+1)+' von '+QUESTIONS.length;
+  $('#q-feedback').className='feedback';
+  $('#q-hint').className='hintbox';
+  $('#q-hint').innerHTML = '<b>Kollegin:</b> ' + q.hint;
+  $('#q-next').disabled = true;
+  $('#q-submit').disabled = false;
+  $('#q-hintbtn').disabled = qs.hintUsed;
+  $('#q-hintbtn').textContent = qs.hintUsed ? 'Tipp bereits verbraucht' : 'Kollegin fragen (1×)';
+  const A = $('#q-answers'); A.innerHTML=''; A.className='answers';
+
+  if(q.type==='single'){
+    if(q.layout==='packet') A.classList.add('packetrow');
+    q.opts.forEach((o,i)=>{
+      const b=document.createElement('button'); b.className='ans'; b.type='button'; b.setAttribute('aria-pressed','false');
+      b.innerHTML = (q.layout==='packet'?'':'<span class="mark">'+'ABCD'[i]+'</span>')+
+                    '<span'+(q.mono?' style="font-family:var(--mono);font-size:13.5px"':'')+'>'+
+                    o.replace(/&/g,'&amp;').replace(/</g,'&lt;')+'</span>';
+      b.onclick=()=>{ if(qs.answered)return; qs.sel=i; $$('.ans',A).forEach(x=>x.setAttribute('aria-pressed',String(x===b))); };
+      A.appendChild(b);
+    });
+  }
+  else if(q.type==='multi'){
+    q.opts.forEach((o,i)=>{
+      const b=document.createElement('button'); b.className='ans'; b.type='button'; b.setAttribute('aria-pressed','false');
+      b.innerHTML='<span class="mark">☐</span><span>'+o+'</span>';
+      b.onclick=()=>{ if(qs.answered)return;
+        const on = b.getAttribute('aria-pressed')!=='true';
+        b.setAttribute('aria-pressed',String(on));
+        $('.mark',b).textContent = on?'☑':'☐';
+        qs.multi = on ? qs.multi.concat(i) : qs.multi.filter(x=>x!==i);
+      };
+      A.appendChild(b);
+    });
+  }
+  else if(q.type==='tf'){
+    [['Stimmt',true],['Stimmt nicht',false]].forEach(([lbl,val],i)=>{
+      const b=document.createElement('button'); b.className='ans'; b.type='button'; b.setAttribute('aria-pressed','false');
+      b.innerHTML='<span class="mark">'+(val?'✓':'✕')+'</span><span>'+lbl+'</span>';
+      b.onclick=()=>{ if(qs.answered)return; qs.sel=val; $$('.ans',A).forEach(x=>x.setAttribute('aria-pressed',String(x===b))); };
+      A.appendChild(b);
+    });
+  }
+  else if(q.type==='number'){
+    const w=document.createElement('div'); w.style.maxWidth='260px';
+    w.innerHTML='<label class="ctl-label" for="q-num">Ihre Antwort in '+q.unit+'</label><input type="number" step="0.1" id="q-num" placeholder="z. B. 1,5">';
+    A.appendChild(w);
+  }
+  else if(q.type==='order'){
+    const strip=document.createElement('div'); strip.className='orderstrip'; strip.id='q-strip';
+    const pool=document.createElement('div'); pool.style.display='flex'; pool.style.flexWrap='wrap'; pool.style.gap='6px';
+    A.appendChild(strip); A.appendChild(pool);
+    q.items.slice().sort(()=>Math.random()-.5).forEach(it=>{
+      const c=document.createElement('button'); c.className='chip'; c.type='button'; c.textContent=it;
+      c.onclick=()=>{ if(qs.answered)return;
+        if(c.parentNode===pool){ strip.appendChild(c); qs.order.push(it); }
+        else { pool.appendChild(c); qs.order = qs.order.filter(x=>x!==it); }
+      };
+      pool.appendChild(c);
+    });
+  }
+  else if(q.type==='fill'){
+    const row=document.createElement('div'); row.className='fillrow';
+    q.fields.forEach((f,fi)=>{
+      const d=document.createElement('div');
+      d.innerHTML='<label class="ctl-label" for="fill'+fi+'">'+f.label+'</label><select id="fill'+fi+'"><option value="-1">— bitte wählen —</option>'+
+        f.opts.map((o,oi)=>'<option value="'+oi+'">'+o+'</option>').join('')+'</select>';
+      row.appendChild(d);
+    });
+    A.appendChild(row);
+  }
+}
+
+function evaluate(){
+  const q = QUESTIONS[qs.i];
+  const A = $('#q-answers');
+  let correct=false, incomplete=false;
+
+  if(q.type==='single'){
+    if(qs.sel===null) incomplete=true;
+    else{
+      correct = qs.sel===q.a;
+      $$('.ans',A).forEach((b,i)=>{
+        b.disabled=true;
+        if(i===q.a) b.classList.add('right');
+        else if(i===qs.sel) b.classList.add('wrong');
+      });
+    }
+  }
+  else if(q.type==='tf'){
+    if(qs.sel===null) incomplete=true;
+    else{
+      correct = qs.sel===q.a;
+      $$('.ans',A).forEach((b,i)=>{
+        b.disabled=true;
+        const val = i===0;
+        if(val===q.a) b.classList.add('right');
+        else if(val===qs.sel) b.classList.add('wrong');
+      });
+    }
+  }
+  else if(q.type==='multi'){
+    if(!qs.multi.length) incomplete=true;
+    else{
+      const want = q.a.slice().sort().join(',');
+      correct = qs.multi.slice().sort().join(',')===want;
+      $$('.ans',A).forEach((b,i)=>{
+        b.disabled=true;
+        if(q.a.includes(i)) b.classList.add('right');
+        else if(qs.multi.includes(i)) b.classList.add('wrong');
+      });
+    }
+  }
+  else if(q.type==='number'){
+    const v = parseFloat(($('#q-num').value||'').replace(',','.'));
+    if(isNaN(v)) incomplete=true;
+    else{ correct = Math.abs(v-q.a)<=q.tol; $('#q-num').disabled=true; }
+  }
+  else if(q.type==='order'){
+    if(qs.order.length!==q.items.length) incomplete=true;
+    else{
+      correct = qs.order.join('|')===q.items.join('|');
+      $$('#q-strip .chip').forEach((c,i)=>{ c.classList.add(c.textContent===q.items[i]?'right':'wrong'); });
+      $$('.chip',A).forEach(c=>c.disabled=true);
+    }
+  }
+  else if(q.type==='fill'){
+    let all=true, allRight=true;
+    q.fields.forEach((f,fi)=>{
+      const s=$('#fill'+fi); const v=+s.value;
+      if(v<0) all=false;
+      else { if(v!==f.a) allRight=false; s.disabled=true;
+             s.style.borderColor = v===f.a ? 'var(--ok)':'var(--bad)';
+             s.style.background  = v===f.a ? 'var(--ok-bg)':'var(--bad-bg)'; }
+    });
+    if(!all) incomplete=true; else correct=allRight;
+  }
+
+  if(incomplete){
+    const f=$('#q-feedback'); f.className='feedback bad show';
+    f.innerHTML='<b>Noch unvollständig.</b> Bitte geben Sie eine vollständige Antwort ab, bevor Sie das Ticket schließen.';
+    return;
+  }
+
+  qs.answered=true;
+  $('#q-submit').disabled=true;
+  $('#q-next').disabled=false;
+  if(!qs.byTopic[q.topic]) qs.byTopic[q.topic]={ok:0,n:0};
+  qs.byTopic[q.topic].n++;
+  if(correct){ qs.score++; qs.byTopic[q.topic].ok++; }
+  $('#q-score').textContent = qs.score+' / '+QUESTIONS.length+' gelöst';
+
+  const f=$('#q-feedback');
+  f.className='feedback '+(correct?'good':'bad')+' show';
+  f.innerHTML = '<b>'+(correct?'Ticket gelöst.':'Ticket eskaliert.')+'</b>' + q.ex;
+  $('#q-next').textContent = (qs.i===QUESTIONS.length-1) ? 'Schicht auswerten' : 'Nächstes Ticket';
+}
+
+$('#q-submit').addEventListener('click', evaluate);
+$('#q-hintbtn').addEventListener('click',()=>{
+  if(qs.hintUsed) return;
+  qs.hintUsed=true;
+  $('#q-hint').classList.add('show');
+  $('#q-hintbtn').disabled=true;
+  $('#q-hintbtn').textContent='Tipp bereits verbraucht';
+});
+$('#q-next').addEventListener('click',()=>{
+  if(qs.i===QUESTIONS.length-1){ showResult(); return; }
+  qs.i++; renderQuestion();
+  $('#q-head').scrollIntoView({block:'start'});
+});
+
+function showResult(){
+  $('#q-body').style.display='none';
+  $('.quiz-foot').style.display='none';
+  $('#q-head').style.display='none';
+  $('#q-prog').style.width='100%';
+  const pct = qs.score/QUESTIONS.length;
+  $('#r-pct').textContent = Math.round(pct*100)+' %';
+  let rank = RANKS[0];
+  RANKS.forEach(r=>{ if(pct>=r.min) rank=r; });
+  $('#r-rank').textContent = rank.t;
+  $('#r-note').textContent = rank.n + (qs.hintUsed ? ' Den Tipp haben Sie einmal genutzt — in der Prüfung sitzen Sie allein da.' : ' Ganz ohne Tipp: stark.');
+  $('#r-breakdown').innerHTML = Object.keys(qs.byTopic).map(t=>{
+    const b=qs.byTopic[t];
+    return '<div class="brow"><span>'+t+'</span><b>'+b.ok+' / '+b.n+'</b></div>';
+  }).join('');
+  $('#q-result').classList.add('show');
+}
+$('#q-restart').addEventListener('click',()=>{
+  qs.i=0; qs.score=0; qs.hintUsed=false; qs.byTopic={};
+  $('#q-result').classList.remove('show');
+  $('#q-body').style.display=''; $('.quiz-foot').style.display=''; $('#q-head').style.display='';
+  renderQuestion();
+  $('#q-head').scrollIntoView({block:'start'});
+});
+renderQuestion();
+
+/* ============ Navigation aktiv markieren ============ */
+const links = $$('nav a');
+const obs = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      links.forEach(l=>l.classList.toggle('on', l.getAttribute('href')==='#'+e.target.id));
+    }
+  });
+},{rootMargin:'-30% 0px -60% 0px'});
+$$('section[id]').forEach(s=>obs.observe(s));
+
+})();
+</script>
+</body>
+</html>
