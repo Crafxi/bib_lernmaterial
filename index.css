@@ -127,17 +127,30 @@ footer p a img:hover {
     filter: none;
 }
 
+.table-scroll {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    /* smooth momentum scroll on iOS */
+    margin-bottom: 24px;
+}
+
 table {
     border-collapse: collapse;
     width: 100%;
+    min-width: 600px;
+    /* forces scroll instead of squishing columns */
     max-width: 1000px;
-    margin-bottom: 24px;
+    margin-bottom: 0;
+    /* moved to wrapper */
 }
 
 th,
 td {
     padding: 10px 16px;
     text-align: left;
+    white-space: nowrap;
+    /* prevents awkward mid-cell wrapping while scrolling */
 }
 
 tr {
