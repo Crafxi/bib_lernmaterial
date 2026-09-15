@@ -192,6 +192,26 @@ pre.code .c{color:#8f9bd0}
 .tape.full{background:var(--indigo);color:#fff}
 .arrow{color:var(--soft);font-size:13px}
 
+/* ---------- Generationenprinzip ---------- */
+.gen-row{display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--wire)}
+.gen-row:last-child{border-bottom:none}
+.gen-tag{font-family:var(--mono);font-size:11px;color:#fff;padding:4px 8px;flex-shrink:0;width:82px;text-align:center}
+.gen-tag.son{background:#5b64d6}
+.gen-tag.dad{background:var(--indigo)}
+.gen-tag.gpa{background:var(--indigo-deep)}
+
+/* ---------- Bänder ---------- */
+.plan{margin-top:20px}
+.plan h4{margin:0 0 8px}
+.tape-row{display:flex;gap:5px;flex-wrap:wrap}
+.tapebtn{border:1.5px solid var(--wire);background:#fff;padding:7px 4px;cursor:pointer;flex:1;min-width:76px;text-align:center;font-family:var(--mono);font-size:12px;line-height:1.5}
+.tapebtn span{display:block;font-family:var(--sans);font-size:10.5px;color:var(--soft)}
+.tapebtn[aria-pressed="true"]{background:var(--indigo);border-color:var(--indigo);color:#fff}
+.tapebtn[aria-pressed="true"] span{color:#c3c8ee}
+.tapebtn.right{background:var(--ok-bg);border-color:var(--ok);color:var(--ok)}
+.tapebtn.wrong{background:var(--bad-bg);border-color:var(--bad);color:var(--bad)}
+.tapebtn.gone{opacity:.4;text-decoration:line-through}
+
 /* ---------- Glossar ---------- */
 .gloss{display:grid;grid-template-columns:1fr 1fr;gap:0 20px}
 @media(max-width:760px){.gloss{grid-template-columns:1fr}}
@@ -639,6 +659,99 @@ fertig = <span class="k">false</span>
         </div>
       </div>
     </div>
+
+    <div class="panel">
+      <h3>Das Archiv-Bit</h3>
+      <p>Windows setzt bei jeder neu erstellten oder geänderten Datei das Archiv-Bit. Es ist die Merkfahne der Sicherungssoftware: „diese Datei gehört in den nächsten Lauf“. Ob ein Sicherungsverfahren die Fahne wieder abräumt, entscheidet darüber, was beim nächsten Mal noch einmal mitgesichert wird — und genau daraus ergibt sich der Unterschied zwischen differenziell und inkrementell.</p>
+      <p class="hint">Setzen Sie pro Zeile ein Kreuz. Aufgabe aus der Abschlussprüfung Sommer 2023.</p>
+      <div class="scroll" style="margin-top:12px">
+        <table id="ab-table">
+          <thead><tr><th style="width:30%">Aktion</th><th style="width:15%">wird gesetzt</th><th style="width:15%">wird zurückgesetzt</th><th style="width:15%">bleibt unverändert</th><th>Begründung</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <div style="margin-top:16px;display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+        <button class="btn" id="ab-check">Kreuze prüfen</button>
+        <button class="btn ghost" id="ab-reset">Zurücksetzen</button>
+        <span class="verdict" id="ab-verdict"></span>
+      </div>
+      <div class="merk"><b>Der springende Punkt:</b> Die differenzielle Sicherung lässt das Archiv-Bit bewusst stehen. Deshalb sammelt jede Differenz alles seit dem letzten Vollbackup wieder ein und wird täglich dicker. Die inkrementelle Sicherung räumt das Bit ab — jede Datei landet genau einmal in genau einem Band, dafür braucht der Restore die ganze Kette.</div>
+    </div>
+
+    <div class="grid2">
+      <div class="panel">
+        <h3>Generationenprinzip</h3>
+        <p class="hint">Großvater-Vater-Sohn: Ein Datenbestand wird dreifach vorgehalten, bevor er überschrieben wird. Die Medien rotieren.</p>
+        <div class="gen" style="margin-top:16px">
+          <div class="gen-row"><span class="gen-tag son">Sohn</span><div><b>Tagessicherungen</b><div class="why">Montag bis Freitag, differenziell oder inkrementell. Werden innerhalb der Woche wieder überschrieben.</div></div></div>
+          <div class="gen-row"><span class="gen-tag dad">Vater</span><div><b>Wochensicherungen</b><div class="why">Ein Vollbackup je Woche, meist am Wochenende. Wird innerhalb des Monats rotiert.</div></div></div>
+          <div class="gen-row"><span class="gen-tag gpa">Großvater</span><div><b>Monatssicherungen</b><div class="why">Vollbackup zum Monatsende, längere Aufbewahrung. Bei Bedarf ergänzt um Jahressicherungen.</div></div></div>
+        </div>
+        <p style="margin-top:14px">Der Nutzen liegt in den Zeitabstufungen: Wird ein Fehler erst nach Wochen bemerkt — eine schleichend beschädigte Datei, eine unbemerkte Verschlüsselung — gibt es noch ältere Stände, aus denen sich eine saubere Version holen lässt.</p>
+      </div>
+
+      <div class="panel">
+        <h3>Snapshot — und warum er kein Backup ist</h3>
+        <p>Ein Vollbackup großer Datenmengen dauert lange. Währenddessen schreiben Anwendungen weiter in dieselben Dateien, und die Sicherung wird inkonsistent. Der klassische Ausweg wäre, Schreibzugriffe zu sperren oder die Anwendung zu stoppen — für Systeme im 24/7-Betrieb undenkbar.</p>
+        <p>Ein <b>Snapshot</b> friert den Datenbestand stattdessen zu einem Zeitpunkt ein und stellt eine nur lesbare Momentaufnahme bereit. Die Anwendungen schreiben ungestört weiter, gesichert wird vom eingefrorenen Stand. Snapshots entstehen schnell, unabhängig von der Größe des Datenbestands, und verbrauchen weniger Platz als vollständige Kopien.</p>
+        <div class="warn"><b>Trotzdem zusätzlich sichern:</b> Der Snapshot liegt auf demselben Speichersystem und verweist auf die Originaldaten. Fällt die Hardware aus, brennt der Serverraum oder verschlüsselt Ransomware das Volume, ist der Snapshot mit weg. Er schützt vor Inkonsistenz und Bedienfehlern, nicht vor Verlust des Speichers.</div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3>Bandbreitenrechner: Wie lange dauert das Vollbackup?</h3>
+      <p class="hint">Aus der Abschlussprüfung Sommer 2023: Die Filialen sichern über eine Leitung in die Zentrale. Der Rechenweg muss nachvollziehbar sein — deshalb steht er unten Schritt für Schritt.</p>
+      <div class="calc-grid" style="margin-top:16px">
+        <div>
+          <label class="ctl-label" for="bw-size">Zu sichernde Datenmenge: <b id="bw-size-out">800</b> GiB</label>
+          <input type="range" id="bw-size" min="50" max="2000" step="50" value="800">
+
+          <label class="ctl-label" for="bw-link" style="margin-top:18px">Netzwerkverbindung</label>
+          <select id="bw-link">
+            <option value="100">100 Mbit/s</option>
+            <option value="1000" selected>1 Gbit/s</option>
+            <option value="2500">2,5 Gbit/s</option>
+            <option value="10000">10 Gbit/s</option>
+          </select>
+
+          <label class="ctl-label" for="bw-pct" style="margin-top:18px">Nutzbarer Anteil der Übertragungsrate: <b id="bw-pct-out">75</b> %</label>
+          <input type="range" id="bw-pct" min="10" max="100" step="5" value="75">
+        </div>
+        <div>
+          <div class="ctl-label">Maximale Übertragungszeit</div>
+          <div class="bignum" id="bw-time">2 <span>h</span> 33 <span>min</span></div>
+          <div class="status-line" id="bw-window"></div>
+        </div>
+      </div>
+      <h4>Rechenweg</h4>
+      <pre class="code" id="bw-steps"></pre>
+      <div class="merk"><b>Die zwei Fallen:</b> GiB rechnet binär mit 1024, die Leitungsgeschwindigkeit dezimal mit 1.000.000 — nicht vermischen. Und die Leitung liefert <b>Bit</b> pro Sekunde, die Datenmenge steht in <b>Byte</b>: Faktor 8 nicht vergessen.</div>
+    </div>
+
+    <div class="panel">
+      <h3>Welche Bänder brauchen Sie? </h3>
+      <p>Gesichert wird nachts zwischen 23:00 und 7:00 Uhr. Am <b>Samstag, 22.04.23 um 10:00 Uhr</b> fällt das Festplattensystem aus. Klicken Sie die Bänder an, die Sie für die Wiederherstellung einlesen müssen.</p>
+      <div id="tapes"></div>
+      <div style="margin-top:16px;display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+        <button class="btn" id="tape-check">Auswahl prüfen</button>
+        <button class="btn ghost" id="tape-reset">Zurücksetzen</button>
+        <span class="verdict" id="tape-verdict"></span>
+      </div>
+      <div class="merk" id="tape-note" style="display:none"></div>
+    </div>
+
+    <div class="grid2">
+      <div class="panel">
+        <h3>Daten-Replikation</h3>
+        <p>Der Datenbestand wird zwischen zwei oder mehreren Servern permanent abgeglichen. Damit entfällt der Verlust, der sonst zwischen zwei aufeinanderfolgenden Sicherungsläufen entstehen würde.</p>
+        <div class="warn"><b>Abgrenzung zum Backup:</b> Replikate sind keine historischen Stände, sondern möglichst aktuelle Kopien. Eine versehentlich gelöschte oder verschlüsselte Datei wird sofort mitrepliziert. Replikation erhöht die Verfügbarkeit, ersetzt aber keine Sicherung.</div>
+      </div>
+      <div class="panel">
+        <h3>Deduplizierung</h3>
+        <p>Übereinstimmende Blöcke von Dateien, die ganz oder teilweise denselben Inhalt haben, werden nur einmal physisch gespeichert. Das spart erheblich Speicherplatz und beschleunigt Sicherung wie Wiederherstellung.</p>
+        <p class="hint">Zwei Verfahren: <b>inline</b> prüft schon beim Schreiben auf Dubletten, <b>post process</b> schreibt zunächst alles und räumt anschließend auf.</p>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -662,7 +775,7 @@ fertig = <span class="k">false</span>
   <div class="wrap">
     <div class="eyebrow">Prüfungssimulation</div>
     <h2>Schichtdienst bei der IT.SYS GmbH</h2>
-    <p class="lede">Sie haben Bereitschaft. Dreizehn Tickets liegen in der Warteschlange, quer durch alle vier Themen. Einmal pro Schicht dürfen Sie eine Kollegin fragen — danach lösen Sie allein.</p>
+    <p class="lede">Sie haben Bereitschaft. Siebzehn Tickets liegen in der Warteschlange, quer durch alle vier Themen. Einmal pro Schicht dürfen Sie eine Kollegin fragen — danach lösen Sie allein.</p>
 
     <div class="quizbox">
       <div class="progress"><i id="q-prog"></i></div>
@@ -671,7 +784,7 @@ fertig = <span class="k">false</span>
           <div class="ticket-id" id="q-ticket">TT-000</div>
           <div class="ticket-from" id="q-from"></div>
         </div>
-        <div class="score-pill" id="q-score">0 / 13 gelöst</div>
+        <div class="score-pill" id="q-score">0 / 17 gelöst</div>
       </div>
       <div class="quiz-body" id="q-body">
         <div class="qtext" id="q-text"></div>
@@ -1074,6 +1187,141 @@ $$('[data-strat]').forEach(b=>b.addEventListener('click',()=>{
 }));
 renderBackup();
 
+/* ============ 9b. Archiv-Bit-Tabelle ============ */
+const abCols = ['gesetzt','zurückgesetzt','unverändert'];
+const abRows = [
+  {a:'Datei erstellen', c:'gesetzt', why:'Die neue Datei wurde noch nie gesichert und muss in den nächsten Lauf.'},
+  {a:'Datei lesen', c:'unverändert', why:'Lesen verändert den Inhalt nicht, also besteht kein neuer Sicherungsbedarf.'},
+  {a:'Datei ändern', c:'gesetzt', why:'Der Inhalt weicht von der letzten Sicherung ab und muss erneut gesichert werden.'},
+  {a:'Voll-Backup durchführen', c:'zurückgesetzt', why:'Alles ist gesichert. Erst die nächste Änderung setzt die Markierung wieder.'},
+  {a:'Differentielle Sicherung durchführen', c:'unverändert', why:'Das Bit bleibt gesetzt, damit die nächste Differenz dieselbe Datei erneut erfasst — bis zum nächsten Vollbackup.'},
+  {a:'Inkrementelle Sicherung durchführen', c:'zurückgesetzt', why:'Die Datei ist gesichert und gehört erst nach der nächsten Änderung wieder in einen Lauf.'}
+];
+const abPick = {};
+function renderAB(){
+  const tb=$('#ab-table tbody'); tb.innerHTML='';
+  abRows.forEach((r,i)=>{
+    const tr=document.createElement('tr');
+    tr.innerHTML='<td>'+r.a+'</td>'+abCols.map(c=>
+      '<td style="text-align:center"><button class="goal-btn" type="button" data-r="'+i+'" data-c="'+c+'" aria-pressed="false" aria-label="'+c+' bei '+r.a+'">✕</button></td>').join('')
+      +'<td class="why" data-abwhy="'+i+'"></td>';
+    tb.appendChild(tr);
+  });
+  $$('#ab-table .goal-btn').forEach(b=>b.addEventListener('click',()=>{
+    abPick[b.dataset.r]=b.dataset.c;
+    $$('#ab-table .goal-btn[data-r="'+b.dataset.r+'"]').forEach(x=>{
+      x.setAttribute('aria-pressed',String(x===b)); x.classList.remove('right','wrong');
+    });
+    $('#ab-verdict').textContent='';
+  }));
+}
+renderAB();
+$('#ab-check').addEventListener('click',()=>{
+  let ok=0,done=0;
+  abRows.forEach((r,i)=>{
+    const sel=abPick[i]; if(!sel) return; done++;
+    const btn=$('#ab-table .goal-btn[data-r="'+i+'"][data-c="'+sel+'"]');
+    if(sel===r.c){btn.classList.add('right');ok++;}
+    else{btn.classList.add('wrong'); $('#ab-table .goal-btn[data-r="'+i+'"][data-c="'+r.c+'"]').classList.add('right');}
+    $('#ab-table [data-abwhy="'+i+'"]').textContent=r.why;
+  });
+  const v=$('#ab-verdict');
+  if(done<abRows.length){v.className='verdict bad';v.textContent='Noch nicht alle Zeilen bearbeitet.';return;}
+  v.className='verdict '+(ok===abRows.length?'good':'bad');
+  v.textContent= ok===abRows.length ? 'Alle sechs richtig.' : ok+' von '+abRows.length+' richtig — Begründungen stehen rechts.';
+});
+$('#ab-reset').addEventListener('click',()=>{Object.keys(abPick).forEach(k=>delete abPick[k]);renderAB();$('#ab-verdict').textContent='';});
+
+/* ============ 9c. Bandbreitenrechner ============ */
+function calcBW(){
+  const gib=+$('#bw-size').value, link=+$('#bw-link').value, pct=+$('#bw-pct').value;
+  $('#bw-size-out').textContent=de(gib); $('#bw-pct-out').textContent=pct;
+  const bytes = gib*Math.pow(1024,3);
+  const bits  = bytes*8;
+  const rate  = link*1e6*(pct/100);
+  const sec   = bits/rate;
+  const h=Math.floor(sec/3600), m=Math.round((sec-h*3600)/60);
+  $('#bw-time').innerHTML = h+' <span>h</span> '+m+' <span>min</span>';
+  const linkTxt = link>=1000 ? (link/1000).toString().replace('.',',')+' Gbit/s' : link+' Mbit/s';
+  $('#bw-steps').textContent =
+    '1)  Datenmenge in Byte\n'+
+    '    '+de(gib)+' GiB × 1024³ = '+de(bytes)+' Byte\n\n'+
+    '2)  Datenmenge in Bit\n'+
+    '    '+de(bytes)+' Byte × 8 = '+de(bits)+' Bit\n\n'+
+    '3)  Nutzbare Übertragungsrate\n'+
+    '    '+linkTxt+' × '+pct+' % = '+de(rate)+' Bit/s\n\n'+
+    '4)  Übertragungszeit\n'+
+    '    '+de(bits)+' Bit ÷ '+de(rate)+' Bit/s = '+sec.toFixed(1).replace('.',',')+' s\n\n'+
+    '5)  Umrechnung\n'+
+    '    '+sec.toFixed(1).replace('.',',')+' s ÷ 3600 = '+(sec/3600).toFixed(3).replace('.',',')+' h\n'+
+    '    → '+h+' h und '+((sec/3600)-h).toFixed(3).replace('.',',')+' × 60 ≈ '+m+' min';
+  const w=$('#bw-window');
+  if(sec<=8*3600){ w.className='status-line ok'; w.textContent='Passt in das nächtliche Sicherungsfenster von 23:00 bis 7:00 Uhr (8 Stunden).'; }
+  else{ w.className='status-line bad'; w.textContent='Passt nicht mehr in das Fenster von 23:00 bis 7:00 Uhr — die Sicherung läuft in den Arbeitstag hinein.'; }
+}
+['input','change'].forEach(ev=>{
+  $('#bw-size').addEventListener(ev,calcBW); $('#bw-link').addEventListener(ev,calcBW); $('#bw-pct').addEventListener(ev,calcBW);
+});
+calcBW();
+
+/* ============ 9d. Bänder-Übung ============ */
+const planDays = [
+  {t:'So',d:'16.04.',b:'B1'},{t:'Mo',d:'17.04.',b:'B2'},{t:'Di',d:'18.04.',b:'B3'},{t:'Mi',d:'19.04.',b:'B4'},
+  {t:'Do',d:'20.04.',b:'B5'},{t:'Fr',d:'21.04.',b:'B6'},{t:'Sa',d:'22.04.',b:'B7'},{t:'So',d:'23.04.',b:'B8'}
+];
+const planDefs = [
+  {id:'diff', name:'Plan für die <b>differenzielle</b> Datensicherung', kinds:['voll','diff','diff','diff','diff','diff','diff','voll'], correct:['B1','B6']},
+  {id:'inkr', name:'Plan für die <b>inkrementelle</b> Datensicherung', kinds:['voll','inkr','inkr','inkr','inkr','inkr','inkr','voll'], correct:['B1','B2','B3','B4','B5','B6']}
+];
+const tapePick = {diff:[], inkr:[]};
+function renderTapes(){
+  const host=$('#tapes'); host.innerHTML='';
+  planDefs.forEach(p=>{
+    const d=document.createElement('div'); d.className='plan';
+    d.innerHTML='<h4>'+p.name+'</h4><div class="tape-row" data-plan="'+p.id+'">'+
+      planDays.map((day,i)=>'<button class="tapebtn" type="button" data-plan="'+p.id+'" data-b="'+day.b+'" aria-pressed="false">'+
+        day.b+'<span>'+day.t+' '+day.d+'</span><span>'+p.kinds[i]+'</span></button>').join('')+'</div>';
+    host.appendChild(d);
+  });
+  $$('#tapes .tapebtn').forEach(b=>b.addEventListener('click',()=>{
+    const p=b.dataset.plan, id=b.dataset.b;
+    const on=b.getAttribute('aria-pressed')!=='true';
+    b.setAttribute('aria-pressed',String(on));
+    b.classList.remove('right','wrong','gone');
+    tapePick[p] = on ? tapePick[p].concat(id) : tapePick[p].filter(x=>x!==id);
+    $('#tape-verdict').textContent='';
+  }));
+  tapePick.diff=[]; tapePick.inkr=[];
+  $('#tape-note').style.display='none';
+}
+renderTapes();
+$('#tape-check').addEventListener('click',()=>{
+  let allRight=true, any=false;
+  planDefs.forEach(p=>{
+    const sel=tapePick[p.id].slice().sort();
+    if(sel.length) any=true;
+    if(sel.join(',')!==p.correct.slice().sort().join(',')) allRight=false;
+    $$('#tapes .tapebtn[data-plan="'+p.id+'"]').forEach(b=>{
+      const id=b.dataset.b, should=p.correct.includes(id), chosen=tapePick[p.id].includes(id);
+      b.classList.remove('right','wrong','gone');
+      if(should) b.classList.add(chosen?'right':'wrong');
+      else if(chosen) b.classList.add('wrong');
+      if(id==='B7'||id==='B8') b.classList.add('gone');
+    });
+  });
+  const v=$('#tape-verdict');
+  if(!any){v.className='verdict bad';v.textContent='Bitte zuerst Bänder auswählen.';return;}
+  v.className='verdict '+(allRight?'good':'bad');
+  v.textContent = allRight ? 'Beide Pläne richtig.' : 'Noch nicht ganz — die Lösung steht unten.';
+  const n=$('#tape-note');
+  n.style.display='block';
+  n.innerHTML='<b>Lösung:</b> Die Sicherungen laufen ab 23:00 Uhr. Das Band <b>B7</b> vom Samstag wäre also erst in der Nacht <i>nach</i> dem Ausfall um 10:00 Uhr geschrieben worden — es existiert nicht. Der jüngste verwertbare Stand ist B6 aus der Nacht von Freitag auf Samstag.<br><br>'+
+    '<b>Differenziell:</b> B1 (Vollbackup) → B6 (letzte Differenz). Zwei Bänder.<br>'+
+    '<b>Inkrementell:</b> B1 → B2 → B3 → B4 → B5 → B6, lückenlos in chronologischer Reihenfolge. Sechs Bänder.<br><br>'+
+    'Alles, was nach 7:00 Uhr am Samstag bis zum Ausfall um 10:00 Uhr entstanden ist, ist in beiden Fällen verloren.';
+});
+$('#tape-reset').addEventListener('click',()=>{renderTapes();$('#tape-verdict').textContent='';});
+
 /* ============ 10. Glossar ============ */
 const glossary = [
   ['AH (Authentication Header)','IPsec-Protokoll Nr. 51: sichert Integrität und Authentizität über das gesamte Paket, verschlüsselt aber nichts und verträgt sich nicht mit NAT.'],
@@ -1109,7 +1357,12 @@ const glossary = [
   ['USV','Unterbrechungsfreie Stromversorgung: hält den Betrieb kurz aufrecht und ermöglicht geordnetes Herunterfahren.'],
   ['ECC-RAM','Arbeitsspeicher, der Bitfehler erkennt und einzelne korrigiert.'],
   ['Failover-Server','Ersatzsystem, das bei Störung automatisch die Aufgaben übernimmt.'],
-  ['XCOPY','Windows-Kommandozeilenbefehl zum Kopieren von Dateien und Verzeichnissen, auch für einfache Sicherungen.']
+  ['XCOPY','Windows-Kommandozeilenbefehl zum Kopieren von Dateien und Verzeichnissen, auch für einfache Sicherungen.'],
+  ['Gibibyte (GiB)','Binäre Speichereinheit: 1 GiB = 1024³ Byte = 1.073.741.824 Byte — nicht zu verwechseln mit dem dezimalen Gigabyte mit 10⁹ Byte.'],
+  ['Sicherungsfenster','Zeitraum, in dem eine Sicherung laufen darf, ohne den Betrieb zu stören — typischerweise nachts, etwa von 23:00 bis 7:00 Uhr.'],
+  ['Konsistenz einer Sicherung','Eigenschaft, dass alle gesicherten Daten denselben Stand abbilden; gefährdet, wenn während der Sicherung weiter geschrieben wird.'],
+  ['Inline-Deduplizierung','Dubletten werden schon beim Schreiben erkannt und gar nicht erst abgelegt; die Gegenvariante post process räumt erst nach dem Schreiben auf.'],
+  ['Prüfsumme als Änderungsmerkmal','Alternative zum Archiv-Bit: Die Sicherungssoftware erkennt an Datum oder Prüfsumme, ob eine Datei seit dem letzten Lauf verändert wurde.']
 ];
 function renderGloss(filter){
   const f = (filter||'').trim().toLowerCase();
@@ -1257,6 +1510,46 @@ const QUESTIONS = [
     a:1,
     hint:'Der Vergleich beantwortet genau eine Frage: Ist die Datei noch dieselbe wie beim Hersteller?',
     ex:'Der Hashvergleich zeigt, ob die Datei seit der Bereitstellung unverändert geblieben ist — also Integrität. Lesbar bleibt die Datei ohnehin für jeden, Vertraulichkeit spielt hier keine Rolle, und verfügbar ist sie unabhängig vom Hashwert.'
+  },
+  {
+    ticket:'TT-054', from:'Seba AG: Windows-Fileserver, Sicherungskonzept', topic:'Backup',
+    type:'single',
+    q:'Was geschieht mit dem Archiv-Bit einer Datei, wenn eine differentielle Datensicherung durchgeführt wird?',
+    opts:['Es wird gesetzt.','Es wird zurückgesetzt.','Es bleibt unverändert.','Es wird gelöscht und die Datei als schreibgeschützt markiert.'],
+    a:2,
+    hint:'Warum wird eine differenzielle Sicherung jeden Tag größer? Die Antwort steckt genau in diesem Verhalten.',
+    ex:'Die differenzielle Sicherung lässt das Bit stehen. Genau deshalb erfasst sie am nächsten Tag dieselbe Datei erneut und sammelt fortlaufend alles seit dem letzten Vollbackup ein. Die inkrementelle Sicherung und das Vollbackup setzen das Bit dagegen zurück.'
+  },
+  {
+    ticket:'TT-055', from:'Seba AG: Leitung Hamburg – Köln', topic:'Backup',
+    type:'number',
+    q:'800 GiB sollen über eine 1-Gbit/s-Leitung gesichert werden, von der 75 % nutzbar sind. Wie lange dauert die Übertragung maximal? Antwort in Stunden, auf eine Nachkommastelle.',
+    a:2.5, tol:0.3, unit:'Stunden',
+    hint:'Drei Schritte: GiB in Byte mit 1024³, Byte in Bit mit 8, dann durch die nutzbaren 750.000.000 Bit/s teilen.',
+    ex:'800 GiB × 1024³ = 858.993.459.200 Byte, mal 8 sind 6.871.947.673.600 Bit. Nutzbar sind 1 Gbit/s × 75 % = 750.000.000 Bit/s. Die Division ergibt rund 9.163 Sekunden, also etwa 2,5 Stunden — genauer 2 Stunden und 33 Minuten. Das passt bequem in ein nächtliches Sicherungsfenster.'
+  },
+  {
+    ticket:'TT-056', from:'Notfall Seba AG: Ausfall Samstag 22.04., 10:00 Uhr', topic:'Backup',
+    type:'multi',
+    q:'Gesichert wird nachts ab 23:00 Uhr: Sonntag 16.04. voll auf B1, danach täglich differenziell auf B2 bis B7. Welche Bänder lesen Sie nach dem Ausfall am Samstagvormittag ein? Mehrfachauswahl.',
+    opts:['B1 (Sonntag, voll)','B2 (Montag, diff)','B5 (Donnerstag, diff)','B6 (Freitag, diff)','B7 (Samstag, diff)'],
+    a:[0,3],
+    hint:'Prüfen Sie zuerst, welches Band zum Zeitpunkt des Ausfalls überhaupt schon geschrieben war.',
+    ex:'B7 hätte erst in der Nacht nach dem Ausfall geschrieben werden sollen und existiert nicht. Der jüngste vorhandene Stand ist B6 aus der Nacht von Freitag auf Samstag. Beim differenziellen Plan genügen deshalb B1 und B6. Beim inkrementellen Plan wären es B1 bis B6 vollständig gewesen.'
+  },
+  {
+    ticket:'TT-057', from:'Rückfrage Kunde: „Snapshots reichen doch?“', topic:'Backup',
+    type:'single',
+    q:'Warum muss trotz regelmäßiger Snapshots zusätzlich ein Backup gefahren werden?',
+    opts:[
+      'Weil Snapshots mit der Größe des Datenbestands immer langsamer werden.',
+      'Weil ein Snapshot auf demselben Speichersystem liegt und bei Hardwaredefekt, Brand oder Ransomware mit verloren geht.',
+      'Weil Snapshots die Daten unverschlüsselt ablegen und damit den Datenschutz verletzen.',
+      'Weil Snapshots nur von Datenbanken, nicht von Dateisystemen erstellt werden können.'
+    ],
+    a:1,
+    hint:'Wo liegt der Snapshot physisch, und wovon hängt er ab?',
+    ex:'Ein Snapshot friert einen Stand ein und verweist dabei auf die Originaldaten auf demselben Speichersystem. Er löst das Konsistenzproblem während der Sicherung und hilft bei Bedienfehlern, schützt aber nicht vor dem Verlust des Speichers selbst. Erst eine Kopie auf einem getrennten Medium ist ein Backup. Nebenbei: Snapshots entstehen gerade unabhängig von der Datenmenge schnell.'
   }
 ];
 
@@ -1265,7 +1558,7 @@ const RANKS = [
   {min:.5,  t:'Solide Grundlage', n:'Die Basis sitzt. Die Details bei IPsec und den Backup-Ketten sind erfahrungsgemäß das, was in der Prüfung die Punkte macht.'},
   {min:.7,  t:'Prüfungsreif', n:'Das würde in der Abschlussprüfung gut aussehen. Die verbliebenen Lücken lassen sich gezielt schließen.'},
   {min:.85, t:'Second-Level-Verstärkung', n:'Sehr sicher. Sie könnten die Tickets vermutlich auch erklären, statt sie nur zu lösen — das ist die beste Vorbereitung.'},
-  {min:1,   t:'Schicht ohne einen Kratzer', n:'Dreizehn von dreizehn. Genau so soll das aussehen.'}
+  {min:1,   t:'Schicht ohne einen Kratzer', n:'Alle siebzehn Tickets gelöst. Genau so soll das aussehen.'}
 ];
 
 const qs = {i:0, score:0, hintUsed:false, answered:false, sel:null, multi:[], order:[], fill:{}, byTopic:{}};
