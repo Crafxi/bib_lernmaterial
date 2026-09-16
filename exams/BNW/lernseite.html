@@ -1142,6 +1142,73 @@
             min-width: 120px
         }
 
+        /* ---------- 3-2-1-Regel ---------- */
+        .r321 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin: 18px 0 22px
+        }
+
+        @media(max-width:720px) {
+            .r321 {
+                grid-template-columns: 1fr
+            }
+        }
+
+        .r321 .t {
+            border: 1.5px solid var(--wire);
+            background: var(--panel2);
+            padding: 14px;
+            font-size: 14px;
+            font-weight: 600
+        }
+
+        .r321 .t b {
+            display: block;
+            font-family: var(--cond);
+            font-size: 42px;
+            line-height: .95;
+            color: var(--indigo-deep)
+        }
+
+        .r321 .t .ex {
+            display: block;
+            font-weight: 400;
+            font-size: 13px;
+            color: var(--soft);
+            margin-top: 8px;
+            line-height: 1.45
+        }
+
+        .r321 .t .st {
+            display: block;
+            font-family: var(--mono);
+            font-size: 12px;
+            margin-top: 8px;
+            color: var(--soft)
+        }
+
+        .r321 .t.ok {
+            border-color: var(--ok);
+            background: var(--ok-bg)
+        }
+
+        .r321 .t.ok b,
+        .r321 .t.ok .st {
+            color: var(--ok)
+        }
+
+        .r321 .t.no {
+            border-color: var(--bad);
+            background: var(--bad-bg)
+        }
+
+        .r321 .t.no b,
+        .r321 .t.no .st {
+            color: var(--bad)
+        }
+
         /* ---------- Generationenprinzip ---------- */
         .gen-row {
             display: flex;
@@ -2262,6 +2329,46 @@ fertig = <span class="k">false</span>
             </div>
 
             <div class="panel">
+                <h3>Die 3-2-1-Regel</h3>
+                <p>Die Faustformel dafür, wann eine Datensicherung wirklich trägt. Sie beantwortet nicht, <i>wie</i>
+                    gesichert wird, sondern <b>wo die Kopien liegen</b> — und genau daran scheitern die meisten Konzepte
+                    in der Praxis.</p>
+                <div class="r321" id="r321">
+                    <div class="t" data-t="kopien"><b>3</b>Kopien der Daten<span class="st"></span>
+                        <span class="ex">Das Original plus zwei Sicherungen. Fällt eine aus, bleibt immer noch eine
+                            übrig.</span>
+                    </div>
+                    <div class="t" data-t="medien"><b>2</b>verschiedene Medien<span class="st"></span>
+                        <span class="ex">Unterschiedliche Speichertechnik oder getrennte Geräte, damit ein Defekt nicht
+                            beide Kopien trifft.</span>
+                    </div>
+                    <div class="t" data-t="extern"><b>1</b>Kopie außer Haus<span class="st"></span>
+                        <span class="ex">Schützt vor Brand, Wasser, Einbruch und Ransomware im eigenen Netz.</span>
+                    </div>
+                </div>
+
+                <h4>Konzept zusammenstellen</h4>
+                <p class="dhelp">Die Produktivdaten liegen auf dem Server. Schalten Sie zusätzliche Speicherorte dazu
+                    und beobachten Sie, wann die Regel erfüllt ist.</p>
+                <div class="flags" id="r321-flags">
+                    <button class="flag" type="button" data-i="0" aria-pressed="false">Zweite Partition derselben
+                        Platte</button>
+                    <button class="flag" type="button" data-i="1" aria-pressed="false">NAS im Serverraum</button>
+                    <button class="flag" type="button" data-i="2" aria-pressed="false">USB-Platte im
+                        Schreibtisch</button>
+                    <button class="flag" type="button" data-i="3" aria-pressed="false">Bandkassette im
+                        Bankschließfach</button>
+                    <button class="flag" type="button" data-i="4" aria-pressed="false">Cloud-Backup beim
+                        Anbieter</button>
+                </div>
+                <div class="status-line" id="r321-out"></div>
+                <div class="merk"><b>Weitergedacht — 3-2-1-1-0:</b> Eine der Kopien liegt <b>offline oder
+                        unveränderbar</b>, damit Ransomware sie nicht mitverschlüsseln kann. Und <b>null Fehler</b> beim
+                    regelmäßigen Rücksicherungstest — eine Sicherung gilt erst dann als vorhanden, wenn sie nachweislich
+                    zurückgespielt werden konnte.</div>
+            </div>
+
+            <div class="panel">
                 <h3>Das Archiv-Bit</h3>
                 <p>Windows setzt bei jeder neu erstellten oder geänderten Datei das Archiv-Bit. Es ist die Merkfahne der
                     Sicherungssoftware: „diese Datei gehört in den nächsten Lauf“. Ob ein Sicherungsverfahren die Fahne
@@ -2432,7 +2539,7 @@ fertig = <span class="k">false</span>
         <div class="wrap">
             <div class="eyebrow">Prüfungssimulation</div>
             <h2>Schichtdienst bei der IT.SYS GmbH</h2>
-            <p class="lede">Sie haben Bereitschaft. Achtzehn Tickets liegen in der Warteschlange, quer durch alle
+            <p class="lede">Sie haben Bereitschaft. Neunzehn Tickets liegen in der Warteschlange, quer durch alle
                 Themen. Einmal pro Schicht dürfen Sie eine Kollegin fragen — danach lösen Sie allein.</p>
 
             <div class="quizbox">
@@ -2442,7 +2549,7 @@ fertig = <span class="k">false</span>
                         <div class="ticket-id" id="q-ticket">TT-000</div>
                         <div class="ticket-from" id="q-from"></div>
                     </div>
-                    <div class="score-pill" id="q-score">0 / 18 gelöst</div>
+                    <div class="score-pill" id="q-score">0 / 19 gelöst</div>
                 </div>
                 <div class="quiz-body" id="q-body">
                     <div class="qtext" id="q-text"></div>
@@ -3067,7 +3174,49 @@ fertig = <span class="k">false</span>
             }));
             renderBackup();
 
-            /* ============ 9b. Archiv-Bit-Tabelle ============ */
+            /* ============ 9b. 3-2-1-Regel ============ */
+            const r321Opts = [
+                { n: 'Zweite Partition derselben Platte', medium: 'server', extern: false, warn: 'Die zweite Partition liegt auf derselben Festplatte wie das Original. Sie zählt weder als eigenes Medium noch als brauchbare Kopie — ein Plattendefekt nimmt beide mit.' },
+                { n: 'NAS im Serverraum', medium: 'nas', extern: false },
+                { n: 'USB-Platte im Schreibtisch', medium: 'usb', extern: false },
+                { n: 'Bandkassette im Bankschließfach', medium: 'tape', extern: true },
+                { n: 'Cloud-Backup beim Anbieter', medium: 'cloud', extern: true }
+            ];
+            function calc321() {
+                const on = $$('#r321-flags .flag').filter(f => f.getAttribute('aria-pressed') === 'true').map(f => r321Opts[+f.dataset.i]);
+                const kopien = 1 + on.length;
+                const medien = new Set(['server'].concat(on.map(o => o.medium))).size;
+                const extern = on.some(o => o.extern);
+                const set = (k, ok, txt) => {
+                    const t = $('#r321 .t[data-t="' + k + '"]');
+                    t.classList.toggle('ok', ok); t.classList.toggle('no', !ok);
+                    $('.st', t).textContent = txt;
+                };
+                set('kopien', kopien >= 3, 'aktuell: ' + kopien);
+                set('medien', medien >= 2, 'aktuell: ' + medien);
+                set('extern', extern, extern ? 'erfüllt' : 'alles am selben Ort');
+
+                const out = $('#r321-out');
+                const warn = on.filter(o => o.warn).map(o => o.warn);
+                if (kopien >= 3 && medien >= 2 && extern) {
+                    out.className = 'status-line ok';
+                    out.innerHTML = 'Die 3-2-1-Regel ist erfüllt.' + (warn.length ? ' <b>Aber:</b> ' + warn[0] : '');
+                } else {
+                    const fehlt = [];
+                    if (kopien < 3) fehlt.push('es fehlen ' + (3 - kopien) + ' Kopien');
+                    if (medien < 2) fehlt.push('alles liegt auf derselben Art von Speicher');
+                    if (!extern) fehlt.push('keine Kopie außer Haus');
+                    out.className = 'status-line bad';
+                    out.innerHTML = 'Noch nicht ausreichend: ' + fehlt.join(', ') + '.' + (warn.length ? ' <b>Hinweis:</b> ' + warn[0] : '');
+                }
+            }
+            $$('#r321-flags .flag').forEach(f => f.addEventListener('click', () => {
+                f.setAttribute('aria-pressed', String(f.getAttribute('aria-pressed') !== 'true'));
+                calc321();
+            }));
+            calc321();
+
+            /* ============ 9c. Archiv-Bit-Tabelle ============ */
             const abCols = ['gesetzt', 'zurückgesetzt', 'unverändert'];
             const abRows = [
                 { a: 'Datei erstellen', c: 'gesetzt', why: 'Die neue Datei wurde noch nie gesichert und muss in den nächsten Lauf.' },
@@ -3238,6 +3387,7 @@ fertig = <span class="k">false</span>
                 ['ECC-RAM', 'Arbeitsspeicher, der Bitfehler erkennt und einzelne korrigiert.'],
                 ['Failover-Server', 'Ersatzsystem, das bei Störung automatisch die Aufgaben übernimmt.'],
                 ['XCOPY', 'Windows-Kommandozeilenbefehl zum Kopieren von Dateien und Verzeichnissen, auch für einfache Sicherungen.'],
+                ['3-2-1-Regel', 'Faustformel für Sicherungskonzepte: drei Kopien der Daten, auf zwei verschiedenen Medien, davon eine an einem anderen Standort.'],
                 ['Gibibyte (GiB)', 'Binäre Speichereinheit: 1 GiB = 1024³ Byte = 1.073.741.824 Byte — nicht zu verwechseln mit dem dezimalen Gigabyte mit 10⁹ Byte.'],
                 ['Sicherungsfenster', 'Zeitraum, in dem eine Sicherung laufen darf, ohne den Betrieb zu stören — typischerweise nachts, etwa von 23:00 bis 7:00 Uhr.'],
                 ['Konsistenz einer Sicherung', 'Eigenschaft, dass alle gesicherten Daten denselben Stand abbilden; gefährdet, wenn während der Sicherung weiter geschrieben wird.'],
@@ -3444,6 +3594,20 @@ fertig = <span class="k">false</span>
                     a: 1,
                     hint: 'Fragen Sie sich, welche Art von Adresse das Gerät auswertet, um weiterzuleiten.',
                     ex: 'Ein Switch leitet Rahmen anhand von MAC-Adressen innerhalb eines lokalen Netzes weiter — Schicht 2, Sicherungsschicht. Ein Router trifft seine Entscheidung anhand von IP-Adressen und verbindet verschiedene Netze — Schicht 3, Vermittlungsschicht. Auf Schicht 1 sitzen nur Hub, Repeater und Medienkonverter.'
+                },
+                {
+                    ticket: 'TT-059', from: 'Konzeptprüfung: Sicherung der Praxisdaten', topic: 'Backup',
+                    type: 'single',
+                    q: 'Die Patientendaten liegen auf dem Server, ein Vollbackup läuft täglich auf ein NAS im selben Serverraum. Welche Bedingung der 3-2-1-Regel ist damit noch nicht erfüllt?',
+                    opts: [
+                        'Es fehlen zwei verschiedene Medientypen.',
+                        'Es fehlt eine Kopie an einem anderen Standort.',
+                        'Es fehlt die dritte Kopie — Server und NAS sind nur eine.',
+                        'Die Regel ist vollständig erfüllt.'
+                    ],
+                    a: 1,
+                    hint: 'Zählen Sie die drei Bedingungen einzeln durch: Anzahl Kopien, Art der Medien, Ort.',
+                    ex: 'Server und NAS sind zwei Kopien auf zwei verschiedenen Geräten — die dritte Kopie fehlt zwar streng genommen auch, der eigentliche Bruch ist aber der Ort: beides steht im selben Raum. Brand, Wasserschaden, Einbruch oder Ransomware im Netz erwischen beide Stände gleichzeitig. Es braucht mindestens eine Kopie außer Haus, etwa im Bankschließfach oder in der Cloud.'
                 }
             ];
 
@@ -3452,7 +3616,7 @@ fertig = <span class="k">false</span>
                 { min: .5, t: 'Solide Grundlage', n: 'Die Basis sitzt. Die Details bei IPsec und den Backup-Ketten sind erfahrungsgemäß das, was in der Prüfung die Punkte macht.' },
                 { min: .7, t: 'Prüfungsreif', n: 'Das würde in der Abschlussprüfung gut aussehen. Die verbliebenen Lücken lassen sich gezielt schließen.' },
                 { min: .85, t: 'Second-Level-Verstärkung', n: 'Sehr sicher. Sie könnten die Tickets vermutlich auch erklären, statt sie nur zu lösen — das ist die beste Vorbereitung.' },
-                { min: 1, t: 'Schicht ohne einen Kratzer', n: 'Alle achtzehn Tickets gelöst. Genau so soll das aussehen.' }
+                { min: 1, t: 'Schicht ohne einen Kratzer', n: 'Alle neunzehn Tickets gelöst. Genau so soll das aussehen.' }
             ];
 
             const qs = { i: 0, score: 0, hintUsed: false, answered: false, sel: null, multi: [], order: [], fill: {}, byTopic: {} };
