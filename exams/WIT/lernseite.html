@@ -1,0 +1,1685 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>WIT 3 Klausurtrainer – Beschaffung & Materialwirtschaft</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#EDF0F3; --surface:#FFFFFF; --surface-2:#F4F6F8; --ink:#16202B; --muted:#56657A; --line:#D3DAE2;
+  --blue:#1F4E8C; --blue-soft:#DCE6F3; --rack:#173A68;
+  --yellow:#F2B705; --yellow-soft:#FFF2C4;
+  --green:#23875A; --green-soft:#DBF1E5; --red:#C93C3C; --red-soft:#FAE0E0; --orange:#D06A12; --cyan:#1A8FA3;
+  --shadow:0 1px 2px rgba(22,32,43,.06),0 8px 24px -12px rgba(22,32,43,.18);
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E151D; --surface:#16202B; --surface-2:#1B2733; --ink:#E4EAF1; --muted:#9BA9B9; --line:#2B3A4A;
+    --blue:#77A7E8; --blue-soft:#1B2D46; --rack:#10294A;
+    --yellow:#F5C33B; --yellow-soft:#3A3113;
+    --green:#4CC38A; --green-soft:#153427; --red:#EF7373; --red-soft:#3D1E1E; --orange:#F0A050; --cyan:#4FC3D6;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px -12px rgba(0,0,0,.5);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E151D; --surface:#16202B; --surface-2:#1B2733; --ink:#E4EAF1; --muted:#9BA9B9; --line:#2B3A4A;
+  --blue:#77A7E8; --blue-soft:#1B2D46; --rack:#10294A;
+  --yellow:#F5C33B; --yellow-soft:#3A3113;
+  --green:#4CC38A; --green-soft:#153427; --red:#EF7373; --red-soft:#3D1E1E; --orange:#F0A050; --cyan:#4FC3D6;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px -12px rgba(0,0,0,.5);
+}
+html{scroll-behavior:smooth;scroll-padding-top:calc(env(safe-area-inset-top,0px) + 72px)}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",sans-serif;font-size:17px;line-height:1.55;-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4,.disp{font-family:"Archivo","Arial Narrow",system-ui,sans-serif;line-height:1.1;margin:0}
+h2{font-size:clamp(1.55rem,3.4vw,2.2rem);font-weight:800;font-stretch:110%;letter-spacing:-.01em}
+h3{font-size:1.2rem;font-weight:750;font-stretch:105%;margin-bottom:.55rem}
+h4{font-size:1rem;font-weight:750;margin-bottom:.35rem}
+p{margin:.4rem 0 .8rem;max-width:72ch}
+ul{margin:.3rem 0 .8rem;padding-left:1.2rem}
+li{margin:.2rem 0}
+button{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--yellow);outline-offset:2px;border-radius:4px}
+img,svg{max-width:100%}
+.wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+.muted{color:var(--muted)}
+.small{font-size:.9rem}
+strong{font-weight:700}
+
+/* ---------- Hero ---------- */
+.hero{position:relative;background:var(--rack);color:#F3F6FA;overflow:hidden}
+.hero .wrap{position:relative;z-index:2;padding-top:56px;padding-bottom:210px}
+.hero h1{font-size:clamp(2.3rem,7vw,5rem);font-weight:850;font-stretch:125%;letter-spacing:-.02em;line-height:.95;max-width:14ch}
+.hero .lead{font-size:1.12rem;max-width:56ch;color:#C9D6E6;margin-top:18px}
+.hero-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:26px;align-items:center}
+.hero .btn{background:var(--yellow);color:#16202B}
+.hero .btn.ghost{background:transparent;color:#F3F6FA;border-color:#8FA9CC}
+.stock{margin-top:30px;max-width:420px}
+.stock-label{display:flex;justify-content:space-between;font-size:.9rem;color:#C9D6E6;margin-bottom:6px}
+.stock-bar{height:14px;background:rgba(255,255,255,.12);border-radius:3px;overflow:hidden;position:relative}
+.stock-fill{height:100%;width:0;background:repeating-linear-gradient(90deg,var(--yellow) 0 18px,#E0A800 18px 20px);transition:width .8s cubic-bezier(.2,.8,.2,1)}
+.hero-chart{position:absolute;left:0;right:0;bottom:0;height:190px;z-index:1;pointer-events:none}
+.hero-chart svg{width:100%;height:100%}
+.saw{fill:none;stroke:var(--yellow);stroke-width:3.5;vector-effect:non-scaling-stroke;stroke-dasharray:6000;stroke-dashoffset:6000;animation:draw 3.2s .3s cubic-bezier(.5,0,.2,1) forwards}
+.hline{stroke-width:1.5;vector-effect:non-scaling-stroke;stroke-dasharray:6 6;opacity:0;animation:fade .6s 2.6s forwards}
+.hlabel{position:absolute;right:20px;font-size:.8rem;color:#C9D6E6;opacity:0;animation:fade .6s 2.8s forwards}
+.theme-toggle{position:absolute;top:16px;right:20px;z-index:3;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);color:#F3F6FA;border-radius:8px;padding:6px 10px;cursor:pointer;font-size:.85rem}
+@keyframes draw{to{stroke-dashoffset:0}}
+@keyframes fade{to{opacity:1}}
+
+/* ---------- Nav ---------- */
+.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--surface);border-bottom:3px solid var(--yellow);box-shadow:var(--shadow)}
+.nav .wrap{display:flex;gap:6px;overflow-x:auto;padding-top:10px;padding-bottom:10px;scrollbar-width:thin}
+.bin{flex:0 0 auto;min-width:40px;height:38px;padding:0 10px;display:inline-flex;align-items:center;justify-content:center;border:1.5px solid var(--line);border-radius:6px;background:var(--surface-2);font-family:"Archivo",sans-serif;font-weight:750;font-size:.95rem;text-decoration:none;color:var(--ink);transition:background .2s,border-color .2s}
+.bin:hover{border-color:var(--blue)}
+.bin.done{background:var(--green-soft);border-color:var(--green)}
+.bin.active{background:var(--yellow);border-color:var(--yellow);color:#16202B}
+.bin.wide{padding:0 14px}
+
+/* ---------- Topics ---------- */
+main{padding:24px 0 80px}
+.topic{padding:52px 0 20px;border-bottom:1px solid var(--line)}
+.topic-head{display:grid;grid-template-columns:auto 1fr;gap:20px;align-items:start;margin-bottom:22px}
+.label{width:78px;background:var(--yellow);color:#16202B;border-radius:4px;padding:8px 8px 6px;text-align:center;font-family:"Archivo",sans-serif;box-shadow:inset 0 -6px 0 rgba(0,0,0,.08)}
+.label small{display:block;font-size:.72rem;font-weight:700}
+.label b{display:block;font-size:2.1rem;font-weight:900;font-stretch:120%;line-height:1}
+.label .code{display:block;height:10px;margin-top:6px;background:repeating-linear-gradient(90deg,#16202B 0 1px,transparent 1px 3px,#16202B 3px 5px,transparent 5px 6px,#16202B 6px 7px,transparent 7px 10px)}
+.exam-q{margin-top:10px;border-left:4px solid var(--blue);padding:4px 0 4px 14px;font-style:italic;color:var(--muted);max-width:70ch}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:16px;margin:16px 0}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:20px 22px;box-shadow:var(--shadow);min-width:0}
+.panel.bench{border-left:5px solid var(--blue)}
+.panel.bench > h3::before{content:"";display:inline-block;width:10px;height:10px;background:var(--blue);border-radius:2px;margin-right:9px;vertical-align:.12em}
+.panel + .panel{margin-top:16px}
+.cols .panel + .panel{margin-top:0}
+.key{background:var(--blue-soft);border-radius:10px;padding:14px 18px;margin:12px 0}
+.key p:last-child,.key ul:last-child{margin-bottom:0}
+.formula{font-family:"Archivo",sans-serif;font-weight:700;font-stretch:100%;background:var(--surface-2);border:1px dashed var(--line);border-radius:8px;padding:10px 14px;display:inline-block;margin:6px 0;font-size:1.05rem}
+.btn{display:inline-flex;align-items:center;gap:8px;background:var(--blue);color:#fff;border:1.5px solid transparent;border-radius:8px;padding:10px 16px;font-weight:700;cursor:pointer;text-decoration:none;transition:transform .15s,filter .15s}
+.btn:hover{filter:brightness(1.08)}
+.btn:active{transform:translateY(1px)}
+.btn.ghost{background:transparent;color:var(--blue);border-color:var(--blue)}
+.btn.sm{padding:6px 12px;font-size:.9rem}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+:root[data-theme="dark"] .btn:not(.ghost){color:#0E151D}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .btn:not(.ghost){color:#0E151D}}
+.hero .btn:not(.ghost){color:#16202B}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+details.answer{margin-top:18px;background:var(--surface);border:1.5px solid var(--green);border-radius:12px;overflow:hidden}
+details.answer summary{cursor:pointer;padding:14px 20px;font-weight:700;list-style:none;display:flex;justify-content:space-between;align-items:center;background:var(--green-soft)}
+details.answer summary::-webkit-details-marker{display:none}
+details.answer summary::after{content:"+";font-family:"Archivo";font-size:1.4rem;font-weight:800;transition:transform .25s}
+details.answer[open] summary::after{transform:rotate(45deg)}
+details.answer .inner{padding:6px 20px 16px}
+.done-btn{margin-top:14px;background:transparent;border:1.5px solid var(--line);border-radius:8px;padding:9px 14px;cursor:pointer;font-weight:700;color:var(--muted)}
+.done-btn.on{background:var(--green);border-color:var(--green);color:#fff}
+
+/* range + inputs */
+input[type=range]{width:100%;accent-color:var(--blue)}
+.slider{display:grid;grid-template-columns:1fr auto;gap:2px 10px;margin:10px 0}
+.slider label{font-size:.92rem}
+.slider output{font-family:"Archivo",sans-serif;font-weight:750;text-align:right}
+.slider input{grid-column:1/-1}
+input[type=number],select,input[type=text]{font:inherit;background:var(--surface-2);color:var(--ink);border:1.5px solid var(--line);border-radius:8px;padding:7px 10px;width:100%}
+.stat-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin:12px 0}
+.stat{background:var(--surface-2);border-radius:10px;padding:10px 12px;border:1px solid var(--line)}
+.stat small{display:block;color:var(--muted);font-size:.8rem}
+.stat b{font-family:"Archivo",sans-serif;font-size:1.35rem;font-weight:800}
+.chart-box{overflow-x:auto;margin:8px 0}
+.chart-box svg{display:block;min-width:520px;width:100%;height:auto}
+.axis{stroke:var(--muted);stroke-width:1.2}
+.gridl{stroke:var(--line);stroke-width:1}
+.svgtxt{fill:var(--muted);font-size:12px;font-family:"Atkinson Hyperlegible",sans-serif}
+.feedback{margin-top:8px;font-weight:700;min-height:1.4em}
+.feedback.ok{color:var(--green)}
+.feedback.no{color:var(--red)}
+
+/* sorter */
+.sorter-pool{display:flex;flex-wrap:wrap;gap:8px;padding:12px;border:2px dashed var(--line);border-radius:10px;min-height:56px;margin-bottom:12px;background:var(--surface-2)}
+.sorter-pool:empty::after{content:"Alles einsortiert.";color:var(--muted)}
+.chip{border:1.5px solid var(--line);background:var(--surface);border-radius:6px;padding:7px 11px;cursor:grab;font-size:.93rem;text-align:left;line-height:1.3;transition:border-color .15s,background .15s,transform .15s}
+.chip:hover{border-color:var(--blue)}
+.chip.sel{border-color:var(--blue);background:var(--blue-soft);transform:translateY(-2px)}
+.chip.ok{border-color:var(--green);background:var(--green-soft);cursor:default;animation:pop .35s}
+.chip.bad{animation:shake .45s;border-color:var(--red);background:var(--red-soft)}
+.buckets{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}
+.bucket{border:2px solid var(--line);border-radius:10px;padding:10px;min-height:90px;cursor:pointer;background:var(--surface);transition:border-color .15s,background .15s}
+.bucket.hot{border-color:var(--blue);background:var(--blue-soft)}
+.bucket-title{font-family:"Archivo",sans-serif;font-weight:800;margin-bottom:8px;font-size:.98rem}
+.bucket-items{display:flex;flex-wrap:wrap;gap:6px}
+.bucket-items .chip{font-size:.83rem;padding:4px 8px}
+.sorter-foot{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:12px;flex-wrap:wrap}
+.sorter-msg{font-weight:700;font-size:.95rem}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+@keyframes pop{0%{transform:scale(.8)}60%{transform:scale(1.07)}100%{transform:scale(1)}}
+
+/* flip cards */
+.flips{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px}
+.flip{perspective:1000px;min-height:250px;cursor:pointer;background:none;border:0;padding:0;text-align:left}
+.flip-inner{position:relative;width:100%;height:100%;min-height:250px;transition:transform .6s cubic-bezier(.3,.7,.2,1);transform-style:preserve-3d}
+.flip.flipped .flip-inner{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:12px;padding:18px;border:1px solid var(--line);background:var(--surface);box-shadow:var(--shadow);display:flex;flex-direction:column}
+.face.back{transform:rotateY(180deg);background:var(--blue-soft);font-size:.93rem}
+.face .ico{font-size:2.2rem;line-height:1;margin-bottom:10px}
+.face .hint{margin-top:auto;font-size:.82rem;color:var(--muted)}
+
+/* chain */
+.chain{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.station{flex:1 1 130px;border:1.5px solid var(--line);border-radius:8px;padding:10px;background:var(--surface-2);font-size:.9rem;transition:background .3s,border-color .3s,transform .3s}
+.station b{display:block;font-family:"Archivo",sans-serif;font-size:.95rem}
+.station.lit{background:var(--yellow-soft);border-color:var(--yellow);transform:translateY(-3px)}
+.chain-note{min-height:3em;font-size:.95rem}
+
+/* tabs */
+.tabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.tab{border:1.5px solid var(--line);background:var(--surface-2);padding:8px 12px;border-radius:8px;cursor:pointer;font-weight:700;font-size:.92rem}
+.tab.on{background:var(--blue);border-color:var(--blue);color:#fff}
+:root[data-theme="dark"] .tab.on{color:#0E151D}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .tab.on{color:#0E151D}}
+.tabpane{display:none;animation:fade .3s}
+.tabpane.on{display:block;opacity:1}
+
+/* tables */
+.tbl-wrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:.92rem}
+th,td{padding:7px 9px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
+th:first-child,td:first-child{text-align:left}
+th{font-family:"Archivo",sans-serif;font-weight:750;background:var(--surface-2)}
+tr.flash td{animation:flashrow .7s}
+@keyframes flashrow{from{background:var(--yellow-soft)}to{background:transparent}}
+.cls{display:inline-block;min-width:26px;text-align:center;border-radius:4px;font-weight:800;font-family:"Archivo",sans-serif;padding:1px 6px;color:#fff}
+.cls.A{background:var(--red)}.cls.B{background:var(--orange)}.cls.C{background:var(--cyan)}
+
+/* tank */
+.tank-wrap{display:grid;grid-template-columns:140px 1fr;gap:20px;align-items:center}
+.tank{height:220px;border:3px solid var(--ink);border-top:0;border-radius:0 0 14px 14px;position:relative;overflow:hidden;background:var(--surface-2)}
+.tank .water{position:absolute;left:0;right:0;bottom:0;background:linear-gradient(var(--cyan),var(--blue));transition:height .6s cubic-bezier(.2,.8,.2,1)}
+.tank .val{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:"Archivo",sans-serif;font-weight:900;font-size:1.5rem;color:var(--ink);text-shadow:0 0 6px var(--surface)}
+.meter{height:10px;background:var(--surface-2);border-radius:5px;overflow:hidden;border:1px solid var(--line)}
+.meter i{display:block;height:100%;transition:width .5s}
+
+/* JIT lanes */
+.lane{display:grid;grid-template-columns:110px 1fr;gap:10px;align-items:center;margin:10px 0}
+.lane-track{position:relative;height:74px;background:var(--surface-2);border-radius:10px;border:1px solid var(--line);overflow:hidden}
+.truck{position:absolute;top:18px;left:-40px;font-size:1.8rem;transition:left .6s linear}
+.store{position:absolute;left:44%;top:6px;bottom:6px;width:26%;border-left:2px dashed var(--line);border-right:2px dashed var(--line);display:flex;flex-wrap:wrap-reverse;align-content:flex-start;gap:2px;padding:4px}
+.store span{font-size:.95rem;line-height:1}
+.factory{position:absolute;right:10px;top:16px;font-size:2rem}
+.lane-cap{font-size:.78rem;position:absolute;left:44%;bottom:-1px;color:var(--muted);padding-left:4px}
+
+/* puzzle */
+.puzzle{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+.slots{display:grid;gap:6px;margin:10px 0}
+.slot{border:2px dashed var(--line);border-radius:8px;padding:9px 12px;min-height:44px;display:flex;gap:10px;align-items:center;font-size:.95rem}
+.slot.filled{border-style:solid;border-color:var(--green);background:var(--green-soft);animation:pop .35s}
+.slot .n{font-family:"Archivo";font-weight:900;color:var(--muted);width:22px}
+.stack{display:flex;height:42px;border-radius:8px;overflow:hidden;margin:10px 0;border:1px solid var(--line)}
+.stack div{display:flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:700;color:#fff;transition:flex-grow .4s;overflow:hidden;white-space:nowrap;min-width:0}
+
+/* steps */
+.steps{counter-reset:s;list-style:none;padding:0;margin:10px 0}
+.steps li{counter-increment:s;position:relative;padding:10px 12px 10px 48px;border-left:3px solid var(--line);margin:0 0 0 14px}
+.steps li::before{content:counter(s);position:absolute;left:-16px;top:8px;width:30px;height:30px;border-radius:50%;background:var(--surface);border:3px solid var(--blue);display:flex;align-items:center;justify-content:center;font-family:"Archivo";font-weight:900;font-size:.9rem;color:var(--blue)}
+.reveal-steps li{opacity:.18;filter:blur(1.5px);transition:opacity .4s,filter .4s}
+.reveal-steps li.shown{opacity:1;filter:none}
+
+/* scoring */
+.sc-table input[type=number]{width:64px;padding:5px 6px;text-align:right}
+.sc-table input[type=range]{width:110px;vertical-align:middle}
+.sc-table td{vertical-align:middle}
+.bars{display:grid;gap:10px;margin-top:12px}
+.bar-row{display:grid;grid-template-columns:150px 1fr 70px;gap:10px;align-items:center}
+.bar-track{height:26px;background:var(--surface-2);border-radius:6px;overflow:hidden;border:1px solid var(--line)}
+.bar-fill{height:100%;background:var(--blue);transition:width .5s cubic-bezier(.2,.8,.2,1);display:flex;align-items:center;justify-content:flex-end;padding-right:8px;color:#fff;font-weight:800;font-size:.8rem}
+.bar-fill.win{background:var(--green)}
+.rank{font-family:"Archivo";font-weight:900;font-size:1.1rem}
+
+/* quiz */
+.quiz-card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:24px;box-shadow:var(--shadow);max-width:820px}
+.qprog{height:8px;background:var(--surface-2);border-radius:4px;overflow:hidden;margin-bottom:16px}
+.qprog i{display:block;height:100%;background:var(--yellow);transition:width .4s}
+.qtext{font-size:1.18rem;font-weight:700;margin:6px 0 16px}
+.opts{display:grid;gap:8px}
+.opt{text-align:left;border:1.5px solid var(--line);background:var(--surface-2);border-radius:10px;padding:12px 14px;cursor:pointer;transition:border-color .15s,background .15s}
+.opt:hover:not([disabled]){border-color:var(--blue)}
+.opt.right{border-color:var(--green);background:var(--green-soft);animation:pop .35s}
+.opt.wrong{border-color:var(--red);background:var(--red-soft);animation:shake .45s}
+.opt[disabled]{cursor:default}
+.explain{margin-top:14px;padding:12px 14px;border-radius:10px;background:var(--blue-soft);display:none}
+.explain.on{display:block;animation:fade .3s}
+.filters{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 16px}
+.score-big{font-family:"Archivo";font-size:3.4rem;font-weight:900;font-stretch:120%;line-height:1}
+
+/* flashcards */
+.fc-topics{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:8px;margin-bottom:22px}
+.fc-topic{text-align:left;border:1.5px solid var(--line);background:var(--surface);border-radius:10px;padding:10px 12px;cursor:pointer;display:flex;flex-direction:column;gap:6px;transition:border-color .15s,background .15s}
+.fc-topic:hover{border-color:var(--blue)}
+.fc-topic.on{border-color:var(--blue);background:var(--blue-soft)}
+.fc-topic b{font-family:"Archivo",sans-serif;font-size:.95rem;font-weight:750;line-height:1.2}
+.fc-topic small{color:var(--muted);font-size:.8rem}
+.fc-mini{height:5px;background:var(--surface-2);border-radius:3px;overflow:hidden;margin-top:auto}
+.fc-mini i{display:block;height:100%;background:var(--green);transition:width .4s}
+.fc-stage{max-width:660px}
+.fc-top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:10px;font-size:.9rem;color:var(--muted);flex-wrap:wrap}
+.fc-dots{display:flex;gap:4px;flex-wrap:wrap}
+.fc-dots i{width:10px;height:10px;border-radius:2px;background:var(--line)}
+.fc-dots i.k{background:var(--green)}
+.fc-dots i.cur{background:var(--yellow);outline:2px solid var(--ink);outline-offset:1px}
+.fc-card{display:block;width:100%;background:none;border:0;padding:0;cursor:pointer;perspective:1400px;text-align:left;color:inherit}
+.fc-inner{display:grid;transition:transform .55s cubic-bezier(.3,.7,.2,1);transform-style:preserve-3d}
+.fc-card.flipped .fc-inner{transform:rotateY(180deg)}
+.fc-face{grid-area:1/1;backface-visibility:hidden;-webkit-backface-visibility:hidden;min-height:250px;border-radius:14px;padding:22px 24px 18px;border:1px solid var(--line);background:var(--surface);box-shadow:var(--shadow);display:flex;flex-direction:column}
+.fc-back{transform:rotateY(180deg);background:var(--blue-soft);border-color:var(--blue)}
+.fc-tag{font-size:.82rem;color:var(--muted)}
+.fc-q{font-family:"Archivo",sans-serif;font-size:clamp(1.3rem,3.4vw,1.75rem);font-weight:800;font-stretch:108%;line-height:1.2;margin:auto 0}
+.fc-a{font-size:1.02rem;line-height:1.55;margin:12px 0 auto}
+.fc-a ul{margin:.3rem 0 0;padding-left:1.15rem}
+.fc-a li{margin:.15rem 0}
+.fc-hint{font-size:.82rem;color:var(--muted);margin-top:14px}
+.fc-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.fc-actions .btn{justify-content:center;padding:13px}
+.btn.good{background:var(--green)!important}
+.btn.again{background:var(--orange)!important}
+.fc-links{display:flex;gap:16px;margin-top:12px;flex-wrap:wrap}
+.linkbtn{background:none;border:0;padding:0;color:var(--blue);font-weight:700;cursor:pointer;font-size:.9rem;text-decoration:underline;text-underline-offset:3px}
+.fc-done{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:26px;box-shadow:var(--shadow)}
+
+.confetti{position:fixed;top:-12px;width:9px;height:14px;z-index:99;pointer-events:none;animation:fall 2.8s cubic-bezier(.3,.6,.4,1) forwards}
+@keyframes fall{to{transform:translateY(105vh) rotate(720deg);opacity:.7}}
+
+footer{padding:30px 0 50px;color:var(--muted);font-size:.9rem}
+
+@media (max-width:640px){
+  body{font-size:16px}
+  .topic-head{grid-template-columns:1fr;gap:12px}
+  .label{width:66px}
+  .tank-wrap{grid-template-columns:1fr}
+  .tank{max-width:160px}
+  .bar-row{grid-template-columns:100px 1fr 56px}
+  .lane{grid-template-columns:1fr}
+  .panel{padding:16px}
+}
+.meta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:10px}
+.prio{display:inline-block;border-radius:4px;padding:2px 9px;font-size:.8rem;font-weight:700;font-family:"Atkinson Hyperlegible",sans-serif;vertical-align:.15em;letter-spacing:0}
+.prio.a{background:var(--red-soft);color:var(--red);border:1px solid var(--red)}
+.prio.b{background:var(--yellow-soft);color:var(--ink);border:1px solid var(--yellow)}
+.hero .legend{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:.9rem;color:#C9D6E6;margin-top:14px}
+.hero .prio.a{background:#F6D4D4;color:#8E2020;border-color:#F6D4D4}
+.hero .prio.b{background:#FFF2C4;color:#5A4300;border-color:#FFF2C4}
+.bin{position:relative}
+.bin.pa::after{content:"";position:absolute;top:4px;right:4px;width:6px;height:6px;border-radius:50%;background:var(--red)}
+.plan-root{display:inline-block;background:var(--rack);color:#F3F6FA;font-family:"Archivo",sans-serif;font-weight:800;padding:10px 18px;border-radius:8px;margin:6px 0 0}
+.plan-branches{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin-top:0;padding-top:16px;border-top:3px solid var(--yellow);position:relative}
+.plan-node{position:relative;text-align:left;border:1.5px solid var(--line);border-radius:8px;padding:10px 12px;background:var(--surface-2);cursor:pointer;display:flex;flex-direction:column;gap:4px;transition:background .2s,border-color .2s,transform .2s}
+.plan-node::before{content:"";position:absolute;top:-17px;left:18px;width:3px;height:16px;background:var(--yellow)}
+.plan-node b{font-family:"Archivo",sans-serif;font-size:.95rem;line-height:1.15}
+.plan-node span{font-size:.85rem;color:var(--muted)}
+.plan-node:hover{border-color:var(--blue)}
+.plan-node.on{background:var(--yellow);border-color:var(--yellow);color:#16202B;transform:translateY(-2px)}
+.plan-node.on span{color:#16202B}
+.plan-info{margin-top:14px;padding:14px 18px;border-radius:10px;background:var(--blue-soft);min-height:84px}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <button class="theme-toggle" id="themeBtn" aria-label="Farbschema wechseln">Hell / Dunkel</button>
+  <div class="wrap">
+    <h1>Beschaffung &amp; Materialwirtschaft</h1>
+    <p class="lead">Klausurtrainer für Wirtschaftstheorie 3 in zehn Themen – gewichtet danach, welche Folien für die Klausur zählen. Jedes Thema mit Erklärung, Übung und Musterantwort; am Ende Quiz und Karteikarten.</p>
+    <p class="legend"><span class="prio a">Sehr wichtig</span><span class="prio b">Mittel</span><span>Der rote Punkt in der Themenleiste markiert die wichtigsten Themen.</span></p>
+    <div class="stock">
+      <div class="stock-label"><span>Dein Wissenslager</span><span id="stockTxt">0 von 10 Themen abgehakt</span></div>
+      <div class="stock-bar"><div class="stock-fill" id="stockFill"></div></div>
+    </div>
+    <div class="hero-actions">
+      <a class="btn" href="#mawi">Mit Thema 1 starten</a>
+      <a class="btn ghost" href="#quiz">Direkt zum Quiz</a>
+    </div>
+  </div>
+  <div class="hero-chart" aria-hidden="true">
+    <svg viewBox="0 0 1200 230" preserveAspectRatio="none">
+      <line class="hline" x1="0" x2="1200" y1="120" y2="120" stroke="#F58F8F"/>
+      <line class="hline" x1="0" x2="1200" y1="200" y2="200" stroke="#7FD6E4"/>
+      <polyline class="saw" points="0,30 300,200 300,30 600,200 600,30 900,200 900,30 1200,200"/>
+    </svg>
+    <span class="hlabel" style="bottom:92px">Meldebestand</span>
+    <span class="hlabel" style="bottom:26px">Sicherheitsbestand</span>
+  </div>
+</header>
+
+<nav class="nav" aria-label="Themen">
+  <div class="wrap" id="navList"></div>
+</nav>
+
+<main class="wrap">
+
+<!-- ================= Thema 1 ================= -->
+<section class="topic" id="mawi" data-title="Materialwirtschaft & Lagerfunktionen" data-prio="a">
+  <div class="topic-head">
+    <div class="label"><small>Thema</small><b>1</b><span class="code"></span></div>
+    <div>
+      <h2>Materialwirtschaft &amp; Lagerfunktionen</h2>
+      <div class="meta"><span class="prio a">Sehr wichtig</span><span class="small muted">Folien 5 (oberer Teil) und 6</span></div>
+      <p class="exam-q">Übungsfrage 2: „Beschreiben Sie die Aufgaben der Materialwirtschaft.“<br>Übungsfrage 3: „Erläutern Sie unterschiedliche Funktionen der Lagerhaltung und geben Sie Beispiele anhand von Beschaffungslagern.“</p>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h3>Aufgabe der Materialwirtschaft</h3>
+    <p>Die Materialwirtschaft versorgt das Unternehmen mit Gütern und Dienstleistungen – und zwar so, dass technische und ökonomische Anforderungen erfüllt sind:</p>
+    <div class="cols" style="margin:8px 0 0">
+      <div class="key" style="margin:0"><h4 style="color:var(--blue)">originär technische Anforderungen</h4><ul class="small"><li>in der geforderten Qualität</li><li>in der wirtschaftlichen Menge</li><li>zum richtigen Zeitpunkt</li><li>am richtigen Ort</li><li>unter entsprechender Entsorgung</li></ul></div>
+      <div class="key" style="margin:0;background:var(--yellow-soft)"><h4 style="color:var(--orange)">ökonomische Anforderungen</h4><ul class="small"><li>zum günstigsten Preis</li><li>bei niedrigsten Beschaffungskosten</li></ul><p class="small">Zusätzlich: bei den <strong>geeignetsten Lieferanten</strong>.</p></div>
+    </div>
+  </div>
+
+  <div class="panel bench">
+    <h3>Sortieren: technisch oder ökonomisch?</h3>
+    <div id="sort2"></div>
+  </div>
+
+  <h3 style="margin:26px 0 6px">Die vier Funktionen der Lagerhaltung</h3>
+  <p>Tippe eine Karte an, um Erklärung und Beispiel aus einem Beschaffungslager zu sehen.</p>
+  <div class="flips" id="flips3"></div>
+
+  <div class="panel bench" style="margin-top:18px">
+    <h3>Sortieren: Welche Funktion erfüllt das Lager?</h3>
+    <div id="sort3"></div>
+  </div>
+
+  <details class="answer"><summary>Musterantwort für die Klausur</summary><div class="inner">
+    <p><strong>Aufgabe der Materialwirtschaft</strong> ist die Versorgung des Unternehmens mit Gütern und Dienstleistungen in der geforderten Qualität, in der wirtschaftlichen Menge, zum richtigen Zeitpunkt, am richtigen Ort und unter entsprechender Entsorgung (originär technische Anforderungen) – zum günstigsten Preis und bei niedrigsten Beschaffungskosten (ökonomische Anforderungen) sowie bei den geeignetsten Lieferanten.</p>
+    <p><strong>Funktionen der Lagerhaltung:</strong></p>
+    <ul>
+      <li><strong>Ausgleichsfunktion:</strong> gleicht zeitliche und mengenmäßige Unterschiede zwischen Beschaffung und Verbrauch aus. <em>Beispiel:</em> Stahlrohre kommen monatlich per LKW, verbraucht werden sie täglich.</li>
+      <li><strong>Sicherungsfunktion:</strong> Puffer gegen Lieferausfälle, Verzögerungen und Bedarfsschwankungen. <em>Beispiel:</em> Reserve an Mikrochips.</li>
+      <li><strong>Spekulationsfunktion:</strong> Einkauf auf Vorrat bei erwarteten Preissteigerungen. <em>Beispiel:</em> Kupfer vor einer Preiserhöhung kaufen.</li>
+      <li><strong>Produktionsfunktion:</strong> Die Lagerung verändert bzw. veredelt das Gut. <em>Beispiel:</em> Holz trocknet, Käse reift.</li>
+    </ul>
+  </div></details>
+  <button class="done-btn" data-done="mawi">Als verstanden markieren</button>
+</section>
+
+<!-- ================= Thema 2 ================= -->
+<section class="topic" id="kosten" data-title="Kosten der Materialwirtschaft" data-prio="a">
+  <div class="topic-head">
+    <div class="label"><small>Thema</small><b>2</b><span class="code"></span></div>
+    <div>
+      <h2>Kosten der Materialwirtschaft</h2>
+      <div class="meta"><span class="prio a">Sehr wichtig</span><span class="small muted">Folien 7 und 8</span></div>
+      <p class="exam-q">Übungsfrage 4: „Welche Kostenkomponenten sind typischerweise in der Materialwirtschaft zu berücksichtigen?“</p>
+    </div>
+  </div>
+
+  <div class="cols">
+    <div class="panel"><h3>Anschaffungskosten</h3><p class="small">Was die Ware selbst kostet – ermittelt über die Bezugskalkulation bis zum Einstandspreis × Menge.</p></div>
+    <div class="panel"><h3>Bestellabwicklungskosten</h3><p class="small">Personal- und Sachkosten der Einkaufsabteilung, Wareneingangskontrolle, Qualitätskontrolle, Rechnungsprüfung, EDV-Organisation.</p></div>
+    <div class="panel"><h3>Lagerhaltungskosten</h3><p class="small"><strong>Fix:</strong> Raumkosten, Lagereinrichtung (Miete, Abschreibungen), Beleuchtung, Heizung, Kühlung, Instandsetzung, Lagerpersonal.<br><strong>Variabel:</strong> Verzinsung und Versicherung des Bestands, Schwund, Verderb, Veralterung.</p></div>
+    <div class="panel"><h3>Fehlmengenkosten</h3><p class="small"><strong>Direkt:</strong> Kosten, die durch Fehlmengen tatsächlich eintreten – entgangener Gewinn, weil nicht produziert werden konnte.<br><strong>Indirekt:</strong> Kosten, die zur Vermeidung von Fehlmengen aufgewendet werden – Expresslieferungen, Teillieferungen, Sondermaßnahmen.</p></div>
+  </div>
+
+  <div class="panel bench">
+    <h3>Ausprobieren: Bezugskalkulation</h3>
+    <div class="cols" style="margin:0">
+      <div>
+        <div class="slider"><label for="b_p">Angebotspreis je Stück (€)</label><output id="b_po"></output><input type="range" id="b_p" min="10" max="500" step="5" value="200"></div>
+        <div class="slider"><label for="b_r">Rabatt (%)</label><output id="b_ro"></output><input type="range" id="b_r" min="0" max="30" value="10"></div>
+        <div class="slider"><label for="b_s">Skonto (%)</label><output id="b_so"></output><input type="range" id="b_s" min="0" max="5" step="0.5" value="2"></div>
+        <div class="slider"><label for="b_f">Fracht / Verpackung / Versicherung je Stück (€)</label><output id="b_fo"></output><input type="range" id="b_f" min="0" max="40" value="5"></div>
+        <div class="slider"><label for="b_m">Gekaufte Menge</label><output id="b_mo"></output><input type="range" id="b_m" min="1" max="200" value="50"></div>
+      </div>
+      <div class="tbl-wrap"><table id="b_tbl"></table></div>
+    </div>
+    <p class="small muted">Reihenfolge merken: Rabatt vor Skonto (Skonto wird auf den bereits rabattierten Preis gerechnet), Bezugskosten danach addieren.</p>
+  </div>
+
+  <div class="panel bench">
+    <h3>Sortieren: Welche Kostenart ist das?</h3>
+    <div id="sort4"></div>
+  </div>
+
+  <details class="answer"><summary>Musterantwort für die Klausur</summary><div class="inner">
+    <ul>
+      <li><strong>Anschaffungskosten:</strong> Angebotspreis ± Zu-/Abschläge − Rabatte/Boni = bereinigter Endpreis − Skonto + Fracht/Verpackung/Versicherung = Einstandspreis; × gekaufte Menge = Anschaffungskosten.</li>
+      <li><strong>Bestellabwicklungskosten:</strong> Personal- und Sachkosten für Einkauf, Wareneingangs- und Qualitätskontrolle, Rechnungsprüfung, EDV.</li>
+      <li><strong>Lagerhaltungskosten:</strong> fix (Raum, Einrichtung, Energie, Instandhaltung, Personal) und variabel (Zinsen auf das gebundene Kapital, Versicherung, Schwund, Verderb, Veralterung).</li>
+      <li><strong>Fehlmengenkosten:</strong> direkt (entgangener Gewinn) und indirekt (Kosten zur Vermeidung von Fehlmengen, z. B. Expresslieferungen).</li>
+    </ul>
+  </div></details>
+  <button class="done-btn" data-done="kosten">Als verstanden markieren</button>
+</section>
+
+<!-- ================= Thema 3 ================= -->
+<section class="topic" id="abc" data-title="ABC-Analyse" data-prio="a">
+  <div class="topic-head">
+    <div class="label"><small>Thema</small><b>3</b><span class="code"></span></div>
+    <div>
+      <h2>ABC-Analyse</h2>
+      <div class="meta"><span class="prio a">Sehr wichtig</span><span class="small muted">Folien 9 bis 11</span></div>
+      <p class="exam-q">Übungsfrage 5: „Was verstehen Sie unter einer ABC-Analyse?“</p>
+    </div>
+  </div>
+
+  <div class="cols">
+    <div class="panel">
+      <h3>Idee</h3>
+      <p>Die ABC-Analyse klassifiziert Materialien (oder Lieferanten) nach ihrer relativen, meist <strong>wertmäßigen</strong> Bedeutung. Damit wird das Wesentliche vom Unwesentlichen getrennt, Rationalisierungsarbeit gezielt eingesetzt, unwirksamer Aufwand vermieden und die Wirtschaftlichkeit gesteigert.</p>
+    </div>
+    <div class="panel">
+      <h3>Faustregel</h3>
+      <table>
+        <tr><th>Klasse</th><th>Mengenanteil</th><th>Wertanteil</th></tr>
+        <tr><td><span class="cls A">A</span></td><td>ca. 15 %</td><td>ca. 80 %</td></tr>
+        <tr><td><span class="cls B">B</span></td><td>ca. 35 %</td><td>ca. 15 %</td></tr>
+        <tr><td><span class="cls C">C</span></td><td>ca. 50 %</td><td>ca. 5 %</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="panel bench">
+    <h3>Ausprobieren: ABC-Analyse Schritt für Schritt</h3>
+    <p class="small muted">Beispiel: Ein E-Scooter-Hersteller analysiert zehn Materialien. Klicke dich durch die vier Rechenschritte.</p>
+    <p id="abcStepTxt" style="font-weight:700"></p>
+    <div class="tbl-wrap"><table id="abcTbl"></table></div>
+    <div class="row" style="margin-top:12px">
+      <button class="btn ghost sm" id="abcBack">Zurück</button>
+      <button class="btn sm" id="abcNext">Nächster Schritt</button>
+    </div>
+    <div class="chart-box" id="abcChart" style="margin-top:14px"></div>
+  </div>
+
+  <div class="cols">
+    <div class="panel"><h3><span class="cls A">A</span> Teile</h3><p class="small"><strong>Einkauf:</strong> intensive Marktanalyse, genaue Mengen- und Qualitätsfestlegung, sorgfältige Preisprüfung, zuverlässige Lieferanten, Rahmenverträge, kurze Beschaffungszeiten, genaue Terminverfolgung.<br><strong>Lager:</strong> Bestände und Lagerzeiten minimieren, verfeinerte Disposition, aktuelle Buchung, Lagerverluste vermeiden.</p></div>
+    <div class="panel"><h3><span class="cls B">B</span> Teile</h3><p class="small">Fallweise Entscheidung über die Intensität von Planung und Kontrolle.</p></div>
+    <div class="panel"><h3><span class="cls C">C</span> Teile</h3><p class="small">Einfache, verbrauchsorientierte Bedarfsprognose, großzügigere Sicherheitsbestände, seltener und in großen Mengen bestellen, Sammelbestellungen und -rechnungen, pauschale Buchung.</p></div>
+  </div>
+
+  <details class="answer"><summary>Musterantwort für die Klausur</summary><div class="inner">
+    <p>Die ABC-Analyse ist ein Verfahren zur <strong>Klassifizierung von Materialien (oder Lieferanten) nach ihrer wertmäßigen Bedeutung</strong>. Vorgehen: Jahresverbrauchswert je Material (Menge × Preis) berechnen, absteigend sortieren, Anteile am Gesamtwert und kumulierte Anteile bilden, Klassen zuordnen.</p>
+    <ul>
+      <li><strong>A-Güter:</strong> ca. 15 % der Güter, ca. 80 % des Wertes – hohe Bedeutung.</li>
+      <li><strong>B-Güter:</strong> ca. 35 % der Güter, ca. 15 % des Wertes – mittlere Bedeutung.</li>
+      <li><strong>C-Güter:</strong> ca. 50 % der Güter, ca. 5 % des Wertes – geringe Bedeutung.</li>
+    </ul>
+    <p>Ziel: Konzentration auf das Wesentliche. A-Teile werden intensiv geplant und kontrolliert (Marktanalyse, Rahmenverträge, geringe Bestände), C-Teile vereinfacht beschafft (Sammelbestellungen, großzügige Sicherheitsbestände). So werden unwirtschaftliche Anstrengungen vermieden und die Wirtschaftlichkeit gesteigert.</p>
+  </div></details>
+  <button class="done-btn" data-done="abc">Als verstanden markieren</button>
+</section>
+
+<!-- ================= Thema 4 ================= -->
+<section class="topic" id="politik" data-title="Strategische Beschaffungspolitik" data-prio="a">
+  <div class="topic-head">
+    <div class="label"><small>Thema</small><b>4</b><span class="code"></span></div>
+    <div>
+      <h2>Strategische Beschaffungspolitik</h2>
+      <div class="meta"><span class="prio a">Sehr wichtig</span><span class="small muted">Folie 12, Details auf Folien 13 bis 16 (mittel)</span></div>
+      <p class="exam-q">Übungsfrage 6: „Welche beschaffungspolitischen Instrumente kennen Sie? Erläutern Sie diese knapp.“</p>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h3>Strategische Beschaffungspolitik</h3>
+    <ul>
+      <li>ist <strong>langfristig</strong> orientiert,</li>
+      <li>legt die <strong>Rahmenbedingungen für die operative Planung</strong> fest,</li>
+      <li>trifft Entscheidungen und Maßnahmen zur <strong>Beeinflussung der Beschaffungssituation</strong>.</li>
+    </ul>
+    <p>Ihre vier <strong>Instrumente</strong> – mit je einer Leitfrage zum Merken:</p>
+    <div class="cols" style="margin:6px 0 0;grid-template-columns:repeat(auto-fit,minmax(200px,1fr))">
+      <div class="key" style="margin:0"><strong>Beschaffungsprogrammpolitik</strong><br><span class="small">Was beschaffen wir?</span></div>
+      <div class="key" style="margin:0"><strong>Lieferantenpolitik</strong><br><span class="small">Bei wem?</span></div>
+      <div class="key" style="margin:0"><strong>Kontraktpolitik</strong><br><span class="small">Mit welchem Vertrag?</span></div>
+      <div class="key" style="margin:0"><strong>Lagerpolitik</strong><br><span class="small">Auf Vorrat oder synchron?</span></div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h3>Die Instrumente im Detail <span class="prio b">Mittel</span></h3>
+    <div class="tabs" data-tabs="t6">
+      <button class="tab on" data-t="p1">Beschaffungsprogrammpolitik</button>
+      <button class="tab" data-t="p2">Lieferantenpolitik</button>
+      <button class="tab" data-t="p3">Kontraktpolitik</button>
+      <button class="tab" data-t="p4">Lagerpolitik</button>
+    </div>
+    <div class="tabpane on" data-p="p1">
+      <p>Langfristige Prognose und Auswahl der zu beschaffenden Güter nach Art, Eigenschaften, Qualität und Quantität.</p>
+      <ul>
+        <li><strong>Eigenfertigung oder Fremdbezug:</strong> Fremdbezug nutzt Spezialisierungseffekte und senkt die Fertigungstiefe; Eigenfertigung bringt Flexibilität, Spezialisierung auf entscheidende Technologien und stärkt die Kernkompetenz.</li>
+        <li><strong>Materialstandardisierung:</strong> weniger Materialvielfalt, Kostenvorteile, einfachere Abwicklung.</li>
+        <li><strong>Ausweichen auf Substitute</strong></li>
+        <li><strong>Änderung von Eigenschaften und Qualitätsanforderungen</strong></li>
+      </ul>
+    </div>
+    <div class="tabpane" data-p="p2">
+      <ul>
+        <li><strong>Direkter Bezug</strong> (vom Produzenten): sehr große Mengen, Sonderanfertigungen.</li>
+        <li><strong>Indirekter Bezug</strong> (über den Handel): größeres Sortiment, Kleinmengen möglich, Handel übernimmt Lagerhaltung, Standortnähe, kurze Lieferzeiten, niedrigere Transportkosten.</li>
+        <li><strong>Anzahl der Lieferanten:</strong> genug leistungsfähige Quellen, z. B. Zweitlieferanten.</li>
+        <li><strong>Räumliche Verteilung:</strong> politische und währungsbedingte Risiken beachten.</li>
+      </ul>
+    </div>
+    <div class="tabpane" data-p="p3">
+      <div class="tbl-wrap"><table>
+        <tr><th>Vertrag</th><th style="text-align:left">Merkmale</th></tr>
+        <tr><td><strong>Rahmenvertrag</strong></td><td style="text-align:left;white-space:normal">langfristiger Liefervertrag, genaue Qualitäts-/Eigenschaftsbeschreibung, feste Zahlungs- und Lieferkonditionen, Gesamtmenge als Absichtserklärung oder Abnahmeverpflichtung</td></tr>
+        <tr><td><strong>Abrufvertrag</strong></td><td style="text-align:left;white-space:normal">basiert auf Rahmenvertrag mit fester Abnahmeverpflichtung, oft Höchst- und Mindestmengen, langfristige Preisvereinbarungen, Versorgungssicherung</td></tr>
+        <tr><td><strong>Sukzessivliefervertrag</strong></td><td style="text-align:left;white-space:normal">bei fertigungssynchroner Beschaffung, genaue Vereinbarung von Abnahmemenge und Lieferzeitpunkt</td></tr>
+      </table></div>
+    </div>
+    <div class="tabpane" data-p="p4">
+      <ul>
+        <li><strong>Vorratsbeschaffung</strong> (Beschaffungsmenge &gt; Bedarfsmenge → Lagerung): für laufend benötigtes Material und schwankenden Bedarf. Motive: Sicherheitslager, spekulative, antizipative/saisonale Lagerhaltung, Pflichtlager.</li>
+        <li><strong>Beschaffung im Bedarfsfall:</strong> bei auftragsorientierter Einzelfertigung; Bedarf und Beschaffung stimmen überein, kein Ausgleichslager.</li>
+        <li><strong>Fertigungssynchrone Beschaffung:</strong> bei Massen- oder Serienfertigung, kein Ausgleichslager, Anlieferung direkt vor Fertigungsbeginn → Just-in-Time.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="panel bench">
+    <h3>Sortieren: Welches Instrument?</h3>
+    <div id="sort6"></div>
+  </div>
+
+  <details class="answer"><summary>Musterantwort für die Klausur</summary><div class="inner">
+    <p>Die strategische Beschaffungspolitik ist langfristig orientiert, legt die Rahmenbedingungen für die operative Planung fest und beeinflusst die Beschaffungssituation. Ihre Instrumente:</p>
+    <ul>
+      <li><strong>Beschaffungsprogrammpolitik:</strong> langfristige Prognose und Auswahl der zu beschaffenden Güter (Art, Eigenschaften, Qualität, Menge); u. a. Eigenfertigung oder Fremdbezug, Materialstandardisierung, Substitute.</li>
+      <li><strong>Lieferantenpolitik:</strong> direkter oder indirekter Bezug, Anzahl der Lieferanten (z. B. Zweitlieferanten), räumliche Verteilung unter Beachtung politischer und Währungsrisiken.</li>
+      <li><strong>Kontraktpolitik:</strong> Gestaltung der Lieferverträge – Rahmen-, Abruf- und Sukzessivliefervertrag.</li>
+      <li><strong>Lagerpolitik:</strong> Wahl des Beschaffungsprinzips – Vorratsbeschaffung, Beschaffung im Bedarfsfall, fertigungssynchrone Beschaffung (Just-in-Time).</li>
+    </ul>
+  </div></details>
+  <button class="done-btn" data-done="politik">Als verstanden markieren</button>
+</section>
+
+<!-- ================= Thema 5 ================= -->
+<section class="topic" id="planung" data-title="Beschaffungsplanung im Überblick" data-prio="b">
+  <div class="topic-head">
+    <div class="label"><small>Thema</small><b>5</b><span class="code"></span></div>
+    <div>
+      <h2>Beschaffungsplanung im Überblick</h2>
+      <div class="meta"><span class="prio b">Mittel</span><span class="small muted">Folie 17</span></div>
+      <p class="exam-q">Die Landkarte für alle folgenden Themen: Die Beschaffungsplanung besteht aus sechs Teilbereichen. Wer sie kennt, kann jedes spätere Thema einordnen.</p>
+    </div>
+  </div>
+
+  <div class="panel bench">
+    <h3>Ausprobieren: Tippe einen Teilbereich an</h3>
+    <div class="plan-root">Beschaffungsplanung</div>
+    <div class="plan-branches" id="planTree"></div>
+    <div class="plan-info" id="planInfo"></div>
+  </div>
+
+  <details class="answer"><summary>Musterantwort für die Klausur</summary><div class="inner">
+    <p>Die Beschaffungsplanung umfasst sechs Teilbereiche:</p>
+    <ul>
+      <li><strong>Bedarfsplanung</strong> – welcher Materialbedarf besteht, Überwachung der Bestände,</li>
+      <li><strong>Lieferantenmanagement</strong> – Auswahl und Steuerung der Lieferanten,</li>
+      <li><strong>Beschaffungsprinzipien</strong> – Vorratsbeschaffung, Beschaffung im Bedarfsfall, fertigungssynchron (Just-in-Time),</li>
+      <li><strong>Beschaffungswege</strong> – direkte oder indirekte Beschaffung,</li>
+      <li><strong>Beschaffungstermine</strong> – bedarfs- oder verbrauchsgesteuert (Bestellpunkt-/Bestellrhythmussystem),</li>
+      <li><strong>Beschaffungsmengen</strong> – optimale Bestellmenge.</li>
+    </ul>
+  </div></details>
+  <button class="done-btn" data-done="planung">Als verstanden markieren</button>
+</section>
+
+<!-- ================= Thema 6 ================= -->
+<section class="topic" id="bestand" data-title="Lagerbestände" data-prio="a">
+  <div class="topic-head">
+    <div class="label"><small>Thema</small><b>6</b><span class="code"></span></div>
+    <div>
+      <h2>Lagerbestände</h2>
+      <div class="meta"><span class="prio a">Sehr wichtig</span><span class="small muted">Folie 19, Bestandsarten auf Folien 20 bis 23 (mittel)</span></div>
+      <p class="exam-q">Übungsfrage 7: „Welche Bestandsgrößen werden typischerweise in der Lagerhaltung unterschieden?“<br>Übungsfrage 8: „Was beeinflusst die Höhe des Sicherheitsbestands?“</p>
+    </div>
+  </div>
+
+  <div class="panel bench">
+    <h3>Ausprobieren: das Sägezahn-Diagramm</h3>
+    <p class="small muted">Das Diagramm von Folie 19 zum Anfassen. Verändere Verbrauch, Lieferzeit, Sicherheitsbestand und Bestellmenge – die Linien zeigen, wo die Bestandsgrößen liegen.</p>
+    <div class="cols" style="margin:0;grid-template-columns:repeat(auto-fit,minmax(200px,1fr))">
+      <div class="slider"><label for="s_v">Verbrauch je Tag (Stk.)</label><output id="s_vo"></output><input type="range" id="s_v" min="5" max="50" value="20"></div>
+      <div class="slider"><label for="s_l">Lieferzeit (Tage)</label><output id="s_lo"></output><input type="range" id="s_l" min="1" max="12" value="5"></div>
+      <div class="slider"><label for="s_sb">Sicherheitsbestand (Stk.)</label><output id="s_sbo"></output><input type="range" id="s_sb" min="0" max="200" step="10" value="60"></div>
+      <div class="slider"><label for="s_q">Bestellmenge (Stk.)</label><output id="s_qo"></output><input type="range" id="s_q" min="50" max="600" step="10" value="300"></div>
+    </div>
+    <div class="chart-box" id="sawChart"></div>
+    <div class="stat-row" id="sawStats"></div>
+    <p class="feedback no small" id="sawWarn"></p>
+    <p class="small">So liest du das Diagramm: Der Bestand sinkt durch den <strong>Verbrauch</strong>. Erreicht er den <strong>Meldebestand</strong> (Bestellpunkt), wird bestellt. Während der <strong>Beschaffungszeit</strong> wird weiter verbraucht, bis die Lieferung genau beim <strong>Sicherheitsbestand</strong> eintrifft und den Bestand um die <strong>Bestellmenge</strong> auf den <strong>Höchstbestand</strong> hebt.</p>
+  </div>
+
+  <h3 style="margin:26px 0 6px">Die vier Bestandsarten <span class="prio b">Mittel</span></h3>
+  <div class="cols">
+    <div class="panel"><h3>Lagerbestand</h3><p class="small">Bestand, der sich zum Planungs- bzw. Prüfzeitpunkt körperlich im Lager befindet.<br><strong>Verfügbarer Bestand</strong> = Lagerbestand + offene Bestellungen − Vormerkungen.<br><strong>Disponierter Bestand</strong> = inkl. Vormerkungen.</p></div>
+    <div class="panel"><h3>Sicherheitsbestand</h3><p class="small">Puffer, der die Leistungsfähigkeit sichert und Fehlmengenkosten vermeidet.</p><span class="formula">B<sub>S</sub> = Ø Verbrauch je Periode × Beschaffungsdauer</span></div>
+    <div class="panel"><h3>Meldebestand</h3><p class="small">Bestand, bei dessen Unterschreiten eine Bestellung ausgelöst wird. Eng mit dem Sicherheitsbestand verknüpft.</p><span class="formula">B<sub>M</sub> = Verbrauch je Periode × Lieferzeit + B<sub>S</sub></span></div>
+    <div class="panel"><h3>Höchstbestand</h3><p class="small">Bestand, der maximal im Lager sein darf – vermeidet hohe Kapitalbindung und Lagerhaltungskosten.</p></div>
+  </div>
+
+  <div class="panel bench">
+    <h3>Rechne selbst</h3>
+    <p>Tagesverbrauch 25 Stück, Lieferzeit 6 Tage, Sicherheitsbestand 50 Stück. Wie hoch ist der Meldebestand?</p>
+    <div class="row"><input type="number" id="mbIn" style="max-width:160px" placeholder="Stück"><button class="btn sm" id="mbBtn">Prüfen</button></div>
+    <p class="feedback" id="mbFb"></p>
+  </div>
+
+  <div class="panel bench">
+    <h3>Was bestimmt die Höhe des Sicherheitsbestands? <span class="prio b">Mittel</span></h3>
+    <p class="small">Laut Folie sind drei Unsicherheiten zu berücksichtigen: <strong>Bedarfsunsicherheit</strong> (Verbrauch schwankt), <strong>Lieferzeitunsicherheit</strong> (Lieferant ist unpünktlich) und <strong>Bestandsunsicherheit</strong> (Schwund, Buchungsfehler). Probier aus, wie sie den Puffer wachsen lassen – vereinfachtes Anschauungsmodell.</p>
+    <div class="tank-wrap">
+      <div class="tank"><div class="water" id="tankW"></div><div class="val" id="tankV"></div></div>
+      <div>
+        <div class="slider"><label for="t_d">Bedarfsschwankung (± Stk. je Tag)</label><output id="t_do"></output><input type="range" id="t_d" min="0" max="15" value="5"></div>
+        <div class="slider"><label for="t_l">Lieferzeitschwankung (± Tage)</label><output id="t_lo"></output><input type="range" id="t_l" min="0" max="4" step="0.5" value="1"></div>
+        <div class="slider"><label for="t_b">Bestandsungenauigkeit (Stk.)</label><output id="t_bo"></output><input type="range" id="t_b" min="0" max="50" step="5" value="10"></div>
+        <div class="slider"><label for="t_s">Gewünschte Lieferbereitschaft</label><output id="t_so"></output><input type="range" id="t_s" min="0" max="5" value="2"></div>
+        <p class="small" style="margin-bottom:4px">Kapitalbindung durch den Puffer: <strong id="t_cap"></strong></p>
+        <div class="meter"><i id="t_capM" style="background:var(--orange)"></i></div>
+        <p class="small" style="margin:10px 0 4px">Risiko eines Engpasses je Bestellzyklus: <strong id="t_risk"></strong></p>
+        <div class="meter"><i id="t_riskM" style="background:var(--red)"></i></div>
+      </div>
+    </div>
+  </div>
+
+  <details class="answer"><summary>Musterantwort für die Klausur</summary><div class="inner">
+    <p><strong>Bestandsgrößen:</strong></p>
+    <ul>
+      <li><strong>Lagerbestand:</strong> physisch vorhandener Bestand zum Prüfzeitpunkt; daraus abgeleitet der verfügbare Bestand (Lagerbestand + offene Bestellungen − Vormerkungen) und der disponierte Bestand.</li>
+      <li><strong>Sicherheitsbestand:</strong> Puffer gegen Unsicherheiten, vermeidet Fehlmengenkosten; B<sub>S</sub> = Ø Verbrauch je Periode × Beschaffungsdauer.</li>
+      <li><strong>Meldebestand:</strong> bei Unterschreiten wird bestellt; B<sub>M</sub> = Verbrauch je Periode × Lieferzeit + Sicherheitsbestand.</li>
+      <li><strong>Höchstbestand:</strong> maximal zulässiger Bestand zur Begrenzung von Kapitalbindung und Lagerkosten.</li>
+    </ul>
+    <p><strong>Einfluss auf den Sicherheitsbestand:</strong> Bedarfsunsicherheit, Lieferzeitunsicherheit und Bestandsunsicherheit sowie Verbrauch je Periode und Beschaffungsdauer. Abzuwägen sind Fehlmengenkosten gegen Lagerhaltungskosten.</p>
+  </div></details>
+  <button class="done-btn" data-done="bestand">Als verstanden markieren</button>
+</section>
+
+<!-- ================= Thema 7 ================= -->
+<section class="topic" id="lief" data-title="Lieferantenauswahl & Just-in-Time" data-prio="b">
+  <div class="topic-head">
+    <div class="label"><small>Thema</small><b>7</b><span class="code"></span></div>
+    <div>
+      <h2>Lieferantenauswahl &amp; Just-in-Time</h2>
+      <div class="meta"><span class="prio b">Mittel</span><span class="small muted">Folien 26, 28 und 29</span></div>
+      <p class="exam-q">Übungsfrage 9: „Welche Kriterien könnten bzw. sollten bei der Analyse und Auswahl von Lieferanten herangezogen werden?“<br>Übungsfrage 10: „Was wird unter Just In Time als Beschaffungsprinzip verstanden?“</p>
+    </div>
+  </div>
+
+  <div class="panel bench">
+    <h3>Sechs Kriteriengruppen für die Lieferantenauswahl</h3>
+    <p class="small">Eselsbrücke: <strong>„Zu Früh Kommt Paul Gern An“</strong> – Zuverlässigkeit, Fertigungsmöglichkeiten, Konditionen, Produkt, Geografische Lage, Allgemeine Situation. Tippe eine Gruppe an.</p>
+    <div class="tabs" data-tabs="t9">
+      <button class="tab on" data-t="k1">Zuverlässigkeit</button>
+      <button class="tab" data-t="k2">Fertigungsmöglichkeiten</button>
+      <button class="tab" data-t="k3">Konditionen</button>
+      <button class="tab" data-t="k4">Produkt</button>
+      <button class="tab" data-t="k5">Geografische Lage</button>
+      <button class="tab" data-t="k6">Allgemeine Situation</button>
+    </div>
+    <div class="tabpane on" data-p="k1"><ul><li>Gleichbleibende Qualität</li><li>Fristgerechte Lieferung (Termintreue)</li><li>Einhaltung der Serviceversprechen</li></ul></div>
+    <div class="tabpane" data-p="k2"><ul><li>Produktionskapazität des Lieferanten</li><li>Qualitätsniveau</li><li>Flexibilität bei Sonderfertigung oder schwankenden Bestellmengen</li></ul></div>
+    <div class="tabpane" data-p="k3"><ul><li>Güterpreis</li><li>Liefer- und Zahlungsbedingungen</li><li>Lieferfristen</li><li>Garantieleistungen</li></ul></div>
+    <div class="tabpane" data-p="k4"><ul><li>Qualität</li><li>Sortiment</li><li>Kundendienst</li><li>Produktentwicklung (F&amp;E)</li></ul></div>
+    <div class="tabpane" data-p="k5"><ul><li>Transportbedingungen</li><li>Politische Sicherheit im Beschaffungsland</li><li>Wechselkursstabilität</li></ul></div>
+    <div class="tabpane" data-p="k6"><ul><li>Marktstellung (Marktanteil)</li><li>Belieferung der Konkurrenz</li><li>Unternehmenszugehörigkeit</li><li>Finanzielle Verhältnisse</li><li>Qualität des Managements</li></ul></div>
+    <p class="small muted" style="margin-top:10px">Gewichtet und bewertet werden die Kriterien z. B. mit dem <a href="#scoring">Scoring-Modell</a>.</p>
+  </div>
+
+  <div class="panel">
+    <h3>Just-in-Time als Beschaffungsprinzip</h3>
+    <p>Just-in-Time (JIT) ist <strong>fertigungssynchrone Beschaffung</strong>: Material wird genau dann und in der Menge angeliefert, in der es in der Produktion gebraucht wird – ohne Ausgleichslager. Initiiert bei <strong>Toyota 1945 von Taiichi Ohno</strong>, um den Abstand zur US-Autoindustrie aufzuholen. Überproduktion und Vorräte gelten als Verschwendung. Man unterscheidet JIT-Produktion und JIT-Anlieferung.</p>
+  </div>
+
+  <div class="panel bench">
+    <h3>Ausprobieren: Vorrat gegen Just-in-Time</h3>
+    <p class="small muted">Beide Fabriken verbrauchen gleich viel. Achte darauf, wie viel im Lager (gestrichelter Bereich) liegt.</p>
+    <div class="lane"><strong>Vorrats&shy;beschaffung</strong><div class="lane-track"><span class="truck" id="truckA">🚚</span><div class="store" id="storeA"></div><span class="lane-cap">Lager</span><span class="factory">🏭</span></div></div>
+    <div class="lane"><strong>Just-in-Time</strong><div class="lane-track"><span class="truck" id="truckB">🚚</span><div class="store" id="storeB"></div><span class="lane-cap">Lager</span><span class="factory">🏭</span></div></div>
+    <div class="row"><button class="btn sm" id="jitBtn">Simulation starten</button><span class="small" id="jitStat"></span></div>
+  </div>
+
+  <div class="cols">
+    <div class="panel">
+      <h3>Voraussetzungen</h3>
+      <ul class="small">
+        <li><strong>Produktionsprogramm:</strong> kontinuierlicher Bedarf</li>
+        <li><strong>Layout/Flächen:</strong> ausreichende Bereitstellflächen</li>
+        <li><strong>Prozess:</strong> kurze Rüstzeiten, hohe Verfügbarkeit der Betriebsmittel</li>
+        <li><strong>Kapazität:</strong> flexible Kapazitätsreserven</li>
+        <li><strong>Qualifikation:</strong> prozessbegleitende Qualitätssicherung</li>
+        <li><strong>Disposition:</strong> verbrauchsgesteuert, dezentral</li>
+        <li><strong>Lieferant:</strong> ausgewählte, zuverlässige Zulieferer</li>
+      </ul>
+    </div>
+    <div class="panel">
+      <h3>Vor- und Nachteile</h3>
+      <div class="tabs" data-tabs="t10">
+        <button class="tab on" data-t="j1">Allgemein</button>
+        <button class="tab" data-t="j2">Auftraggeber</button>
+        <button class="tab" data-t="j3">Auftragnehmer</button>
+      </div>
+      <div class="tabpane on" data-p="j1"><p class="small"><strong style="color:var(--green)">Vorteile:</strong> Ansiedlung von Zulieferbetrieben, bessere Güterversorgung, Massen- und Großserienproduktion.<br><strong style="color:var(--red)">Nachteile:</strong> zunehmender LKW-Verkehr.</p></div>
+      <div class="tabpane" data-p="j2"><p class="small"><strong style="color:var(--green)">Vorteile:</strong> geringere Lagerkosten, geringere Prüfkosten, kürzere Durchlaufzeit.<br><strong style="color:var(--red)">Nachteile:</strong> Single Sourcing, Krisenanfälligkeit, Informationsaustausch nötig.</p></div>
+      <div class="tabpane" data-p="j3"><p class="small"><strong style="color:var(--green)">Vorteile:</strong> Existenzsicherung durch Abhängigkeit des Auftraggebers, langfristige Verträge, Spezialisierung in der Produktion.<br><strong style="color:var(--red)">Nachteile:</strong> Abhängigkeit vom Auftraggeber, Konventionalstrafen, Qualitätskontrolle nötig, Krisenanfälligkeit, Informationsaustausch, ggf. eigenes Lager nötig.</p></div>
+    </div>
+  </div>
+
+  <details class="answer"><summary>Musterantwort für die Klausur</summary><div class="inner">
+    <p><strong>Kriterien der Lieferantenauswahl:</strong></p>
+    <ul>
+      <li><strong>Zuverlässigkeit:</strong> gleichbleibende Qualität, Termintreue, Einhaltung von Serviceversprechen.</li>
+      <li><strong>Fertigungsmöglichkeiten:</strong> Kapazität, Qualitätsniveau, Flexibilität.</li>
+      <li><strong>Konditionen:</strong> Preis, Liefer- und Zahlungsbedingungen, Lieferfristen, Garantien.</li>
+      <li><strong>Produkt:</strong> Qualität, Sortiment, Kundendienst, Produktentwicklung.</li>
+      <li><strong>Geografische Lage:</strong> Transportbedingungen, politische Sicherheit, Wechselkursstabilität.</li>
+      <li><strong>Allgemeine Situation:</strong> Marktstellung, Belieferung der Konkurrenz, Unternehmenszugehörigkeit, Finanzen, Managementqualität.</li>
+    </ul>
+    <p><strong>Just-in-Time</strong> ist ein Prinzip der fertigungssynchronen Beschaffung: Material wird zeit- und mengengenau direkt vor Fertigungsbeginn angeliefert, sodass kein Ausgleichslager nötig ist (Toyota, Taiichi Ohno). Voraussetzungen: kontinuierlicher Bedarf, kurze Rüstzeiten, flexible Kapazitäten, prozessbegleitende Qualitätssicherung, verbrauchsgesteuerte Disposition, zuverlässige Lieferanten. Vorteile: geringere Lager- und Prüfkosten, kürzere Durchlaufzeit. Nachteile: Abhängigkeit (Single Sourcing), Krisenanfälligkeit, mehr LKW-Verkehr.</p>
+  </div></details>
+  <button class="done-btn" data-done="lief">Als verstanden markieren</button>
+</section>
+
+<!-- ================= Thema 8 ================= -->
+<section class="topic" id="bestell" data-title="Bestellpunkt- & Bestellrhythmussystem" data-prio="a">
+  <div class="topic-head">
+    <div class="label"><small>Thema</small><b>8</b><span class="code"></span></div>
+    <div>
+      <h2>Bestellpunkt- &amp; Bestellrhythmussystem</h2>
+      <div class="meta"><span class="prio a">Sehr wichtig</span><span class="small muted">Folien 32 bis 34</span></div>
+      <p class="exam-q">Übungsfrage 12: „Stellen Sie unterschiedliche Systeme der verbrauchsgesteuerten Beschaffungsplanung gegenüber.“</p>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h3>Beschaffungstermine: zwei Wege <span class="prio b">Mittel</span></h3>
+    <div class="cols" style="margin:6px 0 0">
+      <div class="key" style="margin:0"><strong>Bedarfsgesteuerte Beschaffung</strong><p class="small" style="margin-bottom:0">Bedarf aus Stücklistenauflösung<br>− Lagerbestände<br>− Bestellbestände<br>+ reservierte Bestände<br>= zu beschaffende Menge</p></div>
+      <div class="key" style="margin:0;background:var(--yellow-soft)"><strong>Verbrauchsgesteuerte Beschaffung</strong><p class="small" style="margin-bottom:0">orientiert sich am Verbrauch der Vergangenheit:<br>• Bestellpunktsystem<br>• Bestellrhythmussystem</p></div>
+    </div>
+    <p class="small" style="margin-top:12px">Der <strong>Bestellrhythmus</strong> legt fest, wie die Bestelltermine über die Planperiode verteilt sind: Bestellung an festen Terminen, frei wählbare Bestelltermine oder feste Termine, an denen entschieden wird, ob bestellt wird.</p>
+  </div>
+
+  <div class="panel">
+    <h3>Die beiden Systeme im Vergleich</h3>
+    <div class="tbl-wrap"><table>
+      <tr><th></th><th style="text-align:left">Bestellpunktsystem</th><th style="text-align:left">Bestellrhythmussystem</th></tr>
+      <tr><td><strong>Bestellzeitpunkt</strong></td><td style="text-align:left;white-space:normal">variabel – sobald der Lagerbestand unter den Meldebestand sinkt</td><td style="text-align:left;white-space:normal">fix – in festen Abständen</td></tr>
+      <tr><td><strong>Bestellmenge</strong></td><td style="text-align:left;white-space:normal">fix</td><td style="text-align:left;white-space:normal">variabel – Auffüllen bis zum maximalen Lagerbestand</td></tr>
+      <tr><td><strong>Festzulegen</strong></td><td style="text-align:left;white-space:normal">kritischer Lagerbestand und Bestellmenge.<br>Meldemenge = maximaler Lagerverbrauch × Beschaffungszeit (Sicherheitsbestand ist enthalten, da der maximale Verbrauch nur ausnahmsweise eintritt)</td><td style="text-align:left;white-space:normal">Bestelltermine und Höchstbestand</td></tr>
+      <tr><td><strong>Vorteile</strong></td><td style="text-align:left;white-space:normal">reagiert schnell auf Verbrauchsschwankungen</td><td style="text-align:left;white-space:normal">planbar, wenig Überwachungsaufwand, Sammelbestellungen möglich</td></tr>
+      <tr><td><strong>Nachteile</strong></td><td style="text-align:left;white-space:normal">laufende Bestandsüberwachung nötig, unregelmäßige Bestelltermine</td><td style="text-align:left;white-space:normal">Fehlmengenrisiko bei Verbrauchsspitzen zwischen den Terminen → höherer Sicherheitsbestand</td></tr>
+    </table></div>
+  </div>
+
+  <div class="panel bench">
+    <h3>Ausprobieren: 60 Tage im Lager</h3>
+    <p class="small muted">Beide Systeme erleben dieselbe Nachfrage (Ø 20 Stk./Tag, Lieferzeit 4 Tage). Dreiecke markieren Bestellungen, die rote Linie ist der Meldebestand bzw. das Auffüllniveau.</p>
+    <div class="slider" style="max-width:420px"><label for="sim_v">Verbrauchsschwankung (± Stk./Tag)</label><output id="sim_vo"></output><input type="range" id="sim_v" min="0" max="18" value="8"></div>
+    <button class="btn sm ghost" id="simBtn">Neue Nachfrage würfeln</button>
+    <h4 style="margin-top:14px">Bestellpunktsystem <span class="small muted">(Meldebestand 110, feste Menge 180)</span></h4>
+    <div class="chart-box" id="simA"></div>
+    <div class="stat-row" id="simAS"></div>
+    <h4 style="margin-top:14px">Bestellrhythmussystem <span class="small muted">(alle 9 Tage, Bestand inkl. offener Bestellungen auf 290 auffüllen)</span></h4>
+    <div class="chart-box" id="simB"></div>
+    <div class="stat-row" id="simBS"></div>
+  </div>
+
+  <details class="answer"><summary>Musterantwort für die Klausur</summary><div class="inner">
+    <p>Bei der verbrauchsgesteuerten Beschaffung wird auf Basis des bisherigen Verbrauchs disponiert. Man unterscheidet:</p>
+    <ul>
+      <li><strong>Bestellpunktsystem:</strong> Bestellt wird, wenn der Lagerbestand unter einen kritischen Meldebestand sinkt – variable Bestellzeitpunkte, fixe Bestellmengen. Festzulegen sind der kritische Lagerbestand (Meldemenge = maximaler Lagerverbrauch × Beschaffungszeit, Sicherheitsbestand enthalten) und die Bestellmenge. Vorteil: schnelle Reaktion auf Schwankungen; Nachteil: laufende Bestandskontrolle nötig.</li>
+      <li><strong>Bestellrhythmussystem:</strong> Fixe Bestellzeitpunkte, variable Bestellmengen. Am Bestelltermin wird so viel bestellt, dass der Bestand bis zum maximalen Lagerbestand aufgefüllt wird. Vorteil: planbar, geringer Kontrollaufwand; Nachteil: höheres Fehlmengenrisiko zwischen den Terminen.</li>
+    </ul>
+  </div></details>
+  <button class="done-btn" data-done="bestell">Als verstanden markieren</button>
+</section>
+
+<!-- ================= Thema 9 ================= -->
+<section class="topic" id="menge" data-title="Optimale Bestellmenge" data-prio="a">
+  <div class="topic-head">
+    <div class="label"><small>Thema</small><b>9</b><span class="code"></span></div>
+    <div>
+      <h2>Bestellplanung &amp; optimale Bestellmenge</h2>
+      <div class="meta"><span class="prio a">Sehr wichtig</span><span class="small muted">Folien 40 bis 42, Grundlagen auf Folien 36 und 38 (mittel)</span></div>
+      <p class="exam-q">Übungsfrage 14: „Der Jahresbedarf eines Rohstoffs beträgt 500 t. Der Preis je Tonne ist 100 €. Als Zins- und Lagerkostensatz für das durchschnittlich gebundene Kapital sei 15 %. Je Bestell- und Liefervorgang fallen 150 € an. Wie häufig sollte pro Periode bestellt werden? Lösen Sie das Problem analytisch.“</p>
+    </div>
+  </div>
+
+  <div class="cols">
+    <div class="panel">
+      <h3>Bestellplanung <span class="prio b">Mittel</span></h3>
+      <p class="small">Das Beschaffungs- und Lagerprogramm soll optimiert werden, d. h. gesucht sind:</p>
+      <ul class="small"><li>optimaler <strong>Bestellzeitpunkt</strong></li><li>optimale <strong>Bestellmenge</strong></li><li>optimaler <strong>Lagerbestand</strong></li></ul>
+      <p class="small"><strong>Ziele:</strong> hohe (notwendige) Materialverfügbarkeit und Kostenminimierung.</p>
+    </div>
+    <div class="panel">
+      <h3>Das Kostenproblem <span class="prio b">Mittel</span></h3>
+      <p class="small">Kleine Bestellmengen → niedrige <strong>Lagerkosten</strong>, aber hohe <strong>Bestellkosten</strong> (oft bestellen). Die optimale Bestellmenge ist das <strong>Kostenminimum</strong> aus beiden.</p>
+      <p class="small"><strong>Voraussetzungen des Grundmodells:</strong> gleichbleibende Bestellmengen, konstante Lagerabgangsraten, Einstandspreis unabhängig von Menge und Zeitpunkt, fixe Bestellkosten sowie Zins- und Lagerkosten genau bestimmbar.</p>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h3>Klassische Losgrößenformel</h3>
+    <span class="formula">x<sub>opt</sub> = √( 200 · M · K<sub>B</sub> / (E · L<sub>HS</sub>) )</span>
+    <div class="cols" style="margin:10px 0 0;grid-template-columns:repeat(auto-fit,minmax(220px,1fr))">
+      <p class="small" style="margin:0">M = Jahresbedarfsmenge<br>K<sub>B</sub> = Bestellkosten je Bestellung<br>E = Einstandspreis</p>
+      <p class="small" style="margin:0">L<sub>HS</sub> = Lagerhaltungskostensatz in %<br>L<sub>HS</sub> = Zinssatz p + Lagerkostensatz L<sub>S</sub><br>Bestellhäufigkeit n = M / x<sub>opt</sub></p>
+    </div>
+    <p class="small muted" style="margin-top:10px">Woher die 200? Gesamtkosten K(x) = M/x · K<sub>B</sub> + x/2 · E · L<sub>HS</sub>/100. Ableiten, null setzen: x² = 2 · 100 · M · K<sub>B</sub> / (E · L<sub>HS</sub>). Das x/2 ist der durchschnittliche Lagerbestand.</p>
+  </div>
+
+  <div class="panel bench">
+    <h3>Beispiel von Folie 41 – Schritt für Schritt</h3>
+    <p class="small">Preis 10 Cent je Einheit, Lagerkosten 5 % Zinsen auf das gebundene Kapital, Jahresbedarf 16.000 Einheiten (kontinuierlich), 10 € fixe Kosten je Bestellung. Wie oft und in welchen Mengen bestellen?</p>
+    <ol class="steps reveal-steps" id="bSteps">
+      <li><strong>Gegeben:</strong> M = 16.000, E = 0,10 €, L<sub>HS</sub> = 5 %, K<sub>B</sub> = 10 €</li>
+      <li><strong>Einsetzen:</strong> √( 200 · 16.000 · 10 / (0,10 · 5) ) = √( 32.000.000 / 0,5 ) = √64.000.000</li>
+      <li><strong>Ergebnis:</strong> x<sub>opt</sub> = <strong>8.000 Einheiten</strong> je Bestellung</li>
+      <li><strong>Häufigkeit:</strong> n = 16.000 / 8.000 = <strong>2 Bestellungen pro Jahr</strong></li>
+      <li><strong>Probe:</strong> Bestellkosten 2 · 10 € = 20 €; Lagerkosten 8.000/2 · 0,10 € · 5 % = 20 € – gleich hoch, also optimal.</li>
+    </ol>
+    <div class="row"><button class="btn sm" id="bNext">Nächsten Schritt zeigen</button><button class="btn sm ghost" id="bAll">Alles zeigen</button></div>
+  </div>
+
+  <div class="panel bench">
+    <h3>Übungsfrage 14 – Schritt für Schritt</h3>
+    <ol class="steps reveal-steps" id="aSteps">
+      <li><strong>Gegeben:</strong> M = 500 t, E = 100 €/t, L<sub>HS</sub> = 15 %, K<sub>B</sub> = 150 €</li>
+      <li><strong>Formel:</strong> x<sub>opt</sub> = √( 200 · M · K<sub>B</sub> / (E · L<sub>HS</sub>) )</li>
+      <li><strong>Einsetzen:</strong> √( 200 · 500 · 150 / (100 · 15) ) = √( 15.000.000 / 1.500 ) = √10.000</li>
+      <li><strong>Ergebnis:</strong> x<sub>opt</sub> = <strong>100 t</strong> je Bestellung</li>
+      <li><strong>Bestellhäufigkeit:</strong> n = M / x<sub>opt</sub> = 500 / 100 = <strong>5 Bestellungen pro Jahr</strong></li>
+      <li><strong>Probe:</strong> Bestellkosten 5 · 150 € = 750 €; Lagerkosten 100/2 · 100 € · 15 % = 750 €. Im Optimum gleich hoch – Gesamtkosten 1.500 €.</li>
+    </ol>
+    <div class="row"><button class="btn sm" id="aNext">Nächsten Schritt zeigen</button><button class="btn sm ghost" id="aAll">Alles zeigen</button></div>
+  </div>
+
+  <div class="panel bench">
+    <h3>Ausprobieren: Kostenkurven</h3>
+    <div class="row" style="margin-bottom:6px"><button class="btn sm ghost" id="an14">Werte aus Übungsfrage 14</button><button class="btn sm ghost" id="an41">Beispiel von Folie 41</button></div>
+    <div class="cols" style="margin:0;grid-template-columns:repeat(auto-fit,minmax(200px,1fr))">
+      <div class="slider"><label for="a_m">Jahresbedarf M</label><output id="a_mo"></output><input type="range" id="a_m" min="100" max="20000" step="100" value="500"></div>
+      <div class="slider"><label for="a_e">Einstandspreis E (€)</label><output id="a_eo"></output><input type="range" id="a_e" min="0.1" max="500" step="0.1" value="100"></div>
+      <div class="slider"><label for="a_l">Lagerhaltungskostensatz L<sub>HS</sub> (%)</label><output id="a_lo"></output><input type="range" id="a_l" min="1" max="40" value="15"></div>
+      <div class="slider"><label for="a_k">Bestellkosten K<sub>B</sub> (€)</label><output id="a_ko"></output><input type="range" id="a_k" min="5" max="500" step="5" value="150"></div>
+    </div>
+    <div class="chart-box" id="andChart"></div>
+    <div class="slider" style="max-width:520px"><label for="a_x">Deine Bestellmenge – schieb sie an das Minimum</label><output id="a_xo"></output><input type="range" id="a_x" min="1" max="300" value="60"></div>
+    <div class="stat-row" id="andStats"></div>
+  </div>
+
+  <div class="panel bench">
+    <h3>Selbsttest mit neuen Zahlen</h3>
+    <p id="stTask"></p>
+    <div class="row">
+      <label class="small">x<sub>opt</sub> <input type="number" id="stX" style="width:130px" step="any"></label>
+      <label class="small">Bestellungen/Jahr <input type="number" id="stN" style="width:110px" step="any"></label>
+      <button class="btn sm" id="stCheck">Prüfen</button>
+      <button class="btn sm ghost" id="stNew">Neue Aufgabe</button>
+    </div>
+    <p class="feedback" id="stFb"></p>
+  </div>
+
+  <details class="answer"><summary>Musterantwort für die Klausur</summary><div class="inner">
+    <p>x<sub>opt</sub> = √( 200 · M · K<sub>B</sub> / (E · L<sub>HS</sub>) ) = √( 200 · 500 · 150 / (100 · 15) ) = √10.000 = <strong>100 t</strong>.</p>
+    <p>Bestellhäufigkeit = M / x<sub>opt</sub> = 500 t / 100 t = <strong>5 Bestellungen pro Periode</strong>.</p>
+    <p>Kontrolle: Bestellkosten = 5 × 150 € = 750 €; Lagerhaltungskosten = (100 t / 2) × 100 €/t × 0,15 = 750 €. Im Optimum sind Bestell- und Lagerhaltungskosten gleich; die Gesamtkosten betragen 1.500 €.</p>
+  </div></details>
+  <button class="done-btn" data-done="menge">Als verstanden markieren</button>
+</section>
+
+<!-- ================= Thema 10 ================= -->
+<section class="topic" id="scoring" data-title="Scoring-Modell" data-prio="a">
+  <div class="topic-head">
+    <div class="label"><small>Thema</small><b>10</b><span class="code"></span></div>
+    <div>
+      <h2>Scoring-Modell (Nutzwertanalyse)</h2>
+      <div class="meta"><span class="prio a">Sehr wichtig</span><span class="small muted">Folien 45 bis 48</span></div>
+      <p class="exam-q">Klausurrelevant: Vorgehen, Berechnung, Vor- und Nachteile.</p>
+    </div>
+  </div>
+
+  <div class="cols">
+    <div class="panel">
+      <h3>Wozu?</h3>
+      <p class="small">Qualitative Kriterien (Termintreue, Service, Beratung …) lassen sich nicht direkt in Euro ausdrücken. Die Nutzwertanalyse – auch <strong>Scoringmodell, Punktbewertungsverfahren</strong> oder <strong>Rangfolgemodell</strong> – macht sie vergleichbar. Ergebnis ist ein <strong>Punktwert je Option</strong>: ein Indikator für ihren Nutzen bzw. Beitrag zur Zielerreichung.</p>
+      <span class="formula">Nutzwert N<sub>i</sub> = Σ ( Gewicht g<sub>j</sub> × Punkte n<sub>ij</sub> )</span>
+    </div>
+    <div class="panel">
+      <h3>Vorgehen in sechs Schritten</h3>
+      <ol class="steps small" style="margin:0">
+        <li>Bewertungskriterien formulieren (Mindestanforderungen / K.-o.-Kriterien und Auswahlkriterien)</li>
+        <li>Kriterien gewichten (Summe = 100 %)</li>
+        <li>Optionen mit Punkten bewerten (z. B. 10 = sehr gut, 1 = sehr schlecht)</li>
+        <li>Punkte je Kriterium mit dem Gewicht multiplizieren</li>
+        <li>Gewichtete Punkte je Option aufsummieren</li>
+        <li>Vorteilhaftigkeit ermitteln: höchster Nutzwert = Rang 1</li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="panel bench">
+    <h3>Ausprobieren: dein eigenes Scoring</h3>
+    <div class="row" style="margin-bottom:10px">
+      <button class="btn sm ghost" data-preset="lief">Lieferantenauswahl</button>
+      <button class="btn sm ghost" data-preset="nb">Notebook-Beispiel (Folie 47)</button>
+    </div>
+    <p class="small muted" id="scNote"></p>
+    <div class="tbl-wrap"><table class="sc-table" id="scTable"></table></div>
+    <div class="bars" id="scBars"></div>
+    <p class="small key" id="scTip" style="margin-top:14px"></p>
+  </div>
+
+  <div class="panel bench">
+    <h3>Rechne selbst</h3>
+    <p>Zwei Lieferanten werden bewertet (Punkte 1–10):</p>
+    <div class="tbl-wrap"><table style="max-width:520px">
+      <tr><th>Kriterium</th><th>Gewicht</th><th>Lieferant A</th><th>Lieferant B</th></tr>
+      <tr><td>Preis</td><td>40 %</td><td>8</td><td>6</td></tr>
+      <tr><td>Qualität</td><td>35 %</td><td>6</td><td>9</td></tr>
+      <tr><td>Termintreue</td><td>25 %</td><td>7</td><td>8</td></tr>
+    </table></div>
+    <div class="row" style="margin-top:10px">
+      <label class="small">Nutzwert A <input type="number" id="exA" step="0.01" style="width:100px"></label>
+      <label class="small">Nutzwert B <input type="number" id="exB" step="0.01" style="width:100px"></label>
+      <label class="small">Wahl <select id="exC" style="width:120px"><option value="">–</option><option>A</option><option>B</option></select></label>
+      <button class="btn sm" id="exBtn">Prüfen</button>
+    </div>
+    <p class="feedback" id="exFb"></p>
+  </div>
+
+  <div class="cols">
+    <div class="panel"><h3 style="color:var(--green)">Vorteile</h3><ul class="small"><li>systematisches Vorgehen</li><li>nachvollziehbare, transparente Auswahlentscheidungen</li><li>Quantifizierung und Vergleichbarkeit auch nicht-monetären Nutzens</li><li>Ableitung einer Rangfolge der Präferenzen</li></ul></div>
+    <div class="panel"><h3 style="color:var(--red)">Kritikpunkte</h3><ul class="small"><li>stark <strong>subjektiv</strong>: Auswahl der Kriterien, Gewichtung, Punktvergabe</li><li>Modellkonzeption beeinflusst das Ergebnis stark und eröffnet <strong>Manipulationsspielräume</strong> – auch nachträglich durch geänderte Gewichte</li></ul><p class="small">Deshalb: <strong>Sensitivitätsanalyse</strong> – Gewichte variieren und prüfen, ob die Rangfolge stabil bleibt. Die Nutzwertanalyse ist eine <strong>ergänzende</strong> Methode.</p></div>
+  </div>
+
+  <details class="answer"><summary>Musterantwort für die Klausur</summary><div class="inner">
+    <p>Die Nutzwertanalyse (Scoringmodell) ist ein Bewertungsverfahren, um Alternativen auch anhand qualitativer, nicht monetär messbarer Kriterien zu vergleichen. Vorgehen: (1) Kriterien festlegen, (2) gewichten, (3) Alternativen je Kriterium mit Punkten bewerten, (4) Punkte mit Gewichten multiplizieren, (5) je Alternative summieren, (6) Alternative mit dem höchsten Nutzwert wählen. Ergänzend prüft eine Sensitivitätsanalyse die Stabilität der Rangfolge.</p>
+    <p><strong>Vorteile:</strong> systematisch, transparent, nachvollziehbar, macht nicht-monetären Nutzen vergleichbar. <strong>Nachteile:</strong> subjektive Kriterienauswahl, Gewichtung und Punktvergabe; Ergebnis manipulierbar. Daher als ergänzende Entscheidungshilfe nutzen.</p>
+  </div></details>
+  <button class="done-btn" data-done="scoring">Als verstanden markieren</button>
+</section>
+
+
+<!-- ================= Quiz ================= -->
+<section class="topic" id="quiz" data-title="Quiz">
+  <div class="topic-head">
+    <div class="label"><small>Test</small><b>?</b><span class="code"></span></div>
+    <div>
+      <h2>Quiz: Wie gut sitzt dein Wissen?</h2>
+      <p class="exam-q">Multiple Choice mit Erklärung zu jeder Antwort. Wähle einen Themenbereich oder teste alles.</p>
+    </div>
+  </div>
+  <div id="quizBox"></div>
+</section>
+
+<!-- ================= Karten ================= -->
+<section class="topic" id="karten" data-title="Karteikarten">
+  <div class="topic-head">
+    <div class="label"><small>Wdh.</small><b>K</b><span class="code"></span></div>
+    <div>
+      <h2>Karteikarten nach Themen</h2>
+      <p class="exam-q">Wähle ein Thema und geh die Begriffe einzeln durch. Karten, die du noch nicht weißt, kommen am Ende des Stapels wieder.</p>
+    </div>
+  </div>
+  <div id="fcBox"></div>
+</section>
+
+</main>
+
+<footer class="wrap">Grundlage: Vorlesungsfolien „Wirtschaftstheorie 3“ (Dipl.-Kfm. Carsten Pohlmann), Übungsfragen WIT 3 und deine Gewichtung der Folien. Dein Lernfortschritt wird nur in diesem Browser gespeichert.</footer>
+
+<script>
+(function(){
+"use strict";
+const $=(s,el=document)=>el.querySelector(s);
+const $$=(s,el=document)=>Array.from(el.querySelectorAll(s));
+const fmt=(n,d=0)=>Number(n).toLocaleString('de-DE',{minimumFractionDigits:d,maximumFractionDigits:d});
+const eur=(n,d=2)=>fmt(n,d)+' €';
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
+const store={get(k,d){try{const v=localStorage.getItem('wit3_'+k);return v==null?d:JSON.parse(v);}catch(e){return d;}},set(k,v){try{localStorage.setItem('wit3_'+k,JSON.stringify(v));}catch(e){}}};
+const reduced=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const css=v=>getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+
+/* ---------- Theme ---------- */
+const savedTheme=store.get('theme',null);
+if(savedTheme)document.documentElement.setAttribute('data-theme',savedTheme);
+$('#themeBtn').addEventListener('click',()=>{
+  const cur=document.documentElement.getAttribute('data-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');
+  const next=cur==='dark'?'light':'dark';
+  document.documentElement.setAttribute('data-theme',next);store.set('theme',next);
+  redrawAll();
+});
+
+/* ---------- Nav & progress ---------- */
+const TOPIC_IDS=['mawi','kosten','abc','politik','planung','bestand','lief','bestell','menge','scoring'];
+const nav=$('#navList');
+TOPIC_IDS.forEach((id,i)=>{
+  const a=document.createElement('a');a.className='bin';a.href='#'+id;a.dataset.id=id;
+  a.textContent=String(i+1);if($('#'+id).dataset.prio==='a')a.classList.add('pa');a.title=$('#'+id).dataset.title;nav.append(a);
+});
+[['quiz','Quiz'],['karten','Karten']].forEach(([id,t])=>{const a=document.createElement('a');a.className='bin wide';a.href='#'+id;a.dataset.id=id;a.textContent=t;nav.append(a);});
+let done=store.get('done2',{});
+function updateProgress(){
+  const n=TOPIC_IDS.filter(id=>done[id]).length;
+  $('#stockTxt').textContent=n+' von '+TOPIC_IDS.length+' Themen abgehakt';
+  $('#stockFill').style.width=(n/TOPIC_IDS.length*100)+'%';
+  $$('.bin').forEach(b=>b.classList.toggle('done',!!done[b.dataset.id]));
+  $$('.done-btn').forEach(b=>{const on=!!done[b.dataset.done];b.classList.toggle('on',on);b.textContent=on?'✓ Verstanden':'Als verstanden markieren';});
+}
+$$('.done-btn').forEach(b=>b.addEventListener('click',()=>{done[b.dataset.done]=!done[b.dataset.done];store.set('done2',done);updateProgress();if(done[b.dataset.done]&&TOPIC_IDS.every(id=>done[id]))confetti();}));
+setTimeout(updateProgress,300);
+if('IntersectionObserver' in window){
+  const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){$$('.bin').forEach(b=>b.classList.toggle('active',b.dataset.id===e.target.id));const act=$('.bin.active');if(act)act.scrollIntoView({block:'nearest',inline:'center',behavior:reduced?'auto':'smooth'});}});},{rootMargin:'-35% 0px -60% 0px'});
+  $$('section.topic').forEach(s=>io.observe(s));
+}
+
+/* ---------- Tabs ---------- */
+$$('[data-tabs]').forEach(tabs=>{
+  const panel=tabs.parentElement;
+  tabs.addEventListener('click',e=>{
+    const t=e.target.closest('.tab');if(!t)return;
+    $$('.tab',tabs).forEach(x=>x.classList.toggle('on',x===t));
+    $$(':scope > .tabpane',panel).forEach(p=>p.classList.toggle('on',p.dataset.p===t.dataset.t));
+  });
+});
+
+/* ---------- Confetti ---------- */
+function confetti(){
+  if(reduced)return;
+  const cols=['#F2B705','#1F4E8C','#23875A','#C93C3C','#1A8FA3'];
+  for(let i=0;i<90;i++){
+    const s=document.createElement('span');s.className='confetti';
+    s.style.left=Math.random()*100+'vw';s.style.background=cols[i%cols.length];
+    s.style.animationDelay=(Math.random()*0.6)+'s';s.style.animationDuration=(2.2+Math.random()*1.4)+'s';
+    s.style.transform='rotate('+Math.random()*360+'deg)';
+    document.body.append(s);setTimeout(()=>s.remove(),4200);
+  }
+}
+
+/* ---------- Generic sorter ---------- */
+function makeSorter(root,buckets,items){
+  let selected=null,correct=0;
+  function build(){
+    selected=null;correct=0;
+    root.innerHTML='<div class="sorter-pool"></div><div class="buckets"></div><div class="sorter-foot"><span class="sorter-msg"></span><button class="btn sm ghost">Neu mischen</button></div>';
+    const pool=$('.sorter-pool',root),bw=$('.buckets',root),msg=$('.sorter-msg',root);
+    $('.sorter-foot button',root).onclick=build;
+    buckets.forEach(b=>{
+      const el=document.createElement('div');el.className='bucket';el.dataset.b=b.id;el.tabIndex=0;el.setAttribute('role','button');
+      el.innerHTML='<div class="bucket-title" style="color:'+(b.color||'inherit')+'">'+b.label+'</div><div class="bucket-items"></div>';
+      el.addEventListener('click',()=>place(b.id,el));
+      el.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();place(b.id,el);}});
+      el.addEventListener('dragover',e=>{e.preventDefault();el.classList.add('hot');});
+      el.addEventListener('dragleave',()=>el.classList.remove('hot'));
+      el.addEventListener('drop',e=>{e.preventDefault();el.classList.remove('hot');place(b.id,el);});
+      bw.append(el);
+    });
+    shuffle(items).forEach(it=>{
+      const c=document.createElement('button');c.className='chip';c.textContent=it.t;c.draggable=true;c.dataset.b=it.b;if(it.w)c.dataset.w=it.w;
+      c.addEventListener('click',e=>{e.stopPropagation();if(c.classList.contains('ok'))return;select(c);});
+      c.addEventListener('dragstart',()=>{select(c);});
+      pool.append(c);
+    });
+    upd();
+    function select(c){$$('.chip.sel',root).forEach(x=>x.classList.remove('sel'));selected=c;c.classList.add('sel');msg.textContent='Jetzt den passenden Bereich antippen.';msg.style.color='';}
+    function place(bid,el){
+      if(!selected){msg.textContent='Wähle zuerst einen Begriff aus.';return;}
+      const c=selected;selected=null;c.classList.remove('sel');
+      if(c.dataset.b===bid){c.classList.add('ok');c.draggable=false;$('.bucket-items',el).append(c);correct++;msg.textContent='Richtig!';msg.style.color='var(--green)';}
+      else{c.classList.remove('bad');void c.offsetWidth;c.classList.add('bad');setTimeout(()=>c.classList.remove('bad'),600);
+        const right=buckets.find(b=>b.id===c.dataset.b);
+        msg.textContent='Nicht ganz. '+(c.dataset.w||'Probier einen anderen Bereich.');msg.style.color='var(--red)';void right;}
+      upd();
+    }
+    function upd(){if(correct===items.length){msg.textContent='Alle '+items.length+' richtig einsortiert!';msg.style.color='var(--green)';}}
+  }
+  build();
+}
+
+/* ---------- Thema 1: Sortierer ---------- */
+makeSorter($('#sort2'),[{id:'t',label:'originär technisch',color:'var(--blue)'},{id:'o',label:'ökonomisch',color:'var(--orange)'}],[
+ {t:'in der geforderten Qualität',b:'t'},{t:'in der wirtschaftlichen Menge',b:'t',w:'Laut Folie zählt die Menge zu den technischen Anforderungen.'},{t:'zum richtigen Zeitpunkt',b:'t'},{t:'am richtigen Ort',b:'t'},{t:'unter entsprechender Entsorgung',b:'t'},{t:'zum günstigsten Preis',b:'o'},{t:'bei niedrigsten Beschaffungskosten',b:'o'}]);
+
+/* ---------- Q3: flips ---------- */
+const FLIPS=[
+ ['⚖️','Ausgleichsfunktion','Gleicht Unterschiede zwischen Beschaffung und Verbrauch aus.','Beschaffung und Verbrauch laufen zeitlich und mengenmäßig auseinander – das Lager puffert.','Stahlrohre kommen einmal im Monat per LKW, verbraucht werden sie täglich in kleinen Mengen.'],
+ ['🛡️','Sicherungsfunktion','Schützt vor Engpässen und Störungen.','Sicherheitsbestand gegen Lieferverzug, Lieferausfall oder unerwartete Bedarfsspitzen.','Ein Elektronikhersteller hält Mikrochips vor – falls der Lieferant ausfällt, läuft die Produktion weiter.'],
+ ['📈','Spekulationsfunktion','Nutzt erwartete Preisänderungen.','Auf Vorrat einkaufen, wenn Preise voraussichtlich steigen oder gerade günstig sind.','Ein Kabelhersteller kauft Kupfer vor einer erwarteten Preiserhöhung und lagert es ein.'],
+ ['🧀','Produktionsfunktion','Die Lagerung verändert das Material.','Auch Veredelungsfunktion: Während der Lagerung reift, trocknet oder verbessert sich das Gut.','Holz trocknet im Lager einer Möbelschreinerei, Käse oder Wein reifen.']];
+$('#flips3').innerHTML=FLIPS.map(f=>'<button class="flip" aria-label="'+f[1]+' umdrehen"><div class="flip-inner"><div class="face front"><div class="ico">'+f[0]+'</div><h3>'+f[1]+'</h3><p class="small">'+f[2]+'</p><span class="hint">Antippen zum Umdrehen</span></div><div class="face back"><h4>'+f[1]+'</h4><p>'+f[3]+'</p><p><strong>Beispiel:</strong> '+f[4]+'</p></div></div></button>').join('');
+$$('#flips3 .flip').forEach(f=>f.addEventListener('click',()=>f.classList.toggle('flipped')));
+makeSorter($('#sort3'),[{id:'a',label:'Ausgleich'},{id:'s',label:'Sicherung'},{id:'p',label:'Spekulation'},{id:'r',label:'Produktion'}],[
+ {t:'Zuckerrüben werden im Herbst geerntet, aber ganzjährig verarbeitet',b:'a'},{t:'Stahlrohre kommen monatlich, verbraucht wird täglich',b:'a'},
+ {t:'Reserve an Mikrochips für einen Lieferantenausfall',b:'s'},{t:'Puffer gegen einen Streik im Hafen',b:'s'},
+ {t:'Kupfer wird vor erwarteter Preiserhöhung gekauft',b:'p'},{t:'Kaffeebohnen werden bei niedrigem Weltmarktpreis eingelagert',b:'p'},
+ {t:'Holz trocknet im Lager der Schreinerei',b:'r'},{t:'Käse reift mehrere Monate im Lager',b:'r'}]);
+
+/* ---------- Q4: Bezugskalkulation ---------- */
+function bezug(){
+  const p=+$('#b_p').value,r=+$('#b_r').value,s=+$('#b_s').value,f=+$('#b_f').value,m=+$('#b_m').value;
+  $('#b_po').textContent=eur(p);$('#b_ro').textContent=fmt(r,0)+' %';$('#b_so').textContent=fmt(s,1)+' %';$('#b_fo').textContent=eur(f);$('#b_mo').textContent=fmt(m)+' Stk.';
+  const rab=p*r/100,ber=p-rab,sk=ber*s/100,ein=ber-sk+f,ak=ein*m;
+  $('#b_tbl').innerHTML=[['Angebotspreis','',p],['− Rabatt ('+fmt(r)+' %)','',-rab],['= bereinigter Endpreis','b',ber],['− Skonto ('+fmt(s,1)+' %)','',-sk],['+ Fracht / Verp. / Vers.','',f],['= Einstandspreis','b',ein],['× gekaufte Menge','',m],['= Anschaffungskosten','bb',ak]]
+   .map(([l,c,v])=>'<tr'+(c==='bb'?' style="background:var(--yellow-soft)"':'')+'><td>'+(c?'<strong>'+l+'</strong>':l)+'</td><td>'+(l.startsWith('×')?fmt(v)+' Stk.':(c?'<strong>'+eur(v)+'</strong>':eur(v)))+'</td></tr>').join('');
+}
+['b_p','b_r','b_s','b_f','b_m'].forEach(id=>$('#'+id).addEventListener('input',bezug));bezug();
+makeSorter($('#sort4'),[{id:'an',label:'Anschaffungskosten'},{id:'be',label:'Bestellabwicklungskosten'},{id:'la',label:'Lagerhaltungskosten'},{id:'fe',label:'Fehlmengenkosten'}],[
+ {t:'Angebotspreis abzüglich Rabatt',b:'an'},{t:'Frachtkosten der Lieferung',b:'an',w:'Fracht gehört in die Bezugskalkulation bis zum Einstandspreis.'},
+ {t:'Gehalt der Einkäuferin',b:'be'},{t:'Rechnungsprüfung',b:'be'},{t:'Wareneingangskontrolle',b:'be'},
+ {t:'Miete der Lagerhalle',b:'la'},{t:'Versicherung des Lagerbestands',b:'la'},{t:'Verderb und Veralterung',b:'la'},{t:'Zinsen auf gebundenes Kapital',b:'la',w:'Kapitalbindungszinsen sind variable Lagerhaltungskosten.'},
+ {t:'Entgangener Gewinn wegen Produktionsstopp',b:'fe'},{t:'Expresslieferung gegen drohenden Stillstand',b:'fe',w:'Das sind indirekte Fehlmengenkosten – Aufwand zur Vermeidung von Fehlmengen.'}]);
+
+/* ---------- Q5: ABC ---------- */
+const ABC=[['Akkupack',400,120],['Elektromotor',400,80],['Displayeinheit',350,20],['Bremsscheiben',1000,5],['Reifen',600,5],['Schrauben-Set',15000,0.10],['Kabelbinder',40000,0.03],['Griffgummis',500,2],['Aufkleber',4000,0.20],['Verpackungsfolie',1000,0.50]];
+const abcRaw=[ABC[6],ABC[2],ABC[0],ABC[8],ABC[4],ABC[1],ABC[9],ABC[5],ABC[3],ABC[7]];
+let abcStep=0;
+const ABC_TXT=['Ausgangslage: Jahresverbrauchsmenge und Preis je Material.','Schritt 1: Verbrauchswert = Menge × Preis berechnen.','Schritt 2: Nach Verbrauchswert absteigend sortieren.','Schritt 3: Wertanteil in % und kumulierten Anteil berechnen.','Schritt 4: Klassen zuordnen – bis ca. 80 % kumuliert A, bis ca. 95 % B, Rest C.'];
+function renderABC(){
+  const total=ABC.reduce((s,r)=>s+r[1]*r[2],0);
+  let rows=(abcStep>=2?ABC.slice().sort((a,b)=>b[1]*b[2]-a[1]*a[2]):abcRaw);
+  let cum=0;
+  let h='<tr><th>Material</th><th>Menge</th><th>Preis</th>'+(abcStep>=1?'<th>Verbrauchswert</th>':'')+(abcStep>=3?'<th>Anteil</th><th>kumuliert</th>':'')+(abcStep>=4?'<th>Klasse</th>':'')+'</tr>';
+  rows.forEach(r=>{const v=r[1]*r[2];cum+=v;const pc=cum/total*100;const cl=pc<=80.01?'A':pc<=95.01?'B':'C';
+    h+='<tr class="'+(abcStep>0?'flash':'')+'"><td>'+r[0]+'</td><td>'+fmt(r[1])+'</td><td>'+eur(r[2])+'</td>'+(abcStep>=1?'<td><strong>'+eur(v,0)+'</strong></td>':'')+(abcStep>=3?'<td>'+fmt(v/total*100,1)+' %</td><td>'+fmt(pc,1)+' %</td>':'')+(abcStep>=4?'<td><span class="cls '+cl+'">'+cl+'</span></td>':'')+'</tr>';});
+  if(abcStep>=1)h+='<tr><td><strong>Summe</strong></td><td></td><td></td><td><strong>'+eur(total,0)+'</strong></td>'+(abcStep>=3?'<td>100 %</td><td></td>':'')+(abcStep>=4?'<td></td>':'')+'</tr>';
+  $('#abcTbl').innerHTML=h;$('#abcStepTxt').textContent=ABC_TXT[abcStep];
+  $('#abcNext').disabled=abcStep>=4;$('#abcBack').disabled=abcStep<=0;
+  $('#abcChart').innerHTML=abcStep>=4?lorenz():'';
+}
+function lorenz(){
+  const total=ABC.reduce((s,r)=>s+r[1]*r[2],0);const sorted=ABC.slice().sort((a,b)=>b[1]*b[2]-a[1]*a[2]);
+  const W=620,H=280,L=50,B=40,T=16,R=20,pw=W-L-R,ph=H-T-B;
+  const X=v=>L+v/100*pw,Y=v=>T+ph-v/100*ph;
+  let pts=[[0,0]],c=0;sorted.forEach((r,i)=>{c+=r[1]*r[2];pts.push([(i+1)*10,c/total*100]);});
+  const path=pts.map((p,i)=>(i?'L':'M')+X(p[0]).toFixed(1)+' '+Y(p[1]).toFixed(1)).join(' ');
+  let g='<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="ABC-Kurve">';
+  g+='<rect x="'+X(0)+'" y="'+T+'" width="'+(X(20)-X(0))+'" height="'+ph+'" fill="'+css('--red-soft')+'"/><rect x="'+X(20)+'" y="'+T+'" width="'+(X(50)-X(20))+'" height="'+ph+'" fill="'+css('--yellow-soft')+'"/><rect x="'+X(50)+'" y="'+T+'" width="'+(X(100)-X(50))+'" height="'+ph+'" fill="'+css('--blue-soft')+'"/>';
+  [0,20,40,60,80,100].forEach(v=>{g+='<line class="gridl" x1="'+L+'" x2="'+(L+pw)+'" y1="'+Y(v)+'" y2="'+Y(v)+'"/><text class="svgtxt" x="'+(L-8)+'" y="'+(Y(v)+4)+'" text-anchor="end">'+v+'%</text>';});
+  [0,20,50,100].forEach(v=>{g+='<text class="svgtxt" x="'+X(v)+'" y="'+(H-20)+'" text-anchor="middle">'+v+'%</text>';});
+  g+='<text class="svgtxt" x="'+(L+pw/2)+'" y="'+(H-4)+'" text-anchor="middle">Anteil an der Anzahl der Materialien</text>';
+  g+='<text x="'+X(10)+'" y="'+(T+ph-10)+'" text-anchor="middle" font-weight="800" fill="'+css('--red')+'" font-family="Archivo, Arial, sans-serif">A</text><text x="'+X(35)+'" y="'+(T+ph-10)+'" text-anchor="middle" font-weight="800" fill="'+css('--orange')+'" font-family="Archivo, Arial, sans-serif">B</text><text x="'+X(75)+'" y="'+(T+ph-10)+'" text-anchor="middle" font-weight="800" fill="'+css('--cyan')+'" font-family="Archivo, Arial, sans-serif">C</text>';
+  g+='<line class="axis" x1="'+L+'" y1="'+T+'" x2="'+L+'" y2="'+(T+ph)+'"/><line class="axis" x1="'+L+'" y1="'+(T+ph)+'" x2="'+(L+pw)+'" y2="'+(T+ph)+'"/>';
+  g+='<path d="'+path+'" fill="none" stroke="'+css('--blue')+'" stroke-width="3" stroke-dasharray="1200" stroke-dashoffset="1200"><animate attributeName="stroke-dashoffset" to="0" dur="1.4s" fill="freeze"/></path>';
+  pts.slice(1).forEach(p=>{g+='<circle cx="'+X(p[0])+'" cy="'+Y(p[1])+'" r="3.5" fill="'+css('--blue')+'"/>';});
+  return g+'</svg>';
+}
+$('#abcNext').onclick=()=>{if(abcStep<4){abcStep++;renderABC();}};
+$('#abcBack').onclick=()=>{if(abcStep>0){abcStep--;renderABC();}};
+renderABC();
+
+makeSorter($('#sort6'),[{id:'pr',label:'Beschaffungsprogrammpolitik'},{id:'li',label:'Lieferantenpolitik'},{id:'ko',label:'Kontraktpolitik'},{id:'la',label:'Lagerpolitik'}],[
+ {t:'Make or Buy: selbst fertigen oder zukaufen?',b:'pr'},{t:'Materialstandardisierung',b:'pr'},{t:'Ausweichen auf Substitute',b:'pr'},
+ {t:'Direkt vom Hersteller oder über den Handel?',b:'li'},{t:'Zweitlieferanten aufbauen',b:'li'},{t:'Lieferanten auf mehrere Länder verteilen',b:'li'},
+ {t:'Rahmenvertrag über 12 Monate',b:'ko'},{t:'Abrufvertrag mit Mindest- und Höchstmengen',b:'ko'},{t:'Sukzessivliefervertrag',b:'ko'},
+ {t:'Vorratsbeschaffung mit Sicherheitslager',b:'la'},{t:'Just-in-Time-Anlieferung',b:'la',w:'JIT ist das Prinzip der fertigungssynchronen Beschaffung – ein Lagerprinzip.'},{t:'Pflichtlager nach gesetzlicher Vorschrift',b:'la'}]);
+
+/* ---------- Q7: Sägezahn ---------- */
+function saw(){
+  const v=+$('#s_v').value,L=+$('#s_l').value,SB=+$('#s_sb').value,Q=+$('#s_q').value;
+  $('#s_vo').textContent=v+' Stk.';$('#s_lo').textContent=L+' Tage';$('#s_sbo').textContent=SB+' Stk.';$('#s_qo').textContent=Q+' Stk.';
+  const MB=v*L+SB,HB=SB+Q,AVG=SB+Q/2,cyc=Q/v,tmax=cyc*3;
+  const W=680,H=300,Lp=54,Rp=120,T=14,Bp=34,pw=W-Lp-Rp,ph=H-T-Bp,ymax=Math.max(HB,MB)*1.12;
+  const X=t=>Lp+t/tmax*pw,Y=q=>T+ph-q/ymax*ph;
+  let pts=[];for(let k=0;k<3;k++){pts.push([k*cyc,HB]);pts.push([(k+1)*cyc,SB]);}pts.push([3*cyc,HB]);
+  const path=pts.map((p,i)=>(i?'L':'M')+X(p[0]).toFixed(1)+' '+Y(p[1]).toFixed(1)).join(' ');
+  const line=(y,c,lab,dash)=>'<line x1="'+Lp+'" x2="'+(Lp+pw)+'" y1="'+Y(y)+'" y2="'+Y(y)+'" stroke="'+c+'" stroke-width="1.6" stroke-dasharray="'+dash+'"/><text x="'+(Lp+pw+6)+'" y="'+(Y(y)+4)+'" font-size="12" fill="'+c+'" font-weight="700">'+lab+'</text>';
+  let g='<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Lagerbestandsverlauf">';
+  g+='<line class="axis" x1="'+Lp+'" y1="'+T+'" x2="'+Lp+'" y2="'+(T+ph)+'"/><line class="axis" x1="'+Lp+'" y1="'+(T+ph)+'" x2="'+(Lp+pw)+'" y2="'+(T+ph)+'"/>';
+  g+='<text class="svgtxt" x="'+(Lp+pw/2)+'" y="'+(H-8)+'" text-anchor="middle">Zeit (Tage)</text><text class="svgtxt" transform="translate(14 '+(T+ph/2)+') rotate(-90)" text-anchor="middle">Menge</text>';
+  for(let k=0;k<=3;k++){g+='<text class="svgtxt" x="'+X(k*cyc)+'" y="'+(T+ph+16)+'" text-anchor="middle">'+fmt(k*cyc,0)+'</text>';}
+  if(SB>0)g+='<rect x="'+Lp+'" y="'+Y(SB)+'" width="'+pw+'" height="'+(Y(0)-Y(SB))+'" fill="'+css('--cyan')+'" opacity=".12"/>';
+  g+=line(HB,css('--green'),'Höchstbestand','6 4')+line(MB,css('--red'),'Meldebestand','6 4')+line(AVG,css('--orange'),'Ø Bestand','2 4')+(SB>0?line(SB,css('--cyan'),'Sicherheitsbest.','6 4'):'');
+  g+='<path d="'+path+'" fill="none" stroke="'+css('--ink')+'" stroke-width="2.6" stroke-linejoin="round"/>';
+  if(MB<=HB){for(let k=0;k<3;k++){const to=k*cyc+(HB-MB)/v;const ta=to+L;
+    g+='<circle cx="'+X(to)+'" cy="'+Y(MB)+'" r="5" fill="'+css('--red')+'"/>';
+    g+='<line x1="'+X(to)+'" x2="'+X(ta)+'" y1="'+(T+ph-8)+'" y2="'+(T+ph-8)+'" stroke="'+css('--red')+'" stroke-width="3"/>';
+    if(k===0)g+='<text x="'+((X(to)+X(ta))/2)+'" y="'+(T+ph-14)+'" font-size="11" text-anchor="middle" fill="'+css('--red')+'">Lieferzeit</text>';}}
+  g+='</svg>';
+  $('#sawChart').innerHTML=g;
+  $('#sawStats').innerHTML=[['Meldebestand',v+' × '+L+' + '+SB+' = '+fmt(MB)],['Höchstbestand',SB+' + '+Q+' = '+fmt(HB)],['Ø Lagerbestand',SB+' + '+Q+'/2 = '+fmt(AVG)],['Bestellungen alle',fmt(cyc,1)+' Tage']].map(s=>'<div class="stat"><small>'+s[0]+'</small><b style="font-size:1.05rem">'+s[1]+'</b></div>').join('');
+  $('#sawWarn').textContent=MB>HB?'Achtung: Der Meldebestand liegt über dem Höchstbestand – die Lieferzeit ist länger als ein Verbrauchszyklus. Du müsstest bestellen, bevor die letzte Lieferung da ist.':'';
+}
+['s_v','s_l','s_sb','s_q'].forEach(id=>$('#'+id).addEventListener('input',saw));
+$('#mbBtn').onclick=()=>{const v=+$('#mbIn').value,fb=$('#mbFb');if(v===200){fb.className='feedback ok';fb.textContent='Richtig: 25 × 6 + 50 = 200 Stück.';}else{fb.className='feedback no';fb.textContent='Noch nicht. Formel: Verbrauch je Tag × Lieferzeit + Sicherheitsbestand.';}};
+
+/* ---------- Q8: tank ---------- */
+const SERV=[[90,1.28],[95,1.65],[97.5,1.96],[99,2.33],[99.5,2.58],[99.9,3.09]];
+function tank(){
+  const d=+$('#t_d').value,l=+$('#t_l').value,b=+$('#t_b').value,si=+$('#t_s').value,[sg,z]=SERV[si];
+  $('#t_do').textContent='± '+d;$('#t_lo').textContent='± '+fmt(l,1);$('#t_bo').textContent=b;$('#t_so').textContent=fmt(sg,1)+' %';
+  const SB=Math.round(z*Math.sqrt(5*d*d+400*l*l)+b);
+  $('#tankW').style.height=Math.min(100,SB/450*100)+'%';$('#tankV').textContent=SB+' Stk.';
+  $('#t_cap').textContent=eur(SB*50,0);$('#t_capM').style.width=Math.min(100,SB/450*100)+'%';
+  $('#t_risk').textContent=fmt(100-sg,1)+' %';$('#t_riskM').style.width=((100-sg)/10*100)+'%';
+}
+['t_d','t_l','t_b','t_s'].forEach(id=>$('#'+id).addEventListener('input',tank));tank();
+
+/* ---------- Q10: JIT ---------- */
+let jitTimer=null;
+$('#jitBtn').addEventListener('click',()=>{
+  if(jitTimer){clearInterval(jitTimer);jitTimer=null;}
+  let sA=0,sB=0,t=0,delA=0,delB=0,sumA=0,sumB=0;
+  const tA=$('#truckA'),tB=$('#truckB'),stA=$('#storeA'),stB=$('#storeB');
+  const draw=()=>{stA.textContent='';stB.textContent='';for(let i=0;i<sA;i++){const s=document.createElement('span');s.textContent='📦';stA.append(s);}for(let i=0;i<sB;i++){const s=document.createElement('span');s.textContent='📦';stB.append(s);}};
+  const drive=(tr)=>{tr.style.transition='none';tr.style.left='-40px';void tr.offsetWidth;tr.style.transition='left .6s linear';tr.style.left='40%';setTimeout(()=>{tr.style.transition='none';tr.style.left='-40px';},700);};
+  $('#jitBtn').textContent='Simulation neu starten';
+  jitTimer=setInterval(()=>{
+    // Vorrat: big delivery when stock low
+    if(sA<=2){drive(tA);setTimeout(()=>{sA+=12;draw();},600);delA++;}
+    if(t%1===0){drive(tB);setTimeout(()=>{sB+=1;draw();},600);delB++;}
+    setTimeout(()=>{if(sA>0)sA--;if(sB>0)sB--;draw();},900);
+    sumA+=sA;sumB+=sB;t++;
+    $('#jitStat').textContent='Tag '+t+': Vorrat Ø '+fmt(sumA/t,1)+' Kisten im Lager, JIT Ø '+fmt(sumB/t,1)+' Kisten. Lieferungen: '+delA+' vs. '+delB+'.';
+    if(t>=20){clearInterval(jitTimer);jitTimer=null;$('#jitStat').textContent+=' – Mit JIT fast kein Lager, dafür viel mehr Fahrten.';}
+  },1100);
+});
+
+/* ---------- Q12 simulation ---------- */
+function rng(seed){return function(){seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+let simSeed=7;
+function simulate(type,demand){
+  const L=4,s=110,Q=180,T=9,S=290;let stock=210,pipe=[],lev=[],orders=[],short=0;
+  for(let t=0;t<demand.length;t++){
+    pipe=pipe.filter(p=>{if(p.a===t){stock+=p.q;return false;}return true;});
+    const d=demand[t];if(stock>=d)stock-=d;else{short+=d-stock;stock=0;}
+    const pos=stock+pipe.reduce((a,p)=>a+p.q,0);
+    if(type==='p'&&pos<=s){pipe.push({a:t+L,q:Q});orders.push(t);}
+    if(type==='r'&&t%T===0){const q=S-pos;if(q>0){pipe.push({a:t+L,q:q});orders.push(t);}}
+    lev.push(stock);
+  }
+  return {lev,orders,short,avg:lev.reduce((a,b)=>a+b,0)/lev.length,line:type==='p'?s:S};
+}
+function simChart(res,label){
+  const W=640,H=200,Lp=40,R=12,T=10,B=26,pw=W-Lp-R,ph=H-T-B,ymax=320,n=res.lev.length;
+  const X=t=>Lp+t/(n-1)*pw,Y=q=>T+ph-q/ymax*ph;
+  let g='<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="'+label+'">';
+  [0,100,200,300].forEach(v=>{g+='<line class="gridl" x1="'+Lp+'" x2="'+(Lp+pw)+'" y1="'+Y(v)+'" y2="'+Y(v)+'"/><text class="svgtxt" x="'+(Lp-6)+'" y="'+(Y(v)+4)+'" text-anchor="end">'+v+'</text>';});
+  g+='<line x1="'+Lp+'" x2="'+(Lp+pw)+'" y1="'+Y(res.line)+'" y2="'+Y(res.line)+'" stroke="'+css('--red')+'" stroke-dasharray="6 4" stroke-width="1.5"/>';
+  g+='<polyline fill="none" stroke="'+css('--blue')+'" stroke-width="2.4" stroke-linejoin="round" points="'+res.lev.map((v,t)=>X(t).toFixed(1)+','+Y(v).toFixed(1)).join(' ')+'"/>';
+  res.lev.forEach((v,t)=>{if(v===0)g+='<circle cx="'+X(t)+'" cy="'+Y(0)+'" r="4" fill="'+css('--red')+'"/>';});
+  res.orders.forEach(t=>{const x=X(t);g+='<path d="M'+(x-6)+' '+(T+ph+14)+' L'+(x+6)+' '+(T+ph+14)+' L'+x+' '+(T+ph+4)+' Z" fill="'+css('--yellow')+'" stroke="'+css('--ink')+'" stroke-width=".8"/>';});
+  g+='<line class="axis" x1="'+Lp+'" y1="'+(T+ph)+'" x2="'+(Lp+pw)+'" y2="'+(T+ph)+'"/>';
+  return g+'</svg>';
+}
+function sim(){
+  const vv=+$('#sim_v').value;$('#sim_vo').textContent='± '+vv;
+  const r=rng(simSeed),dem=[];for(let t=0;t<60;t++)dem.push(Math.max(0,Math.round(20+(r()*2-1)*vv)));
+  const A=simulate('p',dem),Bs=simulate('r',dem);
+  $('#simA').innerHTML=simChart(A,'Bestellpunktsystem');$('#simB').innerHTML=simChart(Bs,'Bestellrhythmussystem');
+  const st=x=>'<div class="stat"><small>Bestellungen</small><b>'+x.orders.length+'</b></div><div class="stat"><small>Ø Lagerbestand</small><b>'+fmt(x.avg,0)+'</b></div><div class="stat"><small>Fehlmenge (Stk.)</small><b style="color:'+(x.short?css('--red'):css('--green'))+'">'+x.short+'</b></div>';
+  $('#simAS').innerHTML=st(A);$('#simBS').innerHTML=st(Bs);
+}
+$('#sim_v').addEventListener('input',sim);$('#simBtn').onclick=()=>{simSeed=Math.floor(Math.random()*1e6);sim();};
+
+/* ---------- Q14 Andler ---------- */
+let stepN=0;const stepEls=$$('#aSteps li');
+function showSteps(){stepEls.forEach((l,i)=>l.classList.toggle('shown',i<stepN));$('#aNext').disabled=stepN>=stepEls.length;}
+$('#aNext').onclick=()=>{stepN++;showSteps();};$('#aAll').onclick=()=>{stepN=stepEls.length;showSteps();};showSteps();
+function setAndler(M,E,L,K){$('#a_m').value=M;$('#a_e').value=E;$('#a_l').value=L;$('#a_k').value=K;andler(true);}
+$('#an14').onclick=()=>setAndler(500,100,15,150);$('#an41').onclick=()=>setAndler(16000,0.1,5,10);
+function andler(resetX){
+  const M=+$('#a_m').value,E=+$('#a_e').value,Lh=+$('#a_l').value,K=+$('#a_k').value;
+  $('#a_mo').textContent=fmt(M);$('#a_eo').textContent=eur(E);$('#a_lo').textContent=Lh+' %';$('#a_ko').textContent=eur(K,0);
+  const xo=Math.sqrt(200*M*K/(E*Lh));
+  const xs=$('#a_x');const xmax=Math.max(3,Math.ceil(xo*3));
+  xs.min=Math.max(1,Math.floor(xo*0.15));xs.max=xmax;xs.step=Math.max(1,Math.round(xo/100));
+  if(resetX===true||+xs.value>xmax||+xs.value<+xs.min)xs.value=Math.round(xo*0.5)||1;
+  const x=+xs.value;$('#a_xo').textContent=fmt(x)+' Einheiten';
+  const bk=q=>M/q*K,lk=q=>q/2*E*Lh/100,gk=q=>bk(q)+lk(q);
+  const W=680,H=300,Lp=64,R=16,T=12,B=36,pw=W-Lp-R,ph=H-T-B,x0=+xs.min,x1=xmax,ymax=gk(xo)*2.3;
+  const X=q=>Lp+(q-x0)/(x1-x0)*pw,Y=v=>T+ph-Math.min(v,ymax*1.05)/ymax*ph;
+  const curve=f=>{let p='';for(let i=0;i<=140;i++){const q=x0+(x1-x0)*i/140;p+=(i?'L':'M')+X(q).toFixed(1)+' '+Y(f(q)).toFixed(1);}return p;};
+  let g='<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Kostenkurven zur optimalen Bestellmenge"><defs><clipPath id="clipA"><rect x="'+Lp+'" y="'+T+'" width="'+pw+'" height="'+ph+'"/></clipPath></defs>';
+  for(let i=0;i<=4;i++){const v=ymax*i/4;g+='<line class="gridl" x1="'+Lp+'" x2="'+(Lp+pw)+'" y1="'+Y(v)+'" y2="'+Y(v)+'"/><text class="svgtxt" x="'+(Lp-6)+'" y="'+(Y(v)+4)+'" text-anchor="end">'+fmt(v,0)+'</text>';}
+  g+='<g clip-path="url(#clipA)"><path d="'+curve(bk)+'" fill="none" stroke="'+css('--cyan')+'" stroke-width="2.4"/><path d="'+curve(lk)+'" fill="none" stroke="'+css('--orange')+'" stroke-width="2.4"/><path d="'+curve(gk)+'" fill="none" stroke="'+css('--ink')+'" stroke-width="3"/></g>';
+  g+='<line x1="'+X(xo)+'" x2="'+X(xo)+'" y1="'+T+'" y2="'+(T+ph)+'" stroke="'+css('--green')+'" stroke-dasharray="5 4" stroke-width="1.6"/><text x="'+(X(xo)+5)+'" y="'+(T+14)+'" font-size="12" font-weight="700" fill="'+css('--green')+'">x_opt = '+fmt(xo,xo<10?2:0)+'</text>';
+  g+='<line x1="'+X(x)+'" x2="'+X(x)+'" y1="'+Y(gk(x))+'" y2="'+(T+ph)+'" stroke="'+css('--yellow')+'" stroke-width="2"/><circle cx="'+X(x)+'" cy="'+Y(gk(x))+'" r="7" fill="'+css('--yellow')+'" stroke="'+css('--ink')+'" stroke-width="1.5"/>';
+  g+='<line class="axis" x1="'+Lp+'" y1="'+T+'" x2="'+Lp+'" y2="'+(T+ph)+'"/><line class="axis" x1="'+Lp+'" y1="'+(T+ph)+'" x2="'+(Lp+pw)+'" y2="'+(T+ph)+'"/>';
+  [x0,(x0+x1)/2,x1].forEach(q=>{g+='<text class="svgtxt" x="'+X(q)+'" y="'+(T+ph+16)+'" text-anchor="middle">'+fmt(q,0)+'</text>';});
+  g+='<text class="svgtxt" x="'+(Lp+pw/2)+'" y="'+(H-4)+'" text-anchor="middle">Bestellmenge</text>';
+  const lg=[['Gesamtkosten',css('--ink')],['Bestellkosten',css('--cyan')],['Lagerhaltungskosten',css('--orange')]];
+  lg.forEach((l,i)=>{g+='<rect x="'+(Lp+pw-170)+'" y="'+(T+30+i*18)+'" width="14" height="4" fill="'+l[1]+'"/><text class="svgtxt" x="'+(Lp+pw-150)+'" y="'+(T+36+i*18)+'">'+l[0]+'</text>';});
+  $('#andChart').innerHTML=g+'</svg>';
+  const diff=gk(x)-gk(xo);
+  $('#andStats').innerHTML=[['x_opt',fmt(xo,xo<10?2:1)],['Bestellungen/Jahr',fmt(M/xo,2)],['Kosten im Optimum',eur(gk(xo))],['Deine Kosten',eur(gk(x))],['Mehrkosten ggü. Optimum',eur(diff)]].map((s,i)=>'<div class="stat"><small>'+s[0]+'</small><b style="font-size:1.1rem'+(i===4?';color:'+(diff<gk(xo)*0.005?css('--green'):css('--red')):'')+'">'+s[1]+'</b></div>').join('');
+}
+['a_m','a_e','a_l','a_k'].forEach(id=>$('#'+id).addEventListener('input',()=>andler(false)));
+$('#a_x').addEventListener('input',()=>andler(false));
+andler(true);
+
+let stT={};
+function newTask(){
+  const Ms=[400,600,800,1000,1200,2000,2400,3600,5000],Es=[10,20,25,40,50,80,100,200],Ls=[5,8,10,12,15,20,25],Ks=[20,25,40,50,60,75,100,120,150];
+  const p=a=>a[Math.floor(Math.random()*a.length)];
+  stT={M:p(Ms),E:p(Es),L:p(Ls),K:p(Ks)};stT.x=Math.sqrt(200*stT.M*stT.K/(stT.E*stT.L));stT.n=stT.M/stT.x;
+  $('#stTask').innerHTML='Jahresbedarf <strong>'+fmt(stT.M)+' Stk.</strong>, Einstandspreis <strong>'+eur(stT.E,0)+'</strong>, Lagerhaltungskostensatz <strong>'+stT.L+' %</strong>, Bestellkosten <strong>'+eur(stT.K,0)+'</strong> je Bestellung. Berechne x<sub>opt</sub> und die Bestellhäufigkeit (auf 2 Nachkommastellen).';
+  $('#stX').value='';$('#stN').value='';$('#stFb').textContent='';
+}
+$('#stNew').onclick=newTask;
+$('#stCheck').onclick=()=>{
+  const x=parseFloat(String($('#stX').value).replace(',','.')),n=parseFloat(String($('#stN').value).replace(',','.')),fb=$('#stFb');
+  const okX=Math.abs(x-stT.x)/stT.x<0.01,okN=Math.abs(n-stT.n)/stT.n<0.02;
+  if(okX&&okN){fb.className='feedback ok';fb.textContent='Beides richtig! x_opt ≈ '+fmt(stT.x,2)+', n ≈ '+fmt(stT.n,2)+'.';}
+  else{fb.className='feedback no';fb.innerHTML=(okX?'x_opt stimmt. ':'x_opt passt noch nicht. ')+(okN?'Häufigkeit stimmt.':'Häufigkeit = M / x_opt.')+' <button class="btn sm ghost" id="stShow">Lösung zeigen</button>';
+    $('#stShow').onclick=()=>{fb.innerHTML='√(200 · '+fmt(stT.M)+' · '+stT.K+' / ('+stT.E+' · '+stT.L+')) = '+fmt(stT.x,2)+' Stk.; '+fmt(stT.M)+' / '+fmt(stT.x,2)+' = '+fmt(stT.n,2)+' Bestellungen.';};}
+};
+newTask();
+
+/* ---------- Beschaffungsplanung ---------- */
+const PLAN=[
+ ['Bedarfsplanung','Was und wie viel brauchen wir?','Ermittelt den Materialbedarf und überwacht die Bestände: Lager-, Sicherheits-, Melde- und Höchstbestand.','bestand','Thema 6: Lagerbestände'],
+ ['Lieferanten­management','Bei wem kaufen wir?','Summe aller Maßnahmen, um Lieferanten im Sinne der Unternehmensziele zu beeinflussen – vor allem die Auswahl nach Kriterien wie Zuverlässigkeit oder Konditionen.','lief','Thema 7: Lieferantenauswahl'],
+ ['Beschaffungs­prinzipien','Auf Vorrat oder genau zum Bedarf?','Vorratsbeschaffung, Beschaffung im Bedarfsfall oder fertigungssynchrone Beschaffung – wichtigstes Beispiel: Just-in-Time.','lief','Thema 7: Just-in-Time'],
+ ['Beschaffungs­wege','Direkt oder über Zwischenhändler?','<strong>Direkte Beschaffung:</strong> Einkaufsbüros, Einkaufsgemeinschaften.<br><strong>Indirekte Beschaffung:</strong> Handel, Kommissionäre, Importeure.<br><span class="small muted">Laut deiner Gewichtung wenig klausurrelevant – die Grundidee reicht.</span>',null,null],
+ ['Beschaffungs­termine','Wann bestellen wir?','Bedarfsgesteuert (aus der Stücklistenauflösung) oder verbrauchsgesteuert mit Bestellpunkt- bzw. Bestellrhythmussystem.','bestell','Thema 8: Bestellsysteme'],
+ ['Beschaffungs­mengen','Wie viel pro Bestellung?','Optimale Bestellmenge als Kostenminimum aus Bestell- und Lagerhaltungskosten (klassische Losgrößenformel).','menge','Thema 9: Optimale Bestellmenge']];
+(function(){
+  const tree=$('#planTree'),info=$('#planInfo');
+  tree.innerHTML=PLAN.map((p,i)=>'<button class="plan-node" data-i="'+i+'"><b>'+p[0]+'</b><span>'+p[1]+'</span></button>').join('');
+  const show=i=>{const p=PLAN[i];$$('.plan-node',tree).forEach(b=>b.classList.toggle('on',+b.dataset.i===i));
+    info.innerHTML='<h4>'+p[0].replace(/\u00AD/g,'')+'</h4><p style="margin-bottom:6px">'+p[2]+'</p>'+(p[3]?'<a href="#'+p[3]+'" class="small" style="font-weight:700;color:var(--blue)">Mehr dazu in '+p[4]+'</a>':'');};
+  tree.addEventListener('click',e=>{const b=e.target.closest('.plan-node');if(b)show(+b.dataset.i);});
+  info.innerHTML='<p class="muted" style="margin:0">Jeder Teilbereich beantwortet eine Frage. Tippe oben einen an.</p>';
+})();
+(function(){const els=$$('#bSteps li');let n=0;const show=()=>{els.forEach((l,i)=>l.classList.toggle('shown',i<n));$('#bNext').disabled=n>=els.length;};$('#bNext').onclick=()=>{n++;show();};$('#bAll').onclick=()=>{n=els.length;show();};show();})();
+
+/* ---------- Scoring ---------- */
+const PRESETS={
+ lief:{note:'Punkte von 0 (sehr schlecht) bis 10 (sehr gut). Gewichte sind Rohwerte – daraus wird automatisch der Prozentanteil berechnet.',
+   tip:'Sensitivitätsanalyse: Setze das Gewicht für Termintreue auf 10. Die Rangfolge kippt – genau das meint die Kritik, dass Gewichte das Ergebnis stark beeinflussen.',
+   crit:[['Preis',5],['Qualität',4],['Termintreue',4],['Service',2],['Standort',1]],opts:['Nordstahl AG','AsiaParts Ltd.','Müller GmbH'],
+   sc:[[6,10,7],[8,6,9],[9,5,7],[7,4,9],[9,3,8]]},
+ nb:{note:'Folie 47 nutzt Punkte von 0 bis 1 – hier ×10 dargestellt (0,62 → 6,2). Die Gewichte 7 : 6 : 5 : 2 : 1 : 3 : 4 ergeben genau die Prozentwerte der Folie (25 %, 21,4 %, …). Nutzwert hier also ×10: 9,05 statt 0,905.',
+   tip:'Ergebnis wie auf der Folie: A vor D vor B vor C. Probier aus, wie stark du die Rechnerperformance gewichten musst, damit D gewinnt.',
+   crit:[['Rechnerperformance',7],['Akkulaufzeit',6],['Bauhöhe',5],['Gewicht',2],['Wärmeentwicklung',1],['Geräuschentwicklung',3],['Produktimage',4]],opts:['Notebook A','Notebook B','Notebook C','Notebook D'],
+   sc:[[6.2,7.8,9.8,9.4],[10,7,6.5,7.5],[10,8,6,7],[10,7.5,6,8],[10,5,0,5],[10,5,0,5],[10,2,2,6]]}
+};
+let SC=null;
+function loadPreset(k){
+  const p=PRESETS[k];SC={crit:p.crit.map(c=>c.slice()),opts:p.opts.slice(),sc:p.sc.map(r=>r.slice())};
+  $('#scNote').textContent=p.note;$('#scTip').innerHTML='<strong>Tipp:</strong> '+p.tip;
+  $$('[data-preset]').forEach(b=>b.classList.toggle('ghost',b.dataset.preset!==k));
+  let h='<tr><th>Kriterium</th><th>Gewicht</th><th>Anteil</th>'+SC.opts.map(o=>'<th>'+o+'</th>').join('')+'</tr>';
+  SC.crit.forEach((c,i)=>{h+='<tr><td>'+c[0]+'</td><td><input type="range" min="0" max="10" step="1" value="'+c[1]+'" data-w="'+i+'" aria-label="Gewicht '+c[0]+'"></td><td id="scP'+i+'"></td>'+SC.opts.map((o,j)=>'<td><input type="number" min="0" max="10" step="0.1" value="'+SC.sc[i][j]+'" data-s="'+i+'_'+j+'" aria-label="'+o+' '+c[0]+'"></td>').join('')+'</tr>';});
+  h+='<tr><td><strong>Nutzwert</strong></td><td></td><td id="scSum"></td>'+SC.opts.map((o,j)=>'<td><strong id="scN'+j+'"></strong></td>').join('')+'</tr>';
+  $('#scTable').innerHTML=h;
+  $$('#scTable input').forEach(inp=>inp.addEventListener('input',()=>{
+    if(inp.dataset.w!=null)SC.crit[+inp.dataset.w][1]=+inp.value;
+    else{const [i,j]=inp.dataset.s.split('_').map(Number);let v=parseFloat(inp.value);if(isNaN(v))v=0;SC.sc[i][j]=Math.max(0,Math.min(10,v));}
+    calcSC();}));
+  calcSC();
+}
+function calcSC(){
+  const tw=SC.crit.reduce((a,c)=>a+c[1],0)||1;
+  SC.crit.forEach((c,i)=>{$('#scP'+i).textContent=fmt(c[1]/tw*100,1)+' %';});$('#scSum').textContent='100 %';
+  const nw=SC.opts.map((o,j)=>SC.crit.reduce((a,c,i)=>a+c[1]/tw*SC.sc[i][j],0));
+  nw.forEach((v,j)=>$('#scN'+j).textContent=fmt(v,2));
+  const order=nw.map((v,j)=>j).sort((a,b)=>nw[b]-nw[a]);
+  const bars=$('#scBars');
+  if(bars.children.length!==SC.opts.length){bars.innerHTML=SC.opts.map((o,j)=>'<div class="bar-row"><span class="small"><span class="rank" id="scR'+j+'"></span> '+o+'</span><div class="bar-track"><div class="bar-fill" id="scB'+j+'" style="width:0"></div></div><strong id="scV'+j+'"></strong></div>').join('');}
+  nw.forEach((v,j)=>{const r=order.indexOf(j)+1;$('#scR'+j).textContent=r+'.';const b=$('#scB'+j);b.style.width=(v/10*100)+'%';b.classList.toggle('win',r===1);$('#scV'+j).textContent=fmt(v,2);});
+}
+$$('[data-preset]').forEach(b=>b.addEventListener('click',()=>{$('#scBars').innerHTML='';loadPreset(b.dataset.preset);}));
+loadPreset('lief');
+$('#exBtn').onclick=()=>{
+  const a=parseFloat(String($('#exA').value).replace(',','.')),b=parseFloat(String($('#exB').value).replace(',','.')),c=$('#exC').value,fb=$('#exFb');
+  const okA=Math.abs(a-7.05)<0.011,okB=Math.abs(b-7.55)<0.011,okC=c==='B';
+  if(okA&&okB&&okC){fb.className='feedback ok';fb.textContent='Richtig! A: 0,4·8 + 0,35·6 + 0,25·7 = 7,05. B: 0,4·6 + 0,35·9 + 0,25·8 = 7,55 → Lieferant B, obwohl A günstiger ist.';}
+  else{fb.className='feedback no';fb.textContent=(okA?'':'Nutzwert A prüfen. ')+(okB?'':'Nutzwert B prüfen. ')+(okC?'':'Wahl prüfen. ')+'Tipp: Gewicht (als Dezimalzahl) × Punkte, dann addieren.';}
+};
+
+/* ---------- Quiz ---------- */
+const TOPICS={mawi:'Materialwirtschaft & Lager',kosten:'Kosten',abc:'ABC-Analyse',politik:'Beschaffungspolitik',planung:'Beschaffungsplanung',bestand:'Lagerbestände',lief:'Lieferanten & JIT',bestell:'Bestellsysteme',menge:'Optimale Bestellmenge',scoring:'Scoring-Modell'};
+const Q=[
+ ['mawi','Welche Anforderung an die Materialversorgung ist laut Folie ökonomisch?',['in der geforderten Qualität','am richtigen Ort','zum günstigsten Preis','zum richtigen Zeitpunkt'],2,'Ökonomisch sind „zum günstigsten Preis“ und „bei niedrigsten Beschaffungskosten“. Der Rest ist originär technisch.'],
+ ['mawi','„In der wirtschaftlichen Menge“ ist laut Folie eine …',['ökonomische Anforderung','originär technische Anforderung','Lagerfunktion','Kostenkomponente'],1,'Auf Folie 5 steht die wirtschaftliche Menge im Block der originär technischen Anforderungen.'],
+ ['mawi','Eine Mühle lagert Getreide nach der Ernte, um es das ganze Jahr zu verarbeiten. Welche Lagerfunktion?',['Spekulationsfunktion','Produktionsfunktion','Ausgleichsfunktion','Sicherungsfunktion'],2,'Zeitliche Unterschiede zwischen Beschaffung (Ernte) und Verbrauch (ganzjährig) werden ausgeglichen.'],
+ ['mawi','Käse reift mehrere Monate im Lager. Welche Funktion?',['Produktionsfunktion','Ausgleichsfunktion','Sicherungsfunktion','Spekulationsfunktion'],0,'Die Lagerung verändert bzw. veredelt das Gut.'],
+ ['mawi','Ein Unternehmen kauft Kupfer vor einer erwarteten Preiserhöhung. Welche Funktion?',['Sicherungsfunktion','Spekulationsfunktion','Ausgleichsfunktion','Produktionsfunktion'],1,'Einkauf auf Vorrat wegen erwarteter Preissteigerung = Spekulationsfunktion.'],
+ ['mawi','Eine Reserve an Chips für den Fall eines Lieferantenausfalls erfüllt die …',['Sicherungsfunktion','Spekulationsfunktion','Produktionsfunktion','Ausgleichsfunktion'],0,'Puffer gegen Störungen = Sicherungsfunktion.'],
+ ['kosten','Zinsen für das im Lager gebundene Kapital sind …',['fixe Lagerkosten','Bestellabwicklungskosten','variable Lagerhaltungskosten','Fehlmengenkosten'],2,'Variabel, weil sie mit der Höhe des Lagerbestands steigen – wie Versicherung, Schwund, Verderb.'],
+ ['kosten','Die Miete der Lagerhalle gehört zu den …',['variablen Lagerkosten','fixen Lagerkosten','Anschaffungskosten','Fehlmengenkosten'],1,'Raumkosten und Lagereinrichtung sind fixe Lagerkosten.'],
+ ['kosten','Eine Expresslieferung, um einen Produktionsstillstand zu verhindern, verursacht …',['direkte Fehlmengenkosten','indirekte Fehlmengenkosten','fixe Lagerkosten','Anschaffungskosten'],1,'Indirekte Fehlmengenkosten = Aufwand zur Vermeidung von Fehlmengen. Direkte = entgangener Gewinn.'],
+ ['kosten','Direkte Fehlmengenkosten sind …',['entgangener Gewinn, weil nicht produziert werden konnte','Kosten für Teillieferungen','Personalkosten im Einkauf','Zinsen auf den Lagerbestand'],0,'Direkt = Kosten, die durch die Fehlmenge tatsächlich eintreten.'],
+ ['kosten','Angebotspreis 200 €, 10 % Rabatt, 2 % Skonto, 5 € Fracht. Einstandspreis?',['176,40 €','185,00 €','181,40 €','180,40 €'],2,'200 − 20 = 180; Skonto 2 % von 180 = 3,60 → 176,40; + 5 Fracht = 181,40 €.'],
+ ['kosten','Was gehört NICHT zu den Bestellabwicklungskosten?',['Rechnungsprüfung','Wareneingangskontrolle','Miete der Lagerhalle','Personalkosten der Einkaufsabteilung'],2,'Die Miete der Lagerhalle zählt zu den fixen Lagerhaltungskosten.'],
+ ['abc','A-Güter sind typischerweise …',['ca. 50 % der Güter mit ca. 5 % des Wertes','ca. 15 % der Güter mit ca. 80 % des Wertes','ca. 35 % der Güter mit ca. 15 % des Wertes','alle Güter mit hohem Gewicht'],1,'A: wenige Güter, großer Wertanteil → intensive Planung und Kontrolle.'],
+ ['abc','Welche Maßnahme passt zu C-Teilen?',['Intensive Marktanalyse','Minimierung der Lagerbestände durch verfeinerte Disposition','Sammelbestellungen und großzügige Sicherheitsbestände','Genaue Terminverfolgung jeder Lieferung'],2,'C-Teile: einfache Prognose, großzügige Bestände, selten in großen Mengen bestellen, Sammelbestellungen.'],
+ ['abc','Welche Maßnahme passt zu A-Teilen?',['Pauschale Buchung der Zu- und Abgänge','Abschluss von Rahmenverträgen und genaue Terminverfolgung','Seltene Bestellung in großen Mengen','Großzügige Sicherheitsbestände'],1,'A-Teile werden intensiv gesteuert: Marktanalyse, zuverlässige Lieferanten, Rahmenverträge, geringe Bestände.'],
+ ['abc','Womit wird in der ABC-Analyse sortiert?',['Nach Jahresverbrauchswert (Menge × Preis)','Nach Alphabet','Nach Lieferzeit','Nach Gewicht der Teile'],0,'Zuerst Verbrauchswert berechnen, dann absteigend sortieren und kumulieren.'],
+ ['politik','Die strategische Beschaffungspolitik ist …',['kurzfristig und rein operativ','langfristig orientiert und legt Rahmenbedingungen für die operative Planung fest','nur für Preisverhandlungen zuständig','dasselbe wie die Materialdisposition'],1,'Folie 12: langfristig, legt Rahmenbedingungen fest, beeinflusst die Beschaffungssituation.'],
+ ['politik','Welches ist KEIN beschaffungspolitisches Instrument?',['Kontraktpolitik','Lagerpolitik','Preispolitik','Lieferantenpolitik'],2,'Die vier Instrumente: Beschaffungsprogramm-, Lieferanten-, Kontrakt- und Lagerpolitik.'],
+ ['politik','Die Entscheidung Eigenfertigung oder Fremdbezug gehört zur …',['Kontraktpolitik','Lagerpolitik','Beschaffungsprogrammpolitik','Lieferantenpolitik'],2,'Beschaffungsprogrammpolitik: Was wird beschafft? Fremdbezug/Eigenfertigung, Standardisierung, Substitute.'],
+ ['politik','Welcher Vertrag wird bei fertigungssynchroner Beschaffung mit genau vereinbarter Menge und Lieferzeitpunkt genutzt?',['Rahmenvertrag','Sukzessivliefervertrag','Kaufvertrag auf Probe','Abrufvertrag ohne Mengen'],1,'Sukzessivliefervertrag: fertigungssynchron, genaue Abnahmemenge und Lieferzeitpunkt.'],
+ ['politik','„Beschaffung im Bedarfsfall“ passt am besten zu …',['Massenfertigung','auftragsorientierter Einzelfertigung','saisonaler Vorratshaltung','Pflichtlagern'],1,'Bedarf und Beschaffung stimmen mengen- und zeitmäßig überein – kein Ausgleichslager.'],
+ ['politik','Ein Vorteil des indirekten Bezugs über den Handel ist …',['sehr große Mengen lieferbar','Sonderanfertigungen','Kleinmengen bestellbar, großes Sortiment','immer niedrigerer Preis'],2,'Handel: größeres Sortiment, Kleinmengen, übernimmt Lagerhaltung, Standortnähe. Direktbezug: Großmengen, Sonderanfertigungen.'],
+ ['planung','Welcher Bereich gehört NICHT zur Beschaffungsplanung laut Folie 17?',['Beschaffungswege','Beschaffungstermine','Absatzwerbung','Beschaffungsmengen'],2,'Die sechs Teilbereiche: Bedarfsplanung, Lieferantenmanagement, Beschaffungsprinzipien, -wege, -termine, -mengen.'],
+ ['planung','Just-in-Time ist innerhalb der Beschaffungsplanung ein …',['Beschaffungsprinzip','Beschaffungsweg','Beschaffungstermin','Lieferantenkriterium'],0,'Die Folie zu JIT ordnet es dem Teilbereich Beschaffungsprinzipien zu.'],
+ ['planung','Bestellpunkt- und Bestellrhythmussystem gehören zum Teilbereich …',['Beschaffungswege','Beschaffungstermine','Lieferantenmanagement','Bedarfsplanung'],1,'Beschaffungstermine: bedarfsgesteuert oder verbrauchsgesteuert (Bestellpunkt-/Bestellrhythmussystem).'],
+ ['planung','Beschaffung über Handel, Kommissionäre oder Importeure ist …',['direkte Beschaffung','indirekte Beschaffung','fertigungssynchrone Beschaffung','Beschaffung im Bedarfsfall'],1,'Direkt: Einkaufsbüros, Einkaufsgemeinschaften. Indirekt: Handel, Kommissionäre, Importeure.'],
+ ['bestand','Tagesverbrauch 25 Stk., Lieferzeit 6 Tage, Sicherheitsbestand 50 Stk. Meldebestand?',['150','175','200','300'],2,'B_M = 25 × 6 + 50 = 200 Stück.'],
+ ['bestand','Der Meldebestand ist der Bestand, …',['der maximal im Lager sein darf','bei dessen Unterschreiten eine Bestellung ausgelöst wird','der körperlich im Lager liegt','der nie angegriffen werden darf'],1,'Meldebestand = Bestellpunkt.'],
+ ['bestand','Wozu dient der Höchstbestand?',['Er löst die Bestellung aus','Er vermeidet hohe Kapitalbindung und Lagerkosten','Er ist die eiserne Reserve','Er ist der Bestand am Jahresende'],1,'Der Höchstbestand begrenzt, was maximal im Lager sein darf.'],
+ ['bestand','Der verfügbare Bestand ist …',['Lagerbestand + offene Bestellungen − Vormerkungen','Lagerbestand − Sicherheitsbestand','Höchstbestand − Meldebestand','nur der Sicherheitsbestand'],0,'Verfügbar = was da ist + was unterwegs ist − was schon reserviert ist.'],
+ ['bestand','Welche Unsicherheit ist laut Folie beim Sicherheitsbestand NICHT genannt?',['Bedarfsunsicherheit','Lieferzeitunsicherheit','Bestandsunsicherheit','Zinsunsicherheit'],3,'Genannt sind Bedarfs-, Lieferzeit- und Bestandsunsicherheit.'],
+ ['bestand','Im Sägezahn-Diagramm trifft die neue Lieferung idealerweise ein, wenn der Bestand …',['den Höchstbestand erreicht','den Sicherheitsbestand erreicht','null ist','den Meldebestand erreicht'],1,'Während der Beschaffungszeit wird die Menge zwischen Melde- und Sicherheitsbestand verbraucht.'],
+ ['lief','Termintreue gehört zur Kriteriengruppe …',['Konditionen','Zuverlässigkeit','Geografische Lage','Produkt'],1,'Zuverlässigkeit: gleichbleibende Qualität, Termintreue, Einhaltung der Serviceversprechen.'],
+ ['lief','Wechselkursstabilität ist ein Kriterium der …',['Geografischen Lage','Fertigungsmöglichkeiten','Konditionen','Allgemeinen Situation'],0,'Geografische Lage: Transportbedingungen, politische Sicherheit, Wechselkursstabilität.'],
+ ['lief','Garantieleistungen gehören zur Kriteriengruppe …',['Produkt','Konditionen','Zuverlässigkeit','Allgemeine Situation'],1,'Konditionen: Güterpreis, Liefer- und Zahlungsbedingungen, Lieferfristen, Garantieleistungen.'],
+ ['lief','Welche Voraussetzung braucht Just-in-Time?',['Stark schwankenden Bedarf','Kontinuierlichen Bedarf und zuverlässige Lieferanten','Große Sicherheitslager','Viele wechselnde Lieferanten'],1,'JIT braucht u. a. kontinuierlichen Bedarf, kurze Rüstzeiten, Qualitätssicherung und zuverlässige Zulieferer.'],
+ ['lief','Ein Nachteil von JIT für den Auftraggeber ist …',['Verringerung der Lagerkosten','Krisenanfälligkeit bei Lieferstörungen','kürzere Durchlaufzeit','geringere Prüfkosten'],1,'Ohne Puffer führt jede Störung sofort zum Stillstand – dazu Single Sourcing und Informationsbedarf.'],
+ ['lief','Ein Vorteil von JIT für den Auftragnehmer (Lieferanten) ist …',['keine Konventionalstrafen','langfristige Verträge','kein Informationsaustausch nötig','keine Qualitätskontrolle'],1,'Vorteile für Lieferanten: Existenzsicherung, langfristige Verträge, Spezialisierung.'],
+ ['bestell','Das Bestellpunktsystem arbeitet mit …',['fixen Zeitpunkten und variablen Mengen','variablen Zeitpunkten und fixen Mengen','fixen Zeitpunkten und fixen Mengen','Bestellungen nur bei Kundenauftrag'],1,'Bestellt wird bei Unterschreiten des Meldebestands (Zeitpunkt variabel), immer dieselbe Menge.'],
+ ['bestell','Beim Bestellrhythmussystem wird am Bestelltermin …',['immer dieselbe Menge bestellt','der Bestand bis zum maximalen Lagerbestand aufgefüllt','nur bei Fehlmengen bestellt','der Sicherheitsbestand verkauft'],1,'Fixe Zeitpunkte, variable Mengen: auffüllen bis zum Höchstbestand.'],
+ ['bestell','Wie wird die Meldemenge im Bestellpunktsystem laut Folie berechnet?',['maximaler Lagerverbrauch × Beschaffungszeit','Höchstbestand − Sicherheitsbestand','Jahresbedarf / Bestellhäufigkeit','Ø Verbrauch × 2'],0,'Der Sicherheitsbestand ist enthalten, weil der maximale Verbrauch nur ausnahmsweise eintritt.'],
+ ['bestell','Ein Nachteil des Bestellrhythmussystems ist …',['hoher Überwachungsaufwand','unplanbare Bestelltermine','Fehlmengenrisiko bei Verbrauchsspitzen zwischen den Terminen','keine Sammelbestellungen möglich'],2,'Zwischen den festen Terminen wird nicht reagiert – deshalb meist höhere Sicherheitsbestände.'],
+ ['bestell','Die bedarfsgesteuerte Beschaffung ermittelt die Menge aus …',['dem Verbrauch der Vergangenheit','der Stücklistenauflösung abzüglich Lager- und Bestellbeständen plus reservierter Bestände','dem Meldebestand','der ABC-Analyse'],1,'Bedarf aus Stücklistenauflösung − Lagerbestände − Bestellbestände + reservierte Bestände.'],
+ ['menge','Welche Ziele verfolgt die Bestellplanung?',['Maximaler Lagerbestand','Hohe Materialverfügbarkeit und Kostenminimierung','Möglichst viele Lieferanten','Möglichst seltene Bestellungen'],1,'Folie 36: hohe (notwendige) Materialverfügbarkeit und Kostenminimierung.'],
+ ['menge','Welche Annahme gehört zum Grundmodell der optimalen Bestellmenge?',['Mengenabhängige Rabatte','Konstante Lagerabgangsraten','Stark schwankender Bedarf','Unbekannte Bestellkosten'],1,'Außerdem: gleichbleibende Bestellmengen, Preis unabhängig von Menge und Zeitpunkt, Kosten genau bestimmbar.'],
+ ['menge','M = 500 t, E = 100 €, L_HS = 15 %, K_B = 150 €. Wie oft sollte bestellt werden?',['3-mal','5-mal','10-mal','100-mal'],1,'x_opt = √(200·500·150 / (100·15)) = 100 t → 500 / 100 = 5 Bestellungen.'],
+ ['menge','Folie 41: Preis 0,10 €, 5 % Zinsen, Jahresbedarf 16.000, Bestellkosten 10 €. Optimale Bestellmenge?',['800','4.000','8.000','16.000'],2,'√(200·16.000·10 / (0,10·5)) = √64.000.000 = 8.000 → 2 Bestellungen pro Jahr.'],
+ ['menge','Im Optimum der Andler-Formel gilt …',['Bestellkosten = Lagerhaltungskosten','Bestellkosten = 0','Lagerkosten sind maximal','Gesamtkosten = Einstandspreis'],0,'Im Grundmodell schneiden sich Bestell- und Lagerkostenkurve genau bei x_opt.'],
+ ['menge','Was passiert mit x_opt, wenn die Bestellkosten je Bestellung steigen?',['x_opt sinkt','x_opt steigt','x_opt bleibt gleich','x_opt wird null'],1,'K_B steht im Zähler: teurere Bestellungen → seltener, dafür größere Mengen bestellen.'],
+ ['menge','Der Lagerhaltungskostensatz L_HS setzt sich zusammen aus …',['Zinssatz + Lagerkostensatz','Einstandspreis + Bestellkosten','Jahresbedarf × Preis','Skonto + Rabatt'],0,'L_HS = p + L_S.'],
+ ['scoring','Wie berechnet sich der Nutzwert einer Alternative?',['Summe der Punkte ohne Gewichtung','Summe aus Gewicht × Punktwert über alle Kriterien','Höchster Einzelpunktwert','Preis geteilt durch Qualität'],1,'N = Σ g_j · n_ij – gewichtete Punkte je Kriterium aufsummieren.'],
+ ['scoring','Gewichte 50 % / 30 % / 20 %, Punkte 8 / 6 / 5. Nutzwert?',['6,3','6,8','7,0','19'],1,'0,5·8 + 0,3·6 + 0,2·5 = 4 + 1,8 + 1 = 6,8.'],
+ ['scoring','Hauptkritik an der Nutzwertanalyse ist …',['Sie berücksichtigt nur Preise','Kriterien und Gewichte sind subjektiv und beeinflussbar','Sie ist nicht nachvollziehbar','Sie liefert keine Rangfolge'],1,'Subjektive Auswahl und Gewichtung öffnen Spielräume zur Beeinflussung – auch nachträglich.'],
+ ['scoring','Was macht eine Sensitivitätsanalyse?',['Sie variiert die Gewichte und prüft, ob die Rangfolge stabil bleibt','Sie berechnet die optimale Bestellmenge','Sie sortiert Güter nach Wert','Sie ersetzt die Nutzwertanalyse'],0,'So wird geprüft, wie robust das Ergebnis gegenüber Gewichtsänderungen ist.'],
+ ['scoring','Ein anderer Name für die Nutzwertanalyse ist …',['ABC-Analyse','Scoringmodell','Bezugskalkulation','Andler-Formel'],1,'Auch Punktbewertungsverfahren oder Rangfolgemodell.'],
+ ['scoring','Was ist der zweite Schritt der Nutzwertanalyse?',['Optionen bewerten','Kriterien gewichten','Summe bilden','Sensitivitätsanalyse'],1,'1. Kriterien formulieren, 2. gewichten, 3. bewerten, 4. gewichten der Punkte, 5. summieren, 6. Vorteilhaftigkeit.']
+];
+let qs=[],qi=0,qScore=0,qWrong=[],qFilter='all',qCount=15;
+function quizStart(){
+  const best=store.get('best',null);
+  $('#quizBox').innerHTML='<div class="quiz-card"><h3>Quiz starten</h3><p class="small muted">'+Q.length+' Fragen im Pool.'+(best!=null?' Deine beste Quote bisher: <strong>'+best+' %</strong>.':'')+'</p><h4>Themenbereich</h4><div class="filters" id="qf"><button class="tab'+(qFilter==='all'?' on':'')+'" data-f="all">Alle Themen</button>'+Object.entries(TOPICS).map(([k,v])=>'<button class="tab'+(qFilter===k?' on':'')+'" data-f="'+k+'">'+v+'</button>').join('')+'</div><h4>Anzahl Fragen</h4><div class="filters" id="qc">'+[10,15,25,'alle'].map(n=>'<button class="tab'+(String(qCount)===String(n)?' on':'')+'" data-c="'+n+'">'+n+'</button>').join('')+'</div><button class="btn" id="qGo">Quiz starten</button></div>';
+  $('#qf').onclick=e=>{const b=e.target.closest('[data-f]');if(!b)return;qFilter=b.dataset.f;$$('#qf .tab').forEach(x=>x.classList.toggle('on',x===b));};
+  $('#qc').onclick=e=>{const b=e.target.closest('[data-c]');if(!b)return;qCount=b.dataset.c;$$('#qc .tab').forEach(x=>x.classList.toggle('on',x===b));};
+  $('#qGo').onclick=()=>{let pool=Q.filter(q=>qFilter==='all'||q[0]===qFilter);pool=shuffle(pool);if(qCount!=='alle')pool=pool.slice(0,+qCount);runQuiz(pool);};
+}
+function runQuiz(pool){qs=pool;qi=0;qScore=0;qWrong=[];showQ();}
+function showQ(){
+  if(qi>=qs.length)return quizEnd();
+  const q=qs[qi];const order=shuffle(q[2].map((t,i)=>i));
+  $('#quizBox').innerHTML='<div class="quiz-card"><div class="qprog"><i style="width:'+(qi/qs.length*100)+'%"></i></div><div class="row small muted" style="justify-content:space-between"><span>Frage '+(qi+1)+' von '+qs.length+'</span><span>'+TOPICS[q[0]]+'</span></div><p class="qtext">'+q[1]+'</p><div class="opts">'+order.map(i=>'<button class="opt" data-i="'+i+'">'+q[2][i]+'</button>').join('')+'</div><div class="explain" id="qEx"></div><div class="row" style="margin-top:14px;justify-content:space-between"><span class="small muted">Richtig bisher: '+qScore+'</span><button class="btn" id="qNext" style="display:none">'+(qi+1<qs.length?'Nächste Frage':'Auswertung ansehen')+'</button></div></div>';
+  $$('.opt').forEach(b=>b.onclick=()=>{
+    const i=+b.dataset.i,ok=i===q[3];
+    $$('.opt').forEach(x=>{x.disabled=true;if(+x.dataset.i===q[3])x.classList.add('right');});
+    if(ok){qScore++;}else{b.classList.add('wrong');qWrong.push(q);}
+    const ex=$('#qEx');ex.innerHTML='<strong style="color:'+(ok?css('--green'):css('--red'))+'">'+(ok?'Richtig.':'Nicht ganz.')+'</strong> '+q[4];ex.classList.add('on');
+    const n=$('#qNext');n.style.display='';n.focus();n.onclick=()=>{qi++;showQ();};
+  });
+}
+function quizEnd(){
+  const pct=Math.round(qScore/qs.length*100);const best=store.get('best',0);if(pct>best)store.set('best',pct);
+  const msg=pct>=90?'Stark! Du bist klausurbereit.':pct>=70?'Gut dabei – schau dir die Fehler noch einmal an.':pct>=50?'Solide Basis. Wiederhole die markierten Themen.':'Noch Luft nach oben – geh die Themen oben mit den Musterantworten durch.';
+  $('#quizBox').innerHTML='<div class="quiz-card"><div class="qprog"><i style="width:100%"></i></div><div class="score-big">'+pct+' %</div><p><strong>'+qScore+' von '+qs.length+'</strong> richtig. '+msg+'</p>'+(qWrong.length?'<h4>Das solltest du wiederholen</h4><ul class="small">'+qWrong.map(q=>'<li><strong>'+q[1]+'</strong><br>Richtig: '+q[2][q[3]]+'</li>').join('')+'</ul>':'')+'<div class="row" style="margin-top:14px">'+(qWrong.length?'<button class="btn" id="qRetry">Nur Fehler wiederholen</button>':'')+'<button class="btn ghost" id="qAgain">Neues Quiz</button></div></div>';
+  if(pct>=80)confetti();
+  if(qWrong.length)$('#qRetry').onclick=()=>runQuiz(shuffle(qWrong));
+  $('#qAgain').onclick=quizStart;
+}
+quizStart();
+
+/* ---------- Karteikarten ---------- */
+const L=a=>'<ul>'+a.map(x=>'<li>'+x+'</li>').join('')+'</ul>';
+const DECKS=[
+ {id:'mawi',t:'Materialwirtschaft & Lager',cards:[
+  ['Aufgabe der Materialwirtschaft','Versorgung des Unternehmens mit Gütern und Dienstleistungen – unter technischen und ökonomischen Anforderungen, bei den geeignetsten Lieferanten.'],
+  ['Originär technische Anforderungen',L(['geforderte Qualität','wirtschaftliche Menge','richtiger Zeitpunkt','richtiger Ort','entsprechende Entsorgung'])],
+  ['Ökonomische Anforderungen',L(['zum günstigsten Preis','bei niedrigsten Beschaffungskosten'])],
+  ['Die vier Funktionen der Lagerhaltung',L(['Ausgleichsfunktion','Sicherungsfunktion','Spekulationsfunktion','Produktionsfunktion'])],
+  ['Ausgleichsfunktion','Gleicht zeitliche und mengenmäßige Unterschiede zwischen Beschaffung und Verbrauch aus.<br><strong>Beispiel:</strong> Stahlrohre kommen monatlich, verbraucht wird täglich.'],
+  ['Sicherungsfunktion','Puffer gegen Lieferausfall, Lieferverzug und Bedarfsspitzen.<br><strong>Beispiel:</strong> Reserve an Mikrochips.'],
+  ['Spekulationsfunktion','Einkauf auf Vorrat, weil Preissteigerungen erwartet werden.<br><strong>Beispiel:</strong> Kupfer vor einer Preiserhöhung kaufen.'],
+  ['Produktionsfunktion','Die Lagerung verändert bzw. veredelt das Gut.<br><strong>Beispiel:</strong> Holz trocknet, Käse reift.']]},
+ {id:'kosten',t:'Kosten',cards:[
+  ['Die vier Kostenkomponenten',L(['Anschaffungskosten','Bestellabwicklungskosten','Lagerhaltungskosten','Fehlmengenkosten'])],
+  ['Schema der Bezugskalkulation','<span style="display:grid;grid-template-columns:1.4em 1fr;row-gap:2px"><span></span><span>Angebotspreis</span><span>±</span><span>Zu-/Abschlag</span><span>−</span><span>Rabatte und Boni</span><span>=</span><span>bereinigter Endpreis</span><span>−</span><span>Skonto</span><span>+</span><span>Fracht / Verpackung / Versicherung</span><span>=</span><strong>Einstandspreis</strong><span>×</span><span>gekaufte Menge</span><span>=</span><strong>Anschaffungskosten</strong></span>'],
+  ['Bestellabwicklungskosten','Personal- und Sachkosten der Einkaufsabteilung, Wareneingangskontrolle, Qualitätskontrolle, Rechnungsprüfung, EDV-Organisation.'],
+  ['Fixe Lagerkosten','Raumkosten, Lagereinrichtung (Miete, Abschreibungen), Beleuchtung, Heizung, Kühlung, Instandsetzung, Lagerpersonal.'],
+  ['Variable Lagerkosten','Verzinsung und Versicherung des Lagerbestands, Schwund, Verderb, Veralterung.'],
+  ['Direkte Fehlmengenkosten','Entgangener Gewinn, weil Material fehlte und nicht produziert werden konnte.'],
+  ['Indirekte Fehlmengenkosten','Aufwand zur Verhinderung von Fehlmengen: Expresslieferungen, Teillieferungen, Sondermaßnahmen.']]},
+ {id:'abc',t:'ABC-Analyse',cards:[
+  ['Ziel der ABC-Analyse','Materialien (oder Lieferanten) nach ihrer wertmäßigen Bedeutung klassifizieren – Wesentliches vom Unwesentlichen trennen, Wirtschaftlichkeit steigern.'],
+  ['A-Güter','ca. 15 % der Güter, ca. 80 % des Wertes. Große wirtschaftliche Bedeutung.'],
+  ['B-Güter','ca. 35 % der Güter, ca. 15 % des Wertes. Mittlere Bedeutung.'],
+  ['C-Güter','ca. 50 % der Güter, ca. 5 % des Wertes. Geringe Bedeutung.'],
+  ['Vorgehen in vier Schritten',L(['Verbrauchswert = Menge × Preis','absteigend sortieren','Anteil und kumulierten Anteil berechnen','Klassen A, B, C zuordnen'])],
+  ['Maßnahmen für A-Teile',L(['intensive Marktanalyse','Rahmenverträge, zuverlässige Lieferanten','Bestände und Lagerzeiten minimieren','genaue Terminverfolgung'])],
+  ['Maßnahmen für B-Teile','Fallweise Entscheidung über die Intensität von Planung und Kontrolle.'],
+  ['Maßnahmen für C-Teile',L(['einfache, verbrauchsorientierte Prognose','großzügige Sicherheitsbestände','selten, in großen Mengen bestellen','Sammelbestellungen und -rechnungen'])]]},
+ {id:'politik',t:'Beschaffungspolitik',cards:[
+  ['Strategische Beschaffungspolitik',L(['langfristig orientiert','legt Rahmenbedingungen für die operative Planung fest','beeinflusst die Beschaffungssituation'])],
+  ['Die vier beschaffungspolitischen Instrumente',L(['Beschaffungsprogrammpolitik','Lieferantenpolitik','Kontraktpolitik','Lagerpolitik'])],
+  ['Beschaffungsprogrammpolitik','<strong>Was</strong> wird beschafft? Eigenfertigung oder Fremdbezug, Materialstandardisierung, Substitute, Änderung der Qualitätsanforderungen.'],
+  ['Fremdbezug vs. Eigenfertigung','<strong>Fremdbezug:</strong> Spezialisierungseffekte, geringere Fertigungstiefe.<br><strong>Eigenfertigung:</strong> Flexibilität, Schlüsseltechnologien, Stärkung der Kernkompetenz.'],
+  ['Lieferantenpolitik','<strong>Bei wem?</strong> Direkter oder indirekter Bezug, Anzahl der Lieferanten (Zweitlieferanten), räumliche Verteilung (politische und Währungsrisiken).'],
+  ['Rahmenvertrag','Langfristiger Liefervertrag mit genauer Qualitätsbeschreibung, festen Konditionen und Gesamtmenge als Absichtserklärung oder Abnahmeverpflichtung.'],
+  ['Abrufvertrag','Basiert auf einem Rahmenvertrag mit fester Abnahmeverpflichtung, oft mit Höchst- und Mindestmengen; langfristige Preisvereinbarungen.'],
+  ['Sukzessivliefervertrag','Bei fertigungssynchroner Beschaffung: genaue Vereinbarung von Abnahmemenge und Lieferzeitpunkt.'],
+  ['Die drei Lagerprinzipien',L(['Vorratsbeschaffung (Menge > Bedarf, Lager)','Beschaffung im Bedarfsfall (Einzelfertigung)','fertigungssynchrone Beschaffung (Serienfertigung, JIT)'])]]},
+ {id:'planung',t:'Beschaffungsplanung',cards:[
+  ['Die sechs Teilbereiche der Beschaffungsplanung',L(['Bedarfsplanung','Lieferantenmanagement','Beschaffungsprinzipien','Beschaffungswege','Beschaffungstermine','Beschaffungsmengen'])],
+  ['Bedarfsplanung','Was und wie viel brauchen wir? Materialbedarf ermitteln und Bestände überwachen.'],
+  ['Beschaffungsprinzipien','Vorratsbeschaffung, Beschaffung im Bedarfsfall oder fertigungssynchron – z. B. Just-in-Time.'],
+  ['Beschaffungswege','<strong>Direkt:</strong> Einkaufsbüros, Einkaufsgemeinschaften.<br><strong>Indirekt:</strong> Handel, Kommissionäre, Importeure.'],
+  ['Beschaffungstermine','Bedarfsgesteuert (Stücklistenauflösung) oder verbrauchsgesteuert (Bestellpunkt- bzw. Bestellrhythmussystem).'],
+  ['Beschaffungsmengen','Optimale Bestellmenge als Kostenminimum aus Bestell- und Lagerhaltungskosten.']]},
+ {id:'bestand',t:'Lagerbestände',cards:[
+  ['Lagerbestand','Bestand, der sich zum Planungs- bzw. Prüfzeitpunkt körperlich im Lager befindet.'],
+  ['Verfügbarer Bestand','Lagerbestand + offene Bestellungen − Vormerkungen.'],
+  ['Sicherheitsbestand','Puffer, der die Leistungsfähigkeit sichert und Fehlmengenkosten vermeidet.<br><strong>B<sub>S</sub> = Ø Verbrauch je Periode × Beschaffungsdauer</strong>'],
+  ['Meldebestand','Bei Unterschreiten wird bestellt.<br><strong>B<sub>M</sub> = Verbrauch je Periode × Lieferzeit + B<sub>S</sub></strong>'],
+  ['Höchstbestand','Maximal zulässiger Bestand – vermeidet hohe Kapitalbindung und Lagerkosten.'],
+  ['Was beeinflusst den Sicherheitsbestand?',L(['Bedarfsunsicherheit','Lieferzeitunsicherheit','Bestandsunsicherheit'])],
+  ['Wann trifft im Sägezahn-Diagramm die Lieferung ein?','Idealerweise genau, wenn der Bestand den Sicherheitsbestand erreicht. Die Menge zwischen Melde- und Sicherheitsbestand wird während der Beschaffungszeit verbraucht.'],
+  ['Rechne: 25 Stk./Tag, 6 Tage Lieferzeit, SB 50. Meldebestand?','25 × 6 + 50 = <strong>200 Stück</strong>']]},
+ {id:'lief',t:'Lieferanten & JIT',cards:[
+  ['Sechs Kriteriengruppen zur Lieferantenauswahl','„Zu Früh Kommt Paul Gern An“:'+L(['Zuverlässigkeit','Fertigungsmöglichkeiten','Konditionen','Produkt','Geografische Lage','Allgemeine Situation'])],
+  ['Kriterien der Zuverlässigkeit',L(['gleichbleibende Qualität','Termintreue','Einhaltung der Serviceversprechen'])],
+  ['Kriterien der Konditionen',L(['Güterpreis','Liefer- und Zahlungsbedingungen','Lieferfristen','Garantieleistungen'])],
+  ['Kriterien der geografischen Lage',L(['Transportbedingungen','politische Sicherheit','Wechselkursstabilität'])],
+  ['Was ist Just-in-Time?','Fertigungssynchrone Beschaffung: Material kommt genau zum Bedarfszeitpunkt in der benötigten Menge – ohne Ausgleichslager. Toyota, Taiichi Ohno, 1945.'],
+  ['Voraussetzungen für JIT',L(['kontinuierlicher Bedarf','kurze Rüstzeiten','flexible Kapazitäten','prozessbegleitende Qualitätssicherung','verbrauchsgesteuerte Disposition','zuverlässige Zulieferer'])],
+  ['JIT: Vor- und Nachteile für den Auftraggeber','<strong>Pro:</strong> geringere Lager- und Prüfkosten, kürzere Durchlaufzeit.<br><strong>Contra:</strong> Single Sourcing, Krisenanfälligkeit, Informationsaustausch nötig.'],
+  ['JIT: Vor- und Nachteile für den Lieferanten','<strong>Pro:</strong> langfristige Verträge, Existenzsicherung, Spezialisierung.<br><strong>Contra:</strong> Abhängigkeit, Konventionalstrafen, Qualitätskontrolle, ggf. eigenes Lager nötig.']]},
+ {id:'bestell',t:'Bestellsysteme',cards:[
+  ['Bestellpunktsystem','Bestellung bei Unterschreiten des Meldebestands: <strong>variabler Zeitpunkt, fixe Menge</strong>. Reagiert schnell, braucht laufende Bestandskontrolle.'],
+  ['Bestellrhythmussystem','Bestellung an festen Terminen: <strong>fixer Zeitpunkt, variable Menge</strong> bis zum maximalen Lagerbestand. Planbar, aber Fehlmengenrisiko zwischen den Terminen.'],
+  ['Meldemenge im Bestellpunktsystem','Maximaler Lagerverbrauch × Beschaffungszeit – der Sicherheitsbestand ist enthalten, da der maximale Verbrauch nur ausnahmsweise eintritt.'],
+  ['Was ist beim Bestellpunktsystem festzulegen?',L(['kritischer Lagerbestand (Meldemenge)','Bestellmenge'])],
+  ['Bedarfs- vs. verbrauchsgesteuerte Beschaffung','<strong>Bedarfsgesteuert:</strong> aus der Stücklistenauflösung.<br><strong>Verbrauchsgesteuert:</strong> aus dem bisherigen Verbrauch (Bestellpunkt-/Bestellrhythmussystem).'],
+  ['Rechenweg der bedarfsgesteuerten Beschaffung','Bedarf aus Stücklistenauflösung − Lagerbestände − Bestellbestände + reservierte Bestände = zu beschaffende Menge.']]},
+ {id:'menge',t:'Optimale Bestellmenge',cards:[
+  ['Was optimiert die Bestellplanung?',L(['Bestellzeitpunkt','Bestellmenge','Lagerbestand'])],
+  ['Ziele der Bestellplanung',L(['hohe (notwendige) Materialverfügbarkeit','Kostenminimierung'])],
+  ['Grundproblem der Bestellmenge','Kleine Mengen: niedrige Lager-, hohe Bestellkosten. Große Mengen: umgekehrt. Gesucht ist das Minimum der Summe.'],
+  ['Voraussetzungen des Grundmodells',L(['gleichbleibende Bestellmengen','konstante Lagerabgangsraten','Preis unabhängig von Menge und Zeitpunkt','Kosten genau bestimmbar'])],
+  ['Klassische Losgrößenformel','x<sub>opt</sub> = √( 200 · M · K<sub>B</sub> / (E · L<sub>HS</sub>) )'],
+  ['Was ist L<sub>HS</sub>?','Lagerhaltungskostensatz in % = Zinssatz p + Lagerkostensatz L<sub>S</sub>.'],
+  ['Was gilt im Optimum?','Bestellkosten = Lagerhaltungskosten.'],
+  ['Folie 41: M = 16.000, E = 0,10 €, L<sub>HS</sub> = 5 %, K<sub>B</sub> = 10 €','√(200 · 16.000 · 10 / (0,10 · 5)) = √64.000.000 = <strong>8.000 Einheiten</strong><br>16.000 / 8.000 = <strong>2 Bestellungen</strong>'],
+  ['Übungsfrage 14: M = 500 t, E = 100 €, L<sub>HS</sub> = 15 %, K<sub>B</sub> = 150 €','√(200 · 500 · 150 / (100 · 15)) = √10.000 = <strong>100 t</strong><br>500 / 100 = <strong>5 Bestellungen</strong>'],
+  ['Wie ändert sich x<sub>opt</sub>, wenn die Bestellkosten steigen?','x<sub>opt</sub> steigt – seltener, dafür größere Mengen bestellen.']]},
+ {id:'scoring',t:'Scoring-Modell',cards:[
+  ['Andere Namen der Nutzwertanalyse','Scoringmodell, Punktbewertungsverfahren, Rangfolgemodell.'],
+  ['Wofür nutzt man sie?','Um Alternativen auch nach qualitativen, nicht monetären Kriterien zu vergleichen (z. B. Termintreue, Service).'],
+  ['Die sechs Schritte',L(['Kriterien formulieren','Kriterien gewichten','Optionen mit Punkten bewerten','Punkte × Gewicht','gewichtete Punkte summieren','Vorteilhaftigkeit / Rangfolge'])],
+  ['Formel für den Nutzwert','N<sub>i</sub> = Σ ( g<sub>j</sub> × n<sub>ij</sub> )<br>Gewicht mal Punktwert, über alle Kriterien addiert.'],
+  ['Rechne: Gewichte 50/30/20 %, Punkte 8/6/5','0,5·8 + 0,3·6 + 0,2·5 = <strong>6,8</strong>'],
+  ['Vorteile',L(['systematisch','transparent und nachvollziehbar','nicht-monetärer Nutzen wird vergleichbar','liefert eine Rangfolge'])],
+  ['Kritikpunkte',L(['subjektive Kriterien, Gewichte und Punkte','Ergebnis beeinflussbar – auch nachträglich'])],
+  ['Sensitivitätsanalyse','Gewichte variieren und prüfen, ob die Rangfolge stabil bleibt.']]}
+];
+let fcKnown=store.get('fcKnown3',{});
+let fcDeck=null,fcQueue=[],fcTotal=0,fcFirst=0,fcSeen=new Set();
+const deckById=id=>id==='mix'?{id:'mix',t:'Alle Themen gemischt',cards:DECKS.flatMap(d=>d.cards.map((c,i)=>({c,key:d.id+':'+i,t:d.t})))}:null;
+function deckCards(id){
+  if(id==='mix')return deckById('mix').cards;
+  const d=DECKS.find(x=>x.id===id);return d.cards.map((c,i)=>({c,key:d.id+':'+i,t:d.t}));
+}
+function renderTopics(){
+  const tiles=DECKS.map(d=>{const n=d.cards.length,k=d.cards.filter((c,i)=>fcKnown[d.id+':'+i]).length;
+    return '<button class="fc-topic'+(fcDeck===d.id?' on':'')+'" data-d="'+d.id+'"><b>'+d.t+'</b><small>'+k+' von '+n+' gewusst</small><span class="fc-mini"><i style="width:'+(k/n*100)+'%"></i></span></button>';}).join('');
+  const all=DECKS.reduce((a,d)=>a+d.cards.length,0),kAll=Object.keys(fcKnown).filter(k=>fcKnown[k]).length;
+  return '<div class="fc-topics">'+tiles+'<button class="fc-topic'+(fcDeck==='mix'?' on':'')+'" data-d="mix"><b>Alle Themen gemischt</b><small>'+kAll+' von '+all+' gewusst</small><span class="fc-mini"><i style="width:'+(kAll/all*100)+'%"></i></span></button></div>';
+}
+function startDeck(id,onlyOpen){
+  fcDeck=id;let cards=deckCards(id);
+  if(onlyOpen){const open=cards.filter(x=>!fcKnown[x.key]);if(open.length)cards=open;}
+  fcQueue=id==='mix'?shuffle(cards):cards.slice();fcTotal=fcQueue.length;fcFirst=0;fcSeen=new Set();
+  renderFC();
+}
+function renderFC(){
+  const box=$('#fcBox');
+  let h=renderTopics();
+  if(!fcDeck){h+='<p class="muted">Wähle oben ein Thema, um loszulegen.</p>';}
+  else if(!fcQueue.length){
+    const name=fcDeck==='mix'?'Alle Themen':DECKS.find(d=>d.id===fcDeck).t;
+    const idx=DECKS.findIndex(d=>d.id===fcDeck),next=DECKS[idx+1];
+    h+='<div class="fc-done fc-stage"><h3>'+name+': geschafft</h3><p>'+fcFirst+' von '+fcTotal+' Karten hast du beim ersten Versuch gewusst.</p><div class="row"><button class="btn" id="fcRestart">Thema wiederholen</button>'+(next?'<button class="btn ghost" id="fcNext">Weiter mit '+next.t+'</button>':'')+'</div></div>';
+  } else {
+    const cur=fcQueue[0],cards=deckCards(fcDeck);
+    const done=fcTotal-fcQueue.length;
+    h+='<div class="fc-stage"><div class="fc-top"><span>Noch '+fcQueue.length+' von '+fcTotal+' Karten</span><span class="fc-dots">'+(cards.length<=40?cards.map(x=>'<i class="'+(x.key===cur.key?'cur':fcKnown[x.key]?'k':'')+'"></i>').join(''):'<span>'+done+' erledigt</span>')+'</span></div>'+
+      '<button class="fc-card" id="fcCard" aria-label="Karte umdrehen"><div class="fc-inner"><div class="fc-face fc-front"><span class="fc-tag">'+cur.t+'</span><div class="fc-q">'+cur.c[0]+'</div><span class="fc-hint">Antippen oder Leertaste zum Umdrehen</span></div><div class="fc-face fc-back"><span class="fc-tag">'+cur.c[0]+'</span><div class="fc-a">'+cur.c[1]+'</div><span class="fc-hint">Wusstest du es?</span></div></div></button>'+
+      '<div class="fc-actions"><button class="btn again" id="fcNo">Nochmal üben</button><button class="btn good" id="fcYes">Gewusst</button></div>'+
+      '<div class="fc-links"><button class="linkbtn" id="fcShuf">Reihenfolge mischen</button><button class="linkbtn" id="fcOpen">Nur offene Karten</button><button class="linkbtn" id="fcReset">Fortschritt dieses Themas löschen</button></div></div>';
+  }
+  box.innerHTML=h;
+  $$('.fc-topic',box).forEach(b=>b.onclick=()=>startDeck(b.dataset.d));
+  if(fcDeck&&!fcQueue.length){$('#fcRestart').onclick=()=>startDeck(fcDeck);const n=$('#fcNext');if(n)n.onclick=()=>{const i=DECKS.findIndex(d=>d.id===fcDeck);startDeck(DECKS[i+1].id);};return;}
+  if(!fcDeck)return;
+  const card=$('#fcCard');card.onclick=()=>card.classList.toggle('flipped');
+  const rate=ok=>{const cur=fcQueue.shift();
+    if(ok){if(!fcSeen.has(cur.key))fcFirst++;fcKnown[cur.key]=true;}
+    else{fcKnown[cur.key]=false;fcQueue.push(cur);}
+    fcSeen.add(cur.key);store.set('fcKnown3',fcKnown);renderFC();
+    if(!fcQueue.length&&fcFirst===fcTotal)confetti();
+    const nc=$('#fcCard');if(nc)nc.focus({preventScroll:true});};
+  $('#fcYes').onclick=()=>rate(true);$('#fcNo').onclick=()=>rate(false);
+  $('#fcShuf').onclick=()=>{fcQueue=shuffle(fcQueue);renderFC();};
+  $('#fcOpen').onclick=()=>startDeck(fcDeck,true);
+  $('#fcReset').onclick=()=>{deckCards(fcDeck).forEach(x=>delete fcKnown[x.key]);store.set('fcKnown3',fcKnown);startDeck(fcDeck);};
+}
+startDeck('mawi');
+
+/* ---------- redraw on theme ---------- */
+function redrawAll(){saw();sim();andler(false);if(abcStep>=4)renderABC();}
+saw();sim();
+if(window.matchMedia)matchMedia('(prefers-color-scheme: dark)').addEventListener&&matchMedia('(prefers-color-scheme: dark)').addEventListener('change',redrawAll);
+})();
+</script>
+</body>
+</html>
