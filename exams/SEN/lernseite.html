@@ -1,0 +1,1703 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SEN Block 3 – Lernlabor UML & Anforderungen</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root, :root[data-theme="dark"], :root[data-theme="light"]{
+  --ink:#0E1828; --ink2:#14223A; --ink3:#1B2D4A; --line:#2A4066; --line2:#38547F;
+  --chalk:#E7EEF8; --muted:#9FB2CD; --dim:#6F84A3;
+  --uc:#7CC4FF; --act:#5FE0B0; --cls:#F2B44C; --st:#B79CFF; --seq:#FF8F7E; --req:#E6D49A;
+  --ok:#5FE0B0; --bad:#FF7A85; --warn:#F2B44C;
+  --accent:var(--uc);
+  --r-s:6px; --r-m:12px; --r-l:20px;
+  --display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --body:"Atkinson Hyperlegible", "Segoe UI", system-ui, -apple-system, sans-serif;
+  color-scheme: dark;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){ --ink:#0E1828; } }
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px); background:var(--ink)}
+body{
+  margin:0; background:var(--ink); color:var(--chalk); font-family:var(--body);
+  font-size:17px; line-height:1.55; -webkit-font-smoothing:antialiased;
+  background-image:
+    linear-gradient(rgba(124,196,255,.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(124,196,255,.045) 1px, transparent 1px);
+  background-size:28px 28px; background-attachment:fixed;
+  min-height:100vh;
+}
+h1,h2,h3,h4{font-family:var(--display); line-height:1.12; margin:0 0 .5em; letter-spacing:-.01em}
+h1{font-size:clamp(2.2rem,5.5vw,4rem); font-weight:800}
+h2{font-size:clamp(1.6rem,3.4vw,2.3rem); font-weight:800}
+h3{font-size:1.3rem; font-weight:700}
+h4{font-size:1.05rem; font-weight:700}
+p{margin:0 0 1em; max-width:70ch}
+button{font:inherit; color:inherit; cursor:pointer}
+:focus-visible{outline:2px solid var(--accent); outline-offset:3px; border-radius:4px}
+img,svg{max-width:100%}
+code,kbd{font-family:var(--body); background:var(--ink3); padding:.08em .4em; border-radius:4px; font-size:.92em}
+
+/* ---------- layout ---------- */
+.app{display:grid; grid-template-columns:270px minmax(0,1fr); min-height:100vh}
+.side{
+  position:sticky; top:env(safe-area-inset-top,0px); height:calc(100vh - env(safe-area-inset-top,0px));
+  border-right:1px solid var(--line); background:rgba(14,24,40,.86); backdrop-filter:blur(8px);
+  padding:24px 16px; display:flex; flex-direction:column; gap:6px; overflow:auto;
+}
+.brand{display:flex; align-items:center; gap:10px; padding:0 8px 18px; font-family:var(--display); font-weight:800; font-size:1.15rem}
+.brand svg{flex:none}
+.nav-btn{
+  display:flex; align-items:center; gap:12px; width:100%; text-align:left; border:0; background:transparent;
+  padding:10px 12px; border-radius:10px; color:var(--muted); font-size:1rem; position:relative;
+}
+.nav-btn:hover{background:var(--ink2); color:var(--chalk)}
+.nav-btn[aria-current="page"]{background:var(--ink3); color:var(--chalk)}
+.nav-btn[aria-current="page"]::before{content:""; position:absolute; left:-16px; top:8px; bottom:8px; width:3px; border-radius:2px; background:var(--c)}
+.nav-btn .glyph{width:26px; height:26px; flex:none; color:var(--c)}
+.nav-btn .chk{margin-left:auto; width:18px; height:18px; border-radius:50%; border:1.5px solid var(--line2); flex:none; display:grid; place-items:center}
+.nav-btn .chk.on{background:var(--c); border-color:var(--c)}
+.nav-btn .chk.on::after{content:""; width:8px; height:4px; border:2px solid var(--ink); border-top:0; border-right:0; transform:rotate(-45deg) translate(1px,-1px)}
+.side-foot{margin-top:auto; padding:14px 10px 0; border-top:1px solid var(--line); color:var(--dim); font-size:.85rem}
+.meter{height:6px; background:var(--ink3); border-radius:3px; overflow:hidden; margin-top:6px}
+.meter > i{display:block; height:100%; background:linear-gradient(90deg,var(--uc),var(--act),var(--cls),var(--st),var(--seq)); width:0; transition:width .6s ease}
+
+main{padding:40px clamp(18px,4vw,56px) 80px; min-width:0}
+.page{display:none; max-width:1000px}
+.page.on{display:block; animation:pageIn .45s ease both}
+@keyframes pageIn{from{opacity:0; transform:translateY(10px)} to{opacity:1; transform:none}}
+
+@media (max-width:900px){
+  .app{grid-template-columns:1fr}
+  .side{position:sticky; top:0; height:auto; flex-direction:row; overflow-x:auto; padding:10px 10px;
+        border-right:0; border-bottom:1px solid var(--line); z-index:20; gap:4px; padding-top:calc(10px + env(safe-area-inset-top,0px)); top:0}
+  .brand,.side-foot{display:none}
+  .nav-btn{white-space:nowrap; width:auto; padding:8px 12px}
+  .nav-btn .chk{display:none}
+  .nav-btn[aria-current="page"]::before{left:10px; right:10px; top:auto; bottom:-1px; height:3px; width:auto}
+  main{padding-top:28px}
+}
+
+/* ---------- topic head ---------- */
+.topic-head{display:grid; grid-template-columns:auto 1fr; gap:22px; align-items:center; margin-bottom:28px}
+.topic-head .big-glyph{width:84px; height:84px; color:var(--c); border:1.5px solid var(--c); border-radius:22px; display:grid; place-items:center; background:color-mix(in srgb, var(--c) 10%, transparent)}
+.topic-head .big-glyph svg{width:52px; height:52px}
+.topic-head h2{margin:0 0 .2em; color:var(--chalk)}
+.topic-head p{margin:0; color:var(--muted)}
+.lede{color:var(--muted); font-size:1.08rem}
+
+/* ---------- blocks ---------- */
+.block{margin:0 0 34px; padding:26px; border:1px solid var(--line); border-radius:var(--r-l); background:rgba(20,34,58,.78)}
+.block > h3{display:flex; align-items:baseline; gap:12px; flex-wrap:wrap}
+.block > h3 .tag{font-family:var(--body); font-weight:400; font-size:.82rem; color:var(--c); border:1px solid color-mix(in srgb,var(--c) 50%, transparent); padding:2px 9px; border-radius:20px}
+.block .hint{color:var(--muted); margin-top:-.3em}
+.merke{border-left:3px solid var(--c); padding:12px 16px; background:color-mix(in srgb,var(--c) 8%, transparent); border-radius:0 10px 10px 0; margin:16px 0}
+.merke strong{color:var(--c)}
+.fix{border:1px dashed var(--warn); border-radius:12px; padding:14px 18px; margin:16px 0; background:rgba(242,180,76,.06)}
+.fix h4{color:var(--warn); margin-bottom:.4em}
+.fix ul{margin:0; padding-left:1.2em} .fix li{margin:.3em 0}
+
+.two{display:grid; grid-template-columns:1.3fr 1fr; gap:22px; align-items:start}
+@media (max-width:760px){ .two{grid-template-columns:1fr} }
+
+.btn{border:1.5px solid var(--line2); background:var(--ink3); padding:9px 16px; border-radius:10px; font-weight:700; transition:background .2s, border-color .2s, transform .1s}
+.btn:hover{border-color:var(--c, var(--accent))}
+.btn:active{transform:scale(.97)}
+.btn.primary{background:var(--c, var(--accent)); color:var(--ink); border-color:transparent}
+.btn.ghost{background:transparent}
+.btn[disabled]{opacity:.4; cursor:not-allowed}
+.row{display:flex; flex-wrap:wrap; gap:10px; align-items:center}
+.chip{border:1.5px solid var(--line2); background:var(--ink2); padding:6px 12px; border-radius:20px; font-size:.92rem}
+.chip.sel{border-color:var(--c); background:color-mix(in srgb,var(--c) 18%, var(--ink2))}
+
+.svgwrap{overflow-x:auto; border-radius:14px; background:var(--ink); border:1px solid var(--line); padding:10px}
+.svgwrap svg{display:block; margin:0 auto; height:auto}
+.panel{background:var(--ink); border:1px solid var(--line); border-radius:14px; padding:16px 18px; min-height:120px}
+.panel h4{color:var(--c)}
+.muted{color:var(--muted)}
+.small{font-size:.9rem}
+
+/* ---------- svg diagram styles ---------- */
+.dg text{fill:var(--chalk); font-family:var(--body); font-size:13px}
+.dg .lbl{fill:var(--muted); font-size:11.5px; paint-order:stroke; stroke:var(--ink); stroke-width:4px; stroke-linejoin:round}
+.dg .msg text{paint-order:stroke; stroke:var(--ink); stroke-width:4px; stroke-linejoin:round}
+.dg .stroke{stroke:var(--chalk); fill:none; stroke-width:1.5}
+.dg .shape{stroke:var(--chalk); fill:var(--ink2); stroke-width:1.5}
+.dg .bound{stroke:var(--line2); fill:rgba(124,196,255,.03); stroke-width:1.5}
+.dg .dash{stroke-dasharray:6 5}
+.dg .node{cursor:pointer; transition:opacity .25s}
+.dg .node .shape{transition:stroke .25s, fill .25s, filter .25s}
+.dg .node:hover .shape{stroke:var(--c)}
+.dg .hl .shape{stroke:var(--c); fill:color-mix(in srgb,var(--c) 22%, var(--ink2)); filter:drop-shadow(0 0 8px color-mix(in srgb,var(--c) 70%, transparent))}
+.dg .hl2 .shape{stroke:var(--warn); fill:rgba(242,180,76,.16); filter:drop-shadow(0 0 7px rgba(242,180,76,.6))}
+.dg .hl text, .dg .hl2 text{font-weight:700}
+.dg.focus .node:not(.hl):not(.hl2){opacity:.35}
+.dg.focus .edge{opacity:.25}
+.dg.focus .edge.on{opacity:1}
+.dg .edge{transition:opacity .25s}
+.dg .edge.on .stroke{stroke:var(--c)}
+.dg .actor .shape{fill:none}
+
+/* ---------- hero ---------- */
+.hero{display:grid; grid-template-columns:1.1fr 1fr; gap:30px; align-items:center; margin-bottom:40px}
+@media (max-width:860px){ .hero{grid-template-columns:1fr} }
+.hero h1{margin-bottom:.3em}
+.hero h1 span{display:block; color:var(--muted); font-weight:500; font-size:1.15rem; line-height:1.45; letter-spacing:0; margin-top:.9em; max-width:46ch}
+.hero-svg .draw{stroke-dasharray:var(--len); stroke-dashoffset:var(--len); animation:draw 1.1s ease forwards; animation-delay:var(--d,0s)}
+.hero-svg .fade{opacity:0; animation:fade .6s ease forwards; animation-delay:var(--d,0s)}
+@keyframes draw{to{stroke-dashoffset:0}}
+@keyframes fade{to{opacity:1}}
+
+.map{display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:14px}
+.map button{
+  display:grid; grid-template-columns:56px 1fr; gap:14px; text-align:left; align-items:center;
+  border:1px solid var(--line); background:rgba(20,34,58,.8); border-radius:16px; padding:16px; transition:border-color .2s, transform .2s;
+}
+.map button:hover{border-color:var(--c); transform:translateY(-2px)}
+.map .g{width:56px; height:56px; border-radius:14px; display:grid; place-items:center; color:var(--c); background:color-mix(in srgb,var(--c) 12%, transparent)}
+.map .g svg{width:34px;height:34px}
+.map b{font-family:var(--display); font-size:1.12rem; display:block}
+.map span{color:var(--muted); font-size:.9rem; display:block; line-height:1.35}
+.map .state{font-size:.8rem; color:var(--c); margin-top:4px}
+
+/* ---------- notation explorer ---------- */
+.notation{display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:10px}
+.notation button{border:1px solid var(--line); background:var(--ink); border-radius:12px; padding:12px 10px 10px; display:flex; flex-direction:column; align-items:center; gap:8px; font-size:.9rem; color:var(--muted); transition:border-color .2s}
+.notation button svg{width:100%; height:54px}
+.notation button[aria-pressed="true"]{border-color:var(--c); color:var(--chalk); background:color-mix(in srgb,var(--c) 8%, var(--ink))}
+.notation-out{margin-top:14px}
+
+/* ---------- trainer (include/extend etc) ---------- */
+.trainer{display:grid; gap:12px}
+.tcard{border:1px solid var(--line); background:var(--ink); border-radius:14px; padding:16px; display:grid; gap:12px}
+.tcard .q{font-size:1.04rem}
+.tcard .res{display:none}
+.tcard.done .res{display:block; animation:pageIn .35s ease}
+.tcard .opts{display:flex; flex-wrap:wrap; gap:8px}
+.tcard .opts button{border:1.5px solid var(--line2); background:var(--ink2); padding:7px 14px; border-radius:9px}
+.tcard .opts button.right{border-color:var(--ok); background:rgba(95,224,176,.14)}
+.tcard .opts button.wrong{border-color:var(--bad); background:rgba(255,122,133,.12)}
+.tcard.done .opts button{pointer-events:none}
+.score-pill{font-size:.9rem; color:var(--c); border:1px solid var(--c); padding:2px 10px; border-radius:20px}
+
+/* ---------- state lab ---------- */
+.tabs{display:flex; flex-wrap:wrap; gap:6px; margin-bottom:14px}
+.tabs button{border:1.5px solid var(--line2); background:transparent; padding:6px 14px; border-radius:20px; color:var(--muted)}
+.tabs button[aria-selected="true"]{border-color:var(--c); color:var(--chalk); background:color-mix(in srgb,var(--c) 14%, transparent)}
+.dg .st-node .shape{transition:all .35s}
+.dg .st-node.cur .shape{stroke:var(--c); fill:color-mix(in srgb,var(--c) 26%, var(--ink2)); filter:drop-shadow(0 0 10px color-mix(in srgb,var(--c) 80%, transparent))}
+.dg .tr.fire .stroke{stroke:var(--c); stroke-width:2.6; stroke-dasharray:8 6; animation:flow .6s linear 2}
+.dg .tr.fire text{fill:var(--c); font-weight:700}
+@keyframes flow{to{stroke-dashoffset:-28}}
+.log{font-size:.9rem; max-height:190px; overflow:auto; display:flex; flex-direction:column; gap:4px; margin-top:10px}
+.log div{padding:5px 10px; border-radius:8px; background:var(--ink2); animation:pageIn .3s ease}
+.log div.no{color:var(--muted)}
+.ctx{display:flex; flex-wrap:wrap; gap:14px; align-items:center; margin:8px 0}
+.ctx .val{font-family:var(--display); font-size:1.4rem; font-weight:800; color:var(--c)}
+input[type=range]{accent-color:var(--c); width:220px}
+.lamp{width:14px; height:14px; border-radius:50%; background:var(--ink3); border:1px solid var(--line2); display:inline-block; vertical-align:-2px}
+.lamp.on{background:var(--bad); box-shadow:0 0 12px var(--bad); animation:blink .5s steps(2) infinite}
+@keyframes blink{50%{opacity:.35}}
+
+/* ---------- activity ---------- */
+.dg .act-node.active .shape{stroke:var(--c); fill:color-mix(in srgb,var(--c) 22%, var(--ink2))}
+.dg .act-node.visited .shape{stroke:color-mix(in srgb,var(--c) 70%, var(--chalk))}
+.dg .flow.visited{stroke:var(--c)}
+.token{fill:var(--c); filter:drop-shadow(0 0 6px var(--c))}
+.choices{display:flex; gap:8px; flex-wrap:wrap; min-height:44px; align-items:center}
+.choices button{animation:pageIn .3s ease}
+
+.order-pool, .order-out{display:flex; flex-wrap:wrap; gap:8px}
+.order-out{min-height:60px; border:1.5px dashed var(--line2); border-radius:12px; padding:10px; margin:12px 0; counter-reset:o; flex-direction:column}
+.order-out .it{counter-increment:o}
+.order-out .it::before{content:counter(o); font-family:var(--display); font-weight:800; color:var(--c); width:26px; flex:none}
+.it{display:flex; align-items:center; gap:10px; border:1.5px solid var(--line2); background:var(--ink2); padding:7px 12px; border-radius:10px; font-size:.95rem; text-align:left}
+.it svg{width:28px; height:22px; flex:none; color:var(--c)}
+.it.shake{animation:shake .4s; border-color:var(--bad)}
+@keyframes shake{20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}
+
+/* ---------- class boxes ---------- */
+.cbox{border:1.5px solid var(--chalk); background:var(--ink2); border-radius:3px; min-width:170px; font-size:.88rem}
+.cbox > div{padding:5px 10px; border-top:1.5px solid var(--chalk); min-height:24px}
+.cbox > div:first-child{border-top:0; text-align:center; font-weight:700}
+.cbox .abs{font-style:italic}
+.cbox .drop{min-height:40px; transition:background .2s}
+.cbox .drop.over{background:color-mix(in srgb,var(--c) 18%, transparent)}
+.ctree{display:flex; flex-direction:column; align-items:center; gap:0}
+.ctree .kids{display:flex; justify-content:center; align-items:flex-start; padding-top:22px}
+.ctree .kids > .ctree{position:relative; padding:0 12px}
+.ctree .kids > .ctree::before{content:""; position:absolute; top:-22px; left:50%; height:22px; border-left:1.5px solid var(--chalk)}
+.ctree .kids > .ctree::after{content:""; position:absolute; top:-22px; left:0; right:0; border-top:1.5px solid var(--chalk)}
+.ctree .kids > .ctree:first-child::after{left:50%}
+.ctree .kids > .ctree:last-child::after{right:50%}
+.ctree .kids > .ctree:only-child::after{display:none}
+.ctree .tri{width:0; height:0; border-left:9px solid transparent; border-right:9px solid transparent; border-bottom:14px solid var(--chalk); position:relative; margin-top:-1px}
+.ctree .tri::after{content:""; position:absolute; left:-6px; top:3px; border-left:6px solid transparent; border-right:6px solid transparent; border-bottom:9px solid var(--ink)}
+.ctree .stem{width:0; height:18px; border-left:1.5px solid var(--chalk)}
+.treewrap{overflow-x:auto; padding:16px 6px; background:var(--ink); border:1px solid var(--line); border-radius:14px}
+.treewrap > .ctree{min-width:max-content; margin:0 auto}
+.attr-chip{display:inline-block; border:1.5px solid var(--line2); background:var(--ink3); border-radius:7px; padding:3px 9px; margin:3px; font-size:.86rem; cursor:grab; user-select:none}
+.attr-chip.sel{border-color:var(--c); box-shadow:0 0 0 2px color-mix(in srgb,var(--c) 40%, transparent)}
+.attr-chip.good{border-color:var(--ok); color:var(--ok)}
+.attr-chip.badc{border-color:var(--bad); color:var(--bad)}
+.cbox .drop .attr-chip{display:block; margin:4px 0}
+.pool{min-height:52px; border:1.5px dashed var(--line2); border-radius:12px; padding:8px; margin:12px 0}
+
+.mult{display:grid; gap:14px}
+.mult .bar{display:grid; grid-template-columns:auto 1fr auto; align-items:center; gap:10px}
+.mult select, .req select{background:var(--ink2); color:var(--chalk); border:1.5px solid var(--line2); border-radius:8px; padding:6px 8px; font:inherit}
+.mult .read{font-size:1.05rem; min-height:3em}
+.mult .read mark{background:color-mix(in srgb,var(--c) 25%, transparent); color:var(--chalk); padding:0 4px; border-radius:4px}
+
+/* ---------- sequence ---------- */
+.dg .msg{transition:opacity .3s}
+.dg .msg.hide, .dg .frag.hide, .dg .pt.hide{opacity:0}
+.dg .msg.new .stroke{stroke:var(--c); stroke-width:2.2}
+.dg .msg.new text{fill:var(--c)}
+.dg .msg.dim{opacity:.22}
+.dg .frag rect.fr{fill:rgba(255,143,126,.04); stroke:var(--seq); stroke-width:1.2}
+.dg .act{fill:var(--ink3); stroke:var(--chalk); stroke-width:1.2}
+.seq-desc{min-height:3.2em; margin-top:12px}
+
+/* ---------- req ---------- */
+.deck{position:relative; height:200px; display:grid; place-items:center; margin:10px 0}
+.card{position:absolute; width:min(420px,92%); min-height:150px; border-radius:18px; border:1.5px solid var(--line2); background:var(--ink3); display:grid; place-items:center; text-align:center; padding:24px; font-size:1.15rem; font-family:var(--display); font-weight:700; transition:transform .45s ease, opacity .45s ease; box-shadow:0 18px 40px rgba(0,0,0,.35)}
+.card.goL{transform:translateX(-140%) rotate(-14deg); opacity:0}
+.card.goR{transform:translateX(140%) rotate(14deg); opacity:0}
+.card.back{transform:translateY(10px) scale(.95); opacity:.5}
+.card.ok{border-color:var(--ok)} .card.no{border-color:var(--bad)}
+.bins{display:grid; grid-template-columns:1fr 1fr; gap:12px}
+.bin{border:1.5px solid var(--line2); border-radius:14px; padding:12px; min-height:90px}
+.bin h4{margin-bottom:6px}
+.bin ul{margin:0; padding-left:1.1em; font-size:.9rem; color:var(--muted)}
+.bin li.w{color:var(--bad)}
+
+.matrix{width:100%; border-collapse:separate; border-spacing:4px; min-width:620px}
+.matrix th{font-family:var(--display); font-size:.92rem; color:var(--muted); text-align:left; font-weight:700; padding:4px}
+.matrix td button{width:100%; border:1.5px solid var(--line2); background:var(--ink2); border-radius:8px; padding:8px 4px; font-size:.88rem; color:var(--muted)}
+.matrix td button.v1{color:var(--chalk); border-color:#5a6f93}
+.matrix td button.v2{color:var(--ink); background:color-mix(in srgb,var(--c) 55%, var(--ink2)); border-color:transparent}
+.matrix td button.v3{color:var(--ink); background:var(--c); border-color:transparent}
+.matrix td button.ok{outline:2px solid var(--ok)}
+.matrix td button.near{outline:2px dashed var(--warn)}
+.matrix td button.no{outline:2px solid var(--bad)}
+
+.sentence{font-size:1.2rem; line-height:1.7; padding:16px 18px; border-radius:14px; background:var(--ink); border:1px solid var(--line); min-height:3.5em}
+.sentence span{border-bottom:3px solid; padding-bottom:1px}
+.req-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:12px; margin-bottom:14px}
+.req-grid label{display:grid; gap:4px; font-size:.88rem; color:var(--muted); min-width:0; align-content:end}
+.req-grid select{width:100%; min-width:0}
+.req-grid label i{font-style:normal; display:inline-block; width:10px; height:10px; border-radius:2px; margin-right:6px}
+
+.flips{display:grid; grid-template-columns:repeat(auto-fill,minmax(250px,1fr)); gap:12px}
+.flip{perspective:900px; height:210px; border:0; background:none; padding:0; text-align:left}
+.flip .in{position:relative; width:100%; height:100%; transition:transform .6s; transform-style:preserve-3d}
+.flip.on .in{transform:rotateY(180deg)}
+.flip .f,.flip .b{position:absolute; inset:0; backface-visibility:hidden; border-radius:14px; padding:16px; border:1.5px solid var(--line2); overflow:auto}
+.flip .f{background:var(--ink3); font-family:var(--display); font-weight:700; font-size:1.02rem; display:flex; align-items:center}
+.flip .b{background:var(--ink); transform:rotateY(180deg); font-size:.9rem; border-color:var(--c)}
+.flip .b ul{margin:0; padding-left:1.1em}
+
+details.sol{border:1px solid var(--line); border-radius:14px; background:var(--ink); margin:12px 0}
+details.sol > summary{cursor:pointer; padding:14px 18px; font-weight:700; list-style:none; display:flex; justify-content:space-between; align-items:center; gap:10px}
+details.sol > summary::-webkit-details-marker{display:none}
+details.sol > summary::after{content:"+"; font-family:var(--display); font-size:1.4rem; color:var(--c); transition:transform .25s}
+details.sol[open] > summary::after{transform:rotate(45deg)}
+details.sol .body{padding:0 18px 18px}
+details.sol .src{font-weight:400; color:var(--muted); font-size:.85rem}
+
+/* ---------- quiz ---------- */
+.quiz-top{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:16px}
+.qbox{border:1px solid var(--line); background:rgba(20,34,58,.85); border-radius:var(--r-l); padding:26px; position:relative; overflow:hidden}
+.qprog{height:6px; background:var(--ink3); border-radius:3px; overflow:hidden; margin-bottom:18px}
+.qprog i{display:block; height:100%; background:var(--c); transition:width .4s}
+.qmeta{display:flex; justify-content:space-between; color:var(--muted); font-size:.9rem; margin-bottom:8px}
+.qq{font-family:var(--display); font-size:1.35rem; font-weight:700; margin-bottom:6px}
+.qctx{color:var(--muted); font-size:.95rem; margin-bottom:12px}
+.qopts{display:grid; gap:10px; margin:16px 0}
+.qopts button{text-align:left; border:1.5px solid var(--line2); background:var(--ink2); border-radius:12px; padding:12px 16px; display:flex; gap:12px; align-items:center; transition:border-color .2s, background .2s}
+.qopts button:hover:not([disabled]){border-color:var(--c)}
+.qopts button b{font-family:var(--display); color:var(--c); width:22px; flex:none}
+.qopts button.right{border-color:var(--ok); background:rgba(95,224,176,.13)}
+.qopts button.wrong{border-color:var(--bad); background:rgba(255,122,133,.12); animation:shake .4s}
+.qopts button[disabled]{cursor:default}
+.qexp{display:none; border-left:3px solid var(--c); padding:10px 14px; background:var(--ink); border-radius:0 10px 10px 0}
+.qexp.on{display:block; animation:pageIn .3s}
+.ring{width:150px; height:150px}
+.ring circle{fill:none; stroke-width:12}
+.result{display:grid; grid-template-columns:auto 1fr; gap:26px; align-items:center}
+@media (max-width:600px){ .result{grid-template-columns:1fr} }
+.bars{display:grid; gap:8px}
+.bars div{display:grid; grid-template-columns:130px 1fr 44px; gap:10px; align-items:center; font-size:.9rem}
+.bars span.b{height:8px; border-radius:4px; background:var(--ink3); overflow:hidden}
+.bars span.b i{display:block; height:100%}
+.confetti{position:absolute; width:8px; height:14px; top:-20px; animation:fall 1.8s ease-in forwards; border-radius:2px}
+@keyframes fall{to{transform:translateY(520px) rotate(540deg); opacity:0}}
+
+.done-btn{margin-top:10px}
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important}
+  .hero-svg .draw{stroke-dashoffset:0}
+  .hero-svg .fade{opacity:1}
+}
+</style>
+</head>
+<body>
+<div class="app">
+<nav class="side" aria-label="Themen">
+  <div class="brand"><svg width="30" height="30" viewBox="0 0 30 30"><ellipse cx="15" cy="15" rx="13" ry="8" fill="none" stroke="#7CC4FF" stroke-width="2"/><circle cx="15" cy="15" r="3" fill="#F2B44C"/></svg>SEN Block 3</div>
+  <button class="nav-btn" data-go="start" style="--c:var(--chalk)"><span class="glyph" data-glyph="home"></span>Übersicht</button>
+  <button class="nav-btn" data-go="uc" style="--c:var(--uc)"><span class="glyph" data-glyph="uc"></span>Use Case<span class="chk" data-chk="uc"></span></button>
+  <button class="nav-btn" data-go="act" style="--c:var(--act)"><span class="glyph" data-glyph="act"></span>Aktivität<span class="chk" data-chk="act"></span></button>
+  <button class="nav-btn" data-go="cls" style="--c:var(--cls)"><span class="glyph" data-glyph="cls"></span>Klassen<span class="chk" data-chk="cls"></span></button>
+  <button class="nav-btn" data-go="st" style="--c:var(--st)"><span class="glyph" data-glyph="st"></span>Zustände<span class="chk" data-chk="st"></span></button>
+  <button class="nav-btn" data-go="seq" style="--c:var(--seq)"><span class="glyph" data-glyph="seq"></span>Sequenz<span class="chk" data-chk="seq"></span></button>
+  <button class="nav-btn" data-go="req" style="--c:var(--req)"><span class="glyph" data-glyph="req"></span>Anforderungen<span class="chk" data-chk="req"></span></button>
+  <button class="nav-btn" data-go="quiz" style="--c:var(--ok)"><span class="glyph" data-glyph="quiz"></span>Quiz</button>
+  <div class="side-foot">Lernfortschritt <span id="progTxt">0 / 6</span><div class="meter"><i id="progBar"></i></div><div style="margin-top:8px">Bestes Quiz: <span id="bestTxt">–</span></div></div>
+</nav>
+
+<main>
+<!-- ================= START ================= -->
+<section class="page" id="p-start" style="--c:var(--uc)">
+  <div class="hero">
+    <div>
+      <h1>Block 3 zum Durchklicken<span>Alle sechs Diagramm- und Anforderungsthemen aus deinen Mitschriften – mit Simulationen, Baukästen und einem Quiz am Ende.</span></h1>
+      <p class="lede">Jedes Thema beginnt mit der Notation, dann spielst du echte Prüfungsaufgaben interaktiv durch. Wo in den Mitschriften etwas nicht ganz stimmt, steht ein gelber Korrekturhinweis.</p>
+      <div class="row"><button class="btn primary" data-go="uc">Mit Use Case starten</button><button class="btn" data-go="quiz" style="--c:var(--ok)">Direkt zum Quiz</button></div>
+    </div>
+    <svg class="hero-svg dg" viewBox="0 0 440 320" aria-label="Animiertes Use-Case-Diagramm: Du bestehst die SEN-Klausur">
+      <defs>
+        <marker id="hArr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#E7EEF8" stroke-width="1.4"/></marker>
+      </defs>
+      <rect class="bound draw" x="110" y="14" width="316" height="292" rx="4" style="--len:1220;--d:.1s"/>
+      <text class="lbl fade" x="122" y="34" style="--d:.6s">SEN-Klausur</text>
+      <g class="fade" style="--d:.2s">
+        <circle cx="46" cy="118" r="11" class="stroke"/><path class="stroke" d="M46,129 V160 M26,140 H66 M46,160 L30,186 M46,160 L62,186"/>
+        <text x="46" y="206" text-anchor="middle">Du</text>
+      </g>
+      <path class="stroke draw" d="M66,148 L190,148" style="--len:130;--d:.7s"/>
+      <ellipse class="shape draw" cx="268" cy="148" rx="80" ry="28" style="--len:440;--d:.9s"/>
+      <text class="fade" x="268" y="153" text-anchor="middle" style="--d:1.3s">Klausur bestehen</text>
+      <ellipse class="shape draw" cx="268" cy="262" rx="80" ry="26" style="--len:440;--d:1.5s"/>
+      <text class="fade" x="268" y="267" text-anchor="middle" style="--d:1.8s">Diagramme verstehen</text>
+      <path class="stroke dash draw" d="M268,176 L268,234" marker-end="url(#hArr)" style="--len:60;--d:1.9s"/>
+      <text class="lbl fade" x="276" y="210" style="--d:2.1s">«include»</text>
+      <ellipse class="shape draw" cx="330" cy="60" rx="74" ry="24" style="--len:440;--d:2.2s;stroke:#F2B44C"/>
+      <text class="fade" x="330" y="65" text-anchor="middle" style="--d:2.5s">Quiz ≥ 80 %</text>
+      <path class="stroke dash draw" d="M316,83 L292,122" marker-end="url(#hArr)" style="--len:50;--d:2.6s"/>
+      <text class="lbl fade" x="312" y="108" style="--d:2.8s">«extend»</text>
+    </svg>
+  </div>
+  <h3>Themen</h3>
+  <div class="map" id="topicMap"></div>
+</section>
+
+<!-- ================= USE CASE ================= -->
+<section class="page" id="p-uc" style="--c:var(--uc)">
+  <div class="topic-head"><div class="big-glyph" data-glyph="uc"></div><div><h2>Use-Case-Diagramm</h2><p>Zeigt <em>was</em> ein System für wen leistet – nicht <em>wie</em>. Wird früh im Projekt eingesetzt.</p></div></div>
+
+  <div class="block"><h3>Die Bausteine <span class="tag">antippen zum Erklären</span></h3>
+    <div class="notation" id="ucNotation"></div>
+    <div class="panel notation-out" id="ucNotationOut"></div>
+    <div class="merke"><strong>Eselsbrücke für die Pfeile:</strong> «include» zeigt dorthin, was <em>immer</em> mitgemacht werden <em>muss</em> (Basis → Teil). «extend» zeigt zurück zur Basis, die <em>optional</em> erweitert wird (Erweiterung → Basis). Wörter wie „bei Bedarf“, „optional“, „kann“ bedeuten fast immer extend.</div>
+  </div>
+
+  <div class="block"><h3>Pfeil-Trainer: include oder extend? <span class="score-pill" id="ieScore">0 / 0</span></h3>
+    <p class="hint">Alle Sätze stammen aus deinen Aufgaben. Wähle die Beziehung – danach siehst du den korrekten Pfeil.</p>
+    <div class="trainer" id="ieTrainer"></div>
+  </div>
+
+  <div class="block"><h3>Bankgeschäft lesen <span class="tag">Use Case anklicken</span></h3>
+    <p class="hint">Klick auf einen Anwendungsfall: Alle beteiligten Akteure leuchten auf – blau = zwingend, gelb = optional. Rechts steht, <em>warum</em>.</p>
+    <div style="display:grid;gap:14px">
+      <div class="svgwrap" id="bankSvg"></div>
+      <div class="panel" id="bankOut"><h4>Noch nichts ausgewählt</h4><p class="muted small">Tipp: Probier „Depotkonto eröffnen“ und „Girokonto eröffnen“ – genau das wird in der Aufgabe gefragt.</p></div>
+    </div>
+    <div class="fix"><h4>Check deiner Mitschrift</h4><ul>
+      <li>„Depotkonto eröffnen ist eine <em>Generalisierung</em> von Konto eröffnen“ – genauer: eine <strong>Spezialisierung</strong>. Der Pfeil mit dem leeren Dreieck zeigt zum <em>allgemeinen</em> Fall (Konto eröffnen). Das Ergebnis „Ja, Antrag muss ausgefüllt werden“ stimmt, weil die Spezialisierung das include von „Konto eröffnen“ erbt.</li>
+    </ul></div>
+  </div>
+
+  <div class="block"><h3>Prüfungsaufgaben als Lösungsskizze</h3>
+    <p class="hint">Erst selbst skizzieren, dann aufklappen.</p>
+    <div id="ucSolutions"></div>
+  </div>
+  <button class="btn done-btn" data-done="uc">Thema als gelernt markieren</button>
+</section>
+
+<!-- ================= ACTIVITY ================= -->
+<section class="page" id="p-act" style="--c:var(--act)">
+  <div class="topic-head"><div class="big-glyph" data-glyph="act"></div><div><h2>Aktivitätsdiagramm</h2><p>Beschreibt einen Ablauf Schritt für Schritt – mit Verzweigungen und parallelen Strängen.</p></div></div>
+
+  <div class="block"><h3>Die Bausteine <span class="tag">antippen zum Erklären</span></h3>
+    <div class="notation" id="actNotation"></div>
+    <div class="panel notation-out" id="actNotationOut"></div>
+  </div>
+
+  <div class="block"><h3>Token-Simulation: Rechnungseingang <span class="tag">IHK AP1 Herbst 2025</span></h3>
+    <p class="hint">Ein Aktivitätsdiagramm „läuft“ wie ein Spielstein (Token) durch den Graphen. An jeder Raute entscheidest du, welche Bedingung gilt. Am Balken teilt sich der Token.</p>
+    <div class="two">
+      <div class="svgwrap" id="invSvg"></div>
+      <div class="panel"><h4 id="invTitle">Bereit</h4><p id="invText" class="small">Starte die Simulation. Der Token wandert los und wartet an jeder Entscheidung auf dich.</p>
+        <div class="choices" id="invChoices"><button class="btn primary" id="invStart">Simulation starten</button></div>
+      </div>
+    </div>
+    <div class="fix"><h4>Check deiner Mitschrift</h4><ul>
+      <li>Bei „Ablehnung und der Prozess wird beendet“ ist das <strong>Aktivitätsende</strong> (◉) sauberer als das Ablaufende (⊗). ⊗ beendet nur einen einzelnen Strang, ◉ die ganze Aktivität. Gleiches gilt bei der Bewässerung für „keine Bewässerung erforderlich“.</li>
+    </ul></div>
+  </div>
+
+  <div class="block"><h3>Puzzle: Bewässerungssteuerung <span class="tag">IHK AP2 So26</span></h3>
+    <p class="hint">Bring die Elemente in die richtige Reihenfolge, indem du sie nacheinander antippst. Falsche Reihenfolge wackelt.</p>
+    <div class="order-out" id="ordOut"></div>
+    <div class="order-pool" id="ordPool"></div>
+    <div class="row" style="margin-top:12px"><button class="btn ghost" id="ordReset">Neu mischen</button><span class="muted small" id="ordMsg"></span></div>
+  </div>
+  <button class="btn done-btn" data-done="act">Thema als gelernt markieren</button>
+</section>
+
+<!-- ================= CLASS ================= -->
+<section class="page" id="p-cls" style="--c:var(--cls)">
+  <div class="topic-head"><div class="big-glyph" data-glyph="cls"></div><div><h2>Klassendiagramm</h2><p>Statische Struktur: welche Klassen es gibt, was sie wissen (Attribute), was sie können (Methoden) und wie sie zusammenhängen.</p></div></div>
+
+  <div class="block"><h3>Aufbau einer Klasse</h3>
+    <div class="two">
+      <div class="treewrap" style="display:grid;place-items:center;padding:24px">
+        <div class="cbox" style="min-width:260px;font-size:.95rem">
+          <div><span class="muted small" style="font-weight:400">«abstract»</span><br><span class="abs">Versicherungsobjekt</span></div>
+          <div>- neupreis: double<br># baujahr: int<br>~ schadenshoehe: double</div>
+          <div>+ <span class="abs">restwertBerechnen(): double</span><br>+ auszahlen(betrag: double): void</div>
+        </div>
+      </div>
+      <div class="panel">
+        <h4>Drei Fächer (Compartments)</h4>
+        <p class="small">Oben der <strong>Name</strong> (kursiv = abstrakt, keine Objekte möglich), Mitte die <strong>Attribute</strong> <code>name: Typ</code>, unten die <strong>Methoden</strong> <code>name(param: Typ): Rückgabetyp</code>.</p>
+        <p class="small" style="margin:0"><code>+</code> public &nbsp; <code>-</code> private &nbsp; <code>#</code> protected &nbsp; <code>~</code> package<br>Kursiv gesetzte Methode = abstrakt, Unterklassen müssen sie implementieren.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="block"><h3>Beziehungen <span class="tag">antippen zum Erklären</span></h3>
+    <div class="notation" id="clsNotation"></div>
+    <div class="panel notation-out" id="clsNotationOut"></div>
+  </div>
+
+  <div class="block"><h3>Multiplizitäten lesen</h3>
+    <p class="hint">Die Zahl steht immer <em>beim anderen Ende</em>. Stell die Werte ein und lies den Satz.</p>
+    <div class="mult" id="multLab"></div>
+  </div>
+
+  <div class="block"><h3>Baukasten: Bäckerei Weizmann <span class="tag">Generalisierung</span></h3>
+    <p class="hint">Ziehe jedes Attribut in die richtige Klasse (oder tippe Attribut, dann Klasse). Gemeinsames gehört so weit nach oben wie möglich.</p>
+    <div class="pool" id="bakPool"></div>
+    <div class="treewrap" id="bakTree"></div>
+    <div class="row" style="margin-top:12px"><button class="btn primary" id="bakCheck">Prüfen</button><button class="btn ghost" id="bakReset">Zurücksetzen</button><span id="bakMsg" class="small muted"></span></div>
+  </div>
+
+  <div class="block"><h3>KD Verein: Welche Beziehung? <span class="score-pill" id="verScore">0 / 0</span></h3>
+    <div class="trainer" id="verTrainer"></div>
+    <div class="fix"><h4>Check deiner Mitschrift</h4><ul>
+      <li>„Fußballturnier“ und „Turnier“ sind dieselbe Klasse – nur einmal aufführen.</li>
+      <li>Im Diagramm hängt die Gruppe am Verein. Laut Text besteht eine Gruppe aber aus <strong>Fußballmannschaften</strong> → Aggregation Gruppe ◇— Fußballmannschaft.</li>
+      <li>KD Person: Die zweite Unterklasse heißt im Diagramm „Student“, gemeint ist <strong>Professor</strong> (mit lohn).</li>
+    </ul></div>
+  </div>
+
+  <div class="block"><h3>Lösungsskizze: Versicherungsobjekt <span class="tag">AP1 F23 Aufg. 4c</span></h3>
+    <details class="sol"><summary>Musterlösung aufklappen</summary><div class="body" id="versSol"></div></details>
+  </div>
+  <button class="btn done-btn" data-done="cls">Thema als gelernt markieren</button>
+</section>
+
+<!-- ================= STATE ================= -->
+<section class="page" id="p-st" style="--c:var(--st)">
+  <div class="topic-head"><div class="big-glyph" data-glyph="st"></div><div><h2>Zustandsdiagramm</h2><p>Zeigt, in welchen Zuständen ein Objekt sein kann und welches Ereignis es in welchen Zustand bringt.</p></div></div>
+
+  <div class="block"><h3>Die Bausteine <span class="tag">antippen zum Erklären</span></h3>
+    <div class="notation" id="stNotation"></div>
+    <div class="panel notation-out" id="stNotationOut"></div>
+    <div class="merke"><strong>Beschriftung einer Transition:</strong> <code>Ereignis [Bedingung] / Aktion</code>. Alle drei Teile sind optional. In deinen Mitschriften steht oft ein Backslash <code>\</code> – in UML ist es ein normaler Schrägstrich <code>/</code>.</div>
+  </div>
+
+  <div class="block"><h3>Zustandsautomaten zum Ausprobieren</h3>
+    <p class="hint">Löse Ereignisse aus und beobachte, welche Transition schaltet. Ereignisse ohne passende Transition werden ignoriert – genau wie im echten Automaten.</p>
+    <div class="tabs" role="tablist" id="stTabs"></div>
+    <div class="svgwrap" id="stSvg"></div>
+    <div class="ctx" id="stCtx"></div>
+    <div class="row" id="stEvents"></div>
+    <div class="log" id="stLog"></div>
+    <div class="fix" id="stFix" style="display:none"></div>
+  </div>
+  <button class="btn done-btn" data-done="st">Thema als gelernt markieren</button>
+</section>
+
+<!-- ================= SEQUENCE ================= -->
+<section class="page" id="p-seq" style="--c:var(--seq)">
+  <div class="topic-head"><div class="big-glyph" data-glyph="seq"></div><div><h2>Sequenzdiagramm</h2><p>Zeigt, welche Objekte sich in welcher zeitlichen Reihenfolge Nachrichten schicken. Die Zeit läuft von oben nach unten.</p></div></div>
+
+  <div class="block"><h3>Die Bausteine <span class="tag">antippen zum Erklären</span></h3>
+    <div class="notation" id="seqNotation"></div>
+    <div class="panel notation-out" id="seqNotationOut"></div>
+  </div>
+
+  <div class="block"><h3>Schritt für Schritt aufbauen</h3>
+    <p class="hint">Das Diagramm entsteht Nachricht für Nachricht – mit Erklärung, warum welcher Pfeil verwendet wird.</p>
+    <div class="tabs" role="tablist" id="seqTabs"></div>
+    <div class="row" id="seqOpts" style="margin-bottom:10px"></div>
+    <div class="svgwrap" id="seqSvg"></div>
+    <div class="seq-desc" id="seqDesc"></div>
+    <div class="row"><button class="btn" id="seqPrev">Zurück</button><button class="btn primary" id="seqNext">Nächste Nachricht</button><button class="btn ghost" id="seqAll">Alles zeigen</button><span class="muted small" id="seqCount"></span></div>
+    <div class="fix" id="seqFix" style="display:none"></div>
+  </div>
+  <button class="btn done-btn" data-done="seq">Thema als gelernt markieren</button>
+</section>
+
+<!-- ================= REQUIREMENTS ================= -->
+<section class="page" id="p-req" style="--c:var(--req)">
+  <div class="topic-head"><div class="big-glyph" data-glyph="req"></div><div><h2>Anforderungen</h2><p>Lastenheft, Pflichtenheft, Anforderungen formulieren und erheben.</p></div></div>
+
+  <div class="block"><h3>Lastenheft oder Pflichtenheft? <span class="score-pill" id="lhScore">0 / 0</span></h3>
+    <p class="hint">Sortiere die Karte. Tastatur: Pfeil links = Lastenheft, Pfeil rechts = Pflichtenheft.</p>
+    <div class="deck" id="lhDeck"></div>
+    <div class="row" style="justify-content:center;margin-bottom:16px"><button class="btn" id="lhL">Lastenheft</button><button class="btn" id="lhR">Pflichtenheft</button><button class="btn ghost" id="lhRestart">Neu starten</button></div>
+    <div class="bins"><div class="bin"><h4>Lastenheft – WAS & WOFÜR</h4><p class="small muted" style="margin:0 0 6px">vom Auftraggeber</p><ul id="binL"></ul></div><div class="bin"><h4>Pflichtenheft – WIE & WOMIT</h4><p class="small muted" style="margin:0 0 6px">vom Auftragnehmer</p><ul id="binR"></ul></div></div>
+  </div>
+
+  <div class="block"><h3>Anforderungs-Satzschablone</h3>
+    <p class="hint">Baue eine saubere Systemanforderung zum Wochenbericht-Tool aus deiner Aufgabe. Jede Farbe ist ein Baustein der Schablone.</p>
+    <div class="req req-grid" id="reqBuilder"></div>
+    <div class="sentence" id="reqOut"></div>
+    <p class="small muted" id="reqNote" style="margin-top:10px"></p>
+  </div>
+
+  <div class="block"><h3>Erhebungstechniken bewerten</h3>
+    <p class="hint">Tippe auf eine Zelle, um zwischen niedrig, mittel und hoch zu wechseln. „Vergleichen“ zeigt eine Musterbewertung – eine Abweichung um eine Stufe ist meist gut begründbar.</p>
+    <div class="svgwrap" style="padding:6px"><table class="matrix" id="mx"></table></div>
+    <div class="row" style="margin-top:12px"><button class="btn primary" id="mxCheck">Vergleichen</button><button class="btn ghost" id="mxReset">Leeren</button><span class="small muted" id="mxMsg"></span></div>
+    <div id="mxInfo" style="margin-top:14px"></div>
+  </div>
+
+  <div class="block"><h3>Kontrollfragen zum Pflichtenheft <span class="tag">Karte umdrehen</span></h3>
+    <div class="flips" id="flips"></div>
+  </div>
+  <button class="btn done-btn" data-done="req">Thema als gelernt markieren</button>
+</section>
+
+<!-- ================= QUIZ ================= -->
+<section class="page" id="p-quiz" style="--c:var(--ok)">
+  <div class="topic-head"><div class="big-glyph" data-glyph="quiz"></div><div><h2>Quiz</h2><p>10 zufällige Fragen aus den gewählten Themen. Jede Antwort wird sofort erklärt.</p></div></div>
+  <div class="quiz-top" id="quizTopics"></div>
+  <div class="qbox" id="qbox"></div>
+</section>
+</main>
+</div>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <marker id="mOpen" viewBox="0 0 10 10" refX="9.6" refY="5" markerWidth="11" markerHeight="11" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0.5 L10,5 L0,9.5" fill="none" stroke="#E7EEF8" stroke-width="1.5"/></marker>
+    <marker id="mFill" viewBox="0 0 10 10" refX="9.6" refY="5" markerWidth="11" markerHeight="11" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0.5 L10,5 L0,9.5 z" fill="#E7EEF8"/></marker>
+    <marker id="mTri" viewBox="0 0 12 12" refX="11.4" refY="6" markerWidth="15" markerHeight="15" markerUnits="userSpaceOnUse" orient="auto"><path d="M0.8,0.8 L11.4,6 L0.8,11.2 z" fill="#14223A" stroke="#E7EEF8" stroke-width="1.4"/></marker>
+    <marker id="mDia" viewBox="0 0 20 10" refX="19.5" refY="5" markerWidth="22" markerHeight="11" markerUnits="userSpaceOnUse" orient="auto"><path d="M0.7,5 L10,0.7 L19.3,5 L10,9.3 z" fill="#14223A" stroke="#E7EEF8" stroke-width="1.4"/></marker>
+    <marker id="mDiaF" viewBox="0 0 20 10" refX="19.5" refY="5" markerWidth="22" markerHeight="11" markerUnits="userSpaceOnUse" orient="auto"><path d="M0.7,5 L10,0.7 L19.3,5 L10,9.3 z" fill="#E7EEF8" stroke="#E7EEF8" stroke-width="1.4"/></marker>
+  </defs>
+</svg>
+<script>
+/* =====================================================================
+   Helpers
+   ===================================================================== */
+const $ = (s, el=document) => el.querySelector(s);
+const $$ = (s, el=document) => [...el.querySelectorAll(s)];
+const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+const shuffle = a => { a = a.slice(); for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]];} return a; };
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+function svg(w, h, inner, extra=''){
+  return `<svg class="dg" viewBox="0 0 ${w} ${h}" width="${w}" ${extra} xmlns="http://www.w3.org/2000/svg">${inner}</svg>`;
+}
+function txt(x, y, label, cls='', anchor='middle', lh=15){
+  const lines = String(label).split('\n');
+  const y0 = y - (lines.length-1)*lh/2;
+  return `<text x="${x}" y="${y0}" text-anchor="${anchor}" dominant-baseline="middle" class="${cls}">` +
+    lines.map((l,i)=>`<tspan x="${x}" dy="${i?lh:0}">${esc(l)}</tspan>`).join('') + `</text>`;
+}
+function stick(x, y, label){
+  return `<circle class="shape" cx="${x}" cy="${y-30}" r="9"/>
+  <path class="shape" d="M${x},${y-21} V${y+4} M${x-16},${y-12} H${x+16} M${x},${y+4} L${x-13},${y+24} M${x},${y+4} L${x+13},${y+24}"/>
+  ${txt(x, y+40, label)}`;
+}
+
+/* ---------- storage (per-viewer convenience only) ---------- */
+const KEY = 'sen-block3-v1';
+let store = { done:{}, best:null };
+try { const raw = localStorage.getItem(KEY); if(raw) store = Object.assign(store, JSON.parse(raw)); } catch(e){}
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify(store)); }catch(e){} }
+
+/* ---------- glyphs ---------- */
+const GLYPHS = {
+  home:'<rect x="4" y="4" width="10" height="10" rx="2"/><rect x="18" y="4" width="10" height="10" rx="5"/><rect x="4" y="18" width="10" height="10" rx="5"/><rect x="18" y="18" width="10" height="10" rx="2"/>',
+  uc:'<circle cx="6" cy="8" r="3"/><path d="M6 11v7M2 14h8M6 18l-3.5 6M6 18l3.5 6"/><ellipse cx="22" cy="16" rx="8.5" ry="5.5"/><path d="M10 15h3.5"/>',
+  act:'<circle cx="16" cy="3.5" r="2.5" fill="currentColor"/><rect x="8" y="9" width="16" height="7" rx="3.5"/><path d="M16 6v3M16 16v2.5"/><path d="M16 18.5l4.5 4.5-4.5 4.5-4.5-4.5z"/>',
+  cls:'<rect x="5" y="4" width="22" height="24" rx="1.5"/><path d="M5 11h22M5 20h22M9 15h10M9 24h8"/>',
+  st:'<rect x="2" y="6" width="12" height="9" rx="4"/><rect x="18" y="17" width="12" height="9" rx="4"/><path d="M14 10c6 0 10 2 10 7"/><path d="M21.5 14.5l2.5 2.5 2.5-2.5"/>',
+  seq:'<rect x="2" y="3" width="10" height="6" rx="1"/><rect x="20" y="3" width="10" height="6" rx="1"/><path d="M7 9v20M25 9v20" stroke-dasharray="2 2"/><path d="M7 16h17M21 13.5l3 2.5-3 2.5"/><path d="M25 23H8" stroke-dasharray="2 2"/>',
+  req:'<path d="M8 3h12l6 6v20H8z"/><path d="M20 3v6h6M12 15h10M12 19h10M12 23h7"/>',
+  quiz:'<circle cx="16" cy="16" r="12"/><path d="M10.5 16.5l4 4 7-8"/>'
+};
+$$('[data-glyph]').forEach(el => el.innerHTML = `<svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${GLYPHS[el.dataset.glyph]}</svg>`);
+
+/* ---------- navigation & progress ---------- */
+const TOPICS = [
+  {id:'uc', c:'var(--uc)', t:'Use-Case-Diagramm', d:'Akteure, include/extend, Bankgeschäft, 5 Prüfungsaufgaben'},
+  {id:'act', c:'var(--act)', t:'Aktivitätsdiagramm', d:'Token-Simulation Rechnungseingang, Bewässerungs-Puzzle'},
+  {id:'cls', c:'var(--cls)', t:'Klassendiagramm', d:'Beziehungen, Multiplizitäten, Bäckerei-Baukasten, Verein'},
+  {id:'st', c:'var(--st)', t:'Zustandsdiagramm', d:'Drehkreuz, Kasse, Ladegerät, Anrufbeantworter, Immobilie'},
+  {id:'seq', c:'var(--seq)', t:'Sequenzdiagramm', d:'Nachrichtentypen, alt/opt/par, vier Abläufe zum Aufbauen'},
+  {id:'req', c:'var(--req)', t:'Anforderungen', d:'Lasten- vs. Pflichtenheft, Satzschablone, Erhebungstechniken'},
+];
+$('#topicMap').innerHTML = TOPICS.map(t => `<button data-go="${t.id}" style="--c:${t.c}"><span class="g">${$(`[data-glyph="${t.id}"]`).innerHTML}</span><span><b>${t.t}</b><span>${t.d}</span><span class="state" data-state="${t.id}"></span></span></button>`).join('')
+  + `<button data-go="quiz" style="--c:var(--ok)"><span class="g">${$('[data-glyph="quiz"]').innerHTML}</span><span><b>Quiz</b><span>${'Gemischte Fragen aus allen Themen mit Erklärungen'}</span><span class="state" id="mapQuiz"></span></span></button>`;
+
+function renderProgress(){
+  const n = TOPICS.filter(t => store.done[t.id]).length;
+  $('#progTxt').textContent = `${n} / ${TOPICS.length}`;
+  $('#progBar').style.width = (n/TOPICS.length*100)+'%';
+  TOPICS.forEach(t => {
+    $$(`[data-chk="${t.id}"]`).forEach(c => c.classList.toggle('on', !!store.done[t.id]));
+    const s = $(`[data-state="${t.id}"]`); if(s) s.textContent = store.done[t.id] ? 'Als gelernt markiert' : '';
+    const b = $(`[data-done="${t.id}"]`); if(b) b.textContent = store.done[t.id] ? 'Markierung entfernen' : 'Thema als gelernt markieren';
+  });
+  $('#bestTxt').textContent = store.best==null ? '–' : store.best+' %';
+  $('#mapQuiz').textContent = store.best==null ? '' : `Bestes Ergebnis: ${store.best} %`;
+}
+$$('[data-done]').forEach(b => b.addEventListener('click', () => { const id=b.dataset.done; store.done[id]=!store.done[id]; save(); renderProgress(); }));
+
+function go(id, push=true){
+  if(!$('#p-'+id)) id = 'start';
+  $$('.page').forEach(p => p.classList.toggle('on', p.id === 'p-'+id));
+  $$('.nav-btn').forEach(b => b.setAttribute('aria-current', b.dataset.go===id ? 'page' : 'false'));
+  if(push) history.replaceState(null, '', '#'+id);
+  window.scrollTo({top:0, behavior: reduced ? 'auto' : 'smooth'});
+  const nb = $(`.nav-btn[data-go="${id}"]`); if(nb && innerWidth<900) nb.scrollIntoView({inline:'center', block:'nearest'});
+  if(id==='quiz' && !quizStarted) quizIntro();
+}
+document.addEventListener('click', e => { const g = e.target.closest('[data-go]'); if(g){ go(g.dataset.go); } });
+
+/* ---------- notation explorer ---------- */
+function notation(boxId, outId, items){
+  const box = $('#'+boxId), out = $('#'+outId);
+  box.innerHTML = items.map((it,i)=>`<button aria-pressed="false" data-i="${i}">${svg(140,54,it.svg,'preserveAspectRatio="xMidYMid meet"')}<span>${it.n}</span></button>`).join('');
+  const show = i => {
+    $$('button', box).forEach(b => b.setAttribute('aria-pressed', b.dataset.i==i));
+    out.innerHTML = `<h4>${items[i].n}</h4><p class="small" style="margin:0">${items[i].t}</p>`;
+  };
+  box.addEventListener('click', e => { const b = e.target.closest('button'); if(b) show(+b.dataset.i); });
+  show(0);
+}
+
+/* ---------- multiple-choice trainer ---------- */
+function trainer(boxId, scoreId, items){
+  const box = $('#'+boxId); let right=0, total=0;
+  box.innerHTML = items.map((it,i)=>`<div class="tcard" data-i="${i}"><div class="q">${it.q}</div>
+    <div class="opts">${it.opts.map((o,j)=>`<button data-j="${j}">${o}</button>`).join('')}</div>
+    <div class="res">${it.exp}</div></div>`).join('');
+  box.addEventListener('click', e => {
+    const b = e.target.closest('.opts button'); if(!b) return;
+    const card = b.closest('.tcard'), it = items[card.dataset.i], j = +b.dataset.j;
+    total++; if(j===it.a){ right++; b.classList.add('right'); } else { b.classList.add('wrong'); $(`[data-j="${it.a}"]`, card).classList.add('right'); }
+    card.classList.add('done'); $('#'+scoreId).textContent = `${right} / ${total}`;
+  });
+}
+
+/* =====================================================================
+   USE CASE
+   ===================================================================== */
+const UCN = [
+  {n:'Akteur', svg:`<g transform="translate(14,6) scale(.8)">${stick(70,36,'').replace(/<text[\s\S]*<\/text>/,'')}</g>`,
+   t:'Eine <strong>Rolle</strong> außerhalb des Systems, die mit ihm interagiert: Person (Kunde, Admin) oder externes System (Schufa, E-Mail-System, Kreditkarten-Schnittstelle). Steht immer <em>außerhalb</em> der Systemgrenze.'},
+  {n:'Systemgrenze', svg:'<rect class="bound" x="20" y="6" width="100" height="42" rx="2"/><text class="lbl" x="28" y="20">System</text>',
+   t:'Großes Rechteck mit dem Systemnamen. Alles darin leistet das System, alles außerhalb ist Umgebung. Wichtig, um den <strong>Scope</strong> (Funktionsumfang) abzugrenzen.'},
+  {n:'Anwendungsfall', svg:`<ellipse class="shape" cx="70" cy="27" rx="56" ry="18"/>${txt(70,27,'Album ändern')}`,
+   t:'Horizontale Ellipse innerhalb der Systemgrenze. Beschreibt ein <strong>Ziel</strong> des Akteurs, formuliert als Substantiv + Verb: „Artikel bestellen“, „Passwort zurücksetzen“.'},
+  {n:'Assoziation', svg:'<line class="stroke" x1="14" y1="27" x2="126" y2="27"/>',
+   t:'Durchgezogene Linie zwischen Akteur und Anwendungsfall: Die beiden kommunizieren. Optional mit Stereotyp «communicate» und Multiplizitäten (z. B. 1 zu 1).'},
+  {n:'«include»', svg:'<line class="stroke dash" x1="14" y1="34" x2="124" y2="34" marker-end="url(#mOpen)"/><text class="lbl" x="70" y="22" text-anchor="middle">«include»</text>',
+   t:'Gestrichelter Pfeil <strong>von der Basis zum Teil</strong>. Der Teil-Use-Case wird <em>immer</em> ausgeführt („ohne Zahlung kein Kauf“). Typische Signalwörter: muss, immer, dabei findet statt, ist erforderlich.'},
+  {n:'«extend»', svg:'<line class="stroke dash" x1="14" y1="34" x2="124" y2="34" marker-end="url(#mOpen)"/><text class="lbl" x="70" y="22" text-anchor="middle">«extend»</text>',
+   t:'Gestrichelter Pfeil <strong>von der Erweiterung zur Basis</strong>. Die Erweiterung passiert nur <em>manchmal</em>. Die Bedingung kann als Notiz oder in eckigen Klammern dran stehen, z. B. [Erstanmeldung]. Signalwörter: kann, optional, bei Bedarf, falls.'},
+  {n:'Generalisierung', svg:'<line class="stroke" x1="14" y1="27" x2="124" y2="27" marker-end="url(#mTri)"/>',
+   t:'Durchgezogene Linie mit <strong>leerem Dreieck</strong> zum allgemeinen Element. Geht zwischen Akteuren („Admin kann alles, was der Mitarbeiter kann“: Admin ──▷ Mitarbeiter) und zwischen Use Cases (Girokonto eröffnen ──▷ Konto eröffnen). Das Speziellere erbt alle Beziehungen.'},
+  {n:'Notiz', svg:'<path class="shape" d="M30,8 H100 L112,20 V46 H30 Z M100,8 V20 H112"/><text class="lbl" x="71" y="32" text-anchor="middle">Bedingung</text>',
+   t:'Rechteck mit Eselsohr, per gestrichelter Linie angehängt. Ideal für die Bedingung eines extend oder Hinweise wie „Nur Firmenkunden“.'}
+];
+notation('ucNotation','ucNotationOut', UCN);
+
+/* mini relation drawing for the trainer */
+function miniRel(a, b, k, aActor=false, bActor=false, cond=''){
+  const W=600, H=90, ax=110, bx=490, y=48;
+  const node = (x,l,act) => act ? `<g transform="translate(0,-6)">${stick(x,y,l)}</g>` : `<ellipse class="shape" cx="${x}" cy="${y}" rx="92" ry="26"/>${txt(x,y,l)}`;
+  const x1 = aActor ? ax+26 : ax+92, x2 = bActor ? bx-26 : bx-92;
+  const line = k==='ge' ? `<line class="stroke" x1="${x1}" y1="${y}" x2="${x2}" y2="${y}" marker-end="url(#mTri)"/>`
+             : `<line class="stroke dash" x1="${x1}" y1="${y}" x2="${x2}" y2="${y}" marker-end="url(#mOpen)"/><text class="lbl" x="${(x1+x2)/2}" y="${y-12}" text-anchor="middle">«${k==='in'?'include':'extend'}»${cond?' '+cond:''}</text>`;
+  return `<div class="svgwrap" style="padding:4px">${svg(W, aActor||bActor?120:H, node(ax,a,aActor)+node(bx,b,bActor)+line)}</div>`;
+}
+const IE = [
+  {q:'„Ohne Zahlung kein Kauf.“ Beziehung zwischen <b>Produkt kaufen</b> und <b>Zahlung abwickeln</b>?', a:0, rel:['Produkt kaufen','Zahlung abwickeln','in'], why:'Zahlen passiert bei jedem Kauf – also include, Pfeil von der Basis zum Teil.'},
+  {q:'„Rabattcode einlösen ist optional.“ <b>Zahlung abwickeln</b> und <b>Rabattcode einlösen</b>?', a:1, rel:['Rabattcode einlösen','Zahlung abwickeln','ex'], why:'Nur manchmal – extend. Der Pfeil startet bei der Erweiterung und zeigt auf die Basis.'},
+  {q:'Bilderverwaltung: „Beim Ändern <b>müssen</b> Bilder editiert werden.“', a:0, rel:['Album ändern','Bild editieren','in'], why:'„müssen“ = immer = include.'},
+  {q:'Bilderverwaltung: „Beim neu Erstellen können <b>bei Bedarf</b> schon Bilder editiert werden.“', a:1, rel:['Bild editieren','Album erstellen','ex'], why:'„bei Bedarf“ = optional = extend, Pfeil von Bild editieren zu Album erstellen.'},
+  {q:'Statistikabfragen: „Premiumstatistiken abrufen – dazu ist ein Login erforderlich.“', a:0, rel:['Premiumstatistik abrufen','Login','in'], why:'„erforderlich“ = immer = include.'},
+  {q:'„Falls die Login-Daten nicht vorliegen (Erstanmeldung), muss der Nutzer die Daten eingeben.“', a:1, rel:['Daten eingeben','Login','ex','[Erstanmeldung]'], why:'Obwohl „muss“ im Satz steht: Es passiert nur <em>falls</em> die Daten fehlen. Die Bedingung macht es zum extend.'},
+  {q:'Kino: „Die Kreditkarte kann <b>bei Bedarf</b> einer automatischen Prüfung unterzogen werden.“', a:1, rel:['Automatische Prüfung','Mit Kreditkarte zahlen','ex'], why:'„bei Bedarf“ – extend.'},
+  {q:'Schlüsselsystem: „Türen öffnen. Dabei findet <b>immer</b> eine Berechtigungsprüfung statt.“', a:0, rel:['Tür öffnen','Berechtigungsprüfung','in'], why:'„immer“ – include. Mehrere Use Cases dürfen denselben Teil inkludieren.'},
+  {q:'„Der Administrator kann alles, was ein Mitarbeiter kann. Zusätzlich …“', a:2, rel:['Administrator','Mitarbeiter','ge',true,true], why:'Generalisierung zwischen Akteuren. Das Dreieck zeigt auf den allgemeineren Akteur (Mitarbeiter). Der Admin erbt alle Use Cases des Mitarbeiters.'},
+  {q:'Platzreservierung: „Zudem können <b>optional</b> Sonderwünsche angegeben werden.“', a:1, rel:['Sonderwünsche angeben','Reservierungsdaten angeben','ex'], why:'„optional“ – extend.'}
+].map(x => ({q:x.q, a:x.a, opts:['«include»','«extend»','Generalisierung'],
+  exp:`<p class="small" style="margin:0 0 8px">${x.why}</p>${miniRel(x.rel[0],x.rel[1],x.rel[2],x.rel[3]===true,x.rel[4]===true, typeof x.rel[3]==='string'?x.rel[3]:'')}`}));
+trainer('ieTrainer','ieScore', IE);
+
+/* ---------- generic use case renderer ---------- */
+function ucSize(n){ const L = n.l.split('\n'); const m = Math.max(...L.map(s=>s.length)); return {rx: n.rx || Math.max(56, m*3.6+20), ry: n.ry || (L.length>1 ? 30 : 23)}; }
+function ucAnchor(n, o){
+  const c = n.t==='a' ? {x:n.x, y:n.y+(o.t==='a'?4:-6)} : {x:n.x, y:n.y};
+  const {rx, ry} = n.t==='a' ? {rx:24, ry:(o.t==='a'?48:38)} : ucSize(n);
+  const dx = o.x - c.x, dy = (o.t==='a'? o.y+4 : o.y) - c.y;
+  const t = 1/Math.sqrt(dx*dx/(rx*rx) + dy*dy/(ry*ry));
+  return {x: c.x + dx*t, y: c.y + dy*t};
+}
+function ucDiagram(spec){
+  const by = {}; spec.nodes.forEach(n => by[n.id] = n);
+  let s = '';
+  if(spec.b){ const b=spec.b; s += `<rect class="bound" x="${b.x}" y="${b.y}" width="${b.w}" height="${b.h}" rx="3"/><text class="lbl" x="${b.x+10}" y="${b.y+18}">${esc(b.l)}</text>`; }
+  spec.edges.forEach(e => {
+    const A = by[e.f], B = by[e.t];
+    if(e.via){ const v=e.via, p=ucAnchor(A,{x:v[0][0],y:v[0][1]}), q=ucAnchor(B,{x:v[v.length-1][0],y:v[v.length-1][1]});
+      s += `<g class="edge" data-f="${e.f}" data-t="${e.t}"><polyline class="stroke" points="${[[p.x,p.y],...v,[q.x,q.y]].map(a=>a.map(n=>n.toFixed?n.toFixed(1):n).join(',')).join(' ')}"/></g>`; return; }
+    const p = ucAnchor(A,B), q = ucAnchor(B,A);
+    const dash = (e.k==='in'||e.k==='ex') ? ' dash' : '';
+    const mk = e.k==='ge' ? 'url(#mTri)' : (dash ? 'url(#mOpen)' : '');
+    let lab = '';
+    if(dash || e.l){
+      const mx=(p.x+q.x)/2, my=(p.y+q.y)/2, len=Math.hypot(q.x-p.x,q.y-p.y)||1;
+      const nx=-(q.y-p.y)/len, ny=(q.x-p.x)/len, off=e.off ?? 11;
+      const t = e.l ?? `«${e.k==='in'?'include':'extend'}»`;
+      lab = txt(mx+nx*off, my+ny*off, t, 'lbl');
+    }
+    s += `<g class="edge" data-f="${e.f}" data-t="${e.t}"><line class="stroke${dash}" x1="${p.x.toFixed(1)}" y1="${p.y.toFixed(1)}" x2="${q.x.toFixed(1)}" y2="${q.y.toFixed(1)}" ${mk?`marker-end="${mk}"`:''}/>${lab}</g>`;
+  });
+  spec.nodes.forEach(n => {
+    if(n.t==='a') s += `<g class="node actor" data-id="${n.id}">${stick(n.x,n.y,n.l)}</g>`;
+    else if(n.t==='note') s += `<g class="node"><path class="shape" d="M${n.x},${n.y} h${n.w-12} l12,12 v${n.h-12} h-${n.w} z"/>${txt(n.x+n.w/2,n.y+n.h/2,n.l,'lbl')}</g>`;
+    else { const {rx,ry} = ucSize(n); s += `<g class="node uc" data-id="${n.id}"><ellipse class="shape" cx="${n.x}" cy="${n.y}" rx="${rx}" ry="${ry}"/>${txt(n.x,n.y,n.l)}</g>`; }
+  });
+  return svg(spec.w, spec.h, s);
+}
+
+/* ---------- Bankgeschäft ---------- */
+const BANK = {w:780, h:480, b:{x:150,y:12,w:470,h:456,l:'Bankgeschäft'},
+  nodes:[
+    {id:'kb',t:'a',x:70,y:100,l:'Kundenberater'},{id:'sa',t:'a',x:70,y:340,l:'Schalter-\nangestellter'},
+    {id:'ku',t:'a',x:705,y:80,l:'Kunde'},{id:'ab',t:'a',x:705,y:235,l:'Anlage-\nberater'},{id:'sc',t:'a',x:705,y:390,l:'Schufa'},
+    {id:'antrag',t:'u',x:375,y:62,l:'Antrag\nausfüllen'},{id:'konto',t:'u',x:345,y:170,l:'Konto\neröffnen'},
+    {id:'aktien',t:'u',x:530,y:160,l:'Aktien-\nberatung',rx:60},
+    {id:'spar',t:'u',x:240,y:290,l:'Sparbuch\neröffnen',rx:62},{id:'giro',t:'u',x:385,y:300,l:'Girokonto\neröffnen',rx:62},{id:'depot',t:'u',x:535,y:290,l:'Depotkonto\neröffnen',rx:62},
+    {id:'geld',t:'u',x:250,y:415,l:'Geld\neinzahlen',rx:58},{id:'schufa',t:'u',x:440,y:415,l:'Schufa-\nAuskunft',rx:58}
+  ],
+  edges:[
+    {f:'kb',t:'konto',k:'as'},{f:'ku',t:'antrag',k:'as'},{f:'ku',t:'aktien',k:'as'},{f:'ab',t:'aktien',k:'as'},
+    {f:'sa',t:'geld',k:'as'},{f:'ku',t:'geld',k:'as',via:[[640,458],[250,458]]},{f:'sc',t:'schufa',k:'as'},
+    {f:'konto',t:'antrag',k:'in'},{f:'spar',t:'konto',k:'ge'},{f:'giro',t:'konto',k:'ge'},{f:'depot',t:'konto',k:'ge'},
+    {f:'depot',t:'aktien',k:'in',off:14},{f:'spar',t:'geld',k:'in',off:-12},{f:'geld',t:'giro',k:'ex',off:16},{f:'giro',t:'schufa',k:'in',off:14},{f:'depot',t:'schufa',k:'in',off:12}
+  ]};
+$('#bankSvg').innerHTML = ucDiagram(BANK);
+(function(){
+  const by = {}; BANK.nodes.forEach(n => by[n.id]=n);
+  const name = id => by[id].l.replace(/-\n(?=[A-ZÄÖÜ])/,'-').replace('-\n','').replace('\n',' ');
+  function involve(start){
+    const ucs = {}, actors = {};
+    (function visit(u, mode, path){
+      if(ucs[u]==='zwingend' || (ucs[u] && mode==='optional')) return;
+      ucs[u] = mode;
+      BANK.edges.forEach(e => {
+        if(e.k==='as' && e.t===u){ const a=e.f; if(!actors[a] || (actors[a].mode==='optional' && mode==='zwingend')) actors[a] = {mode, why:[...path, `direkt mit »${name(u)}« verbunden`]}; }
+        if(e.k==='in' && e.f===u) visit(e.t, mode, [...path, `inkludiert »${name(e.t)}«`]);
+        if(e.k==='ge' && e.f===u) visit(e.t, mode, [...path, `erbt von »${name(e.t)}«`]);
+        if(e.k==='ex' && e.t===u) visit(e.f, 'optional', [...path, `kann erweitert werden um »${name(e.f)}«`]);
+      });
+    })(start, 'zwingend', []);
+    return {ucs, actors};
+  }
+  const root = $('#bankSvg svg');
+  root.addEventListener('click', e => {
+    const g = e.target.closest('.node.uc'); if(!g) return;
+    const id = g.dataset.id, {ucs, actors} = involve(id);
+    root.classList.add('focus');
+    $$('.node', root).forEach(n => { const k=n.dataset.id; n.classList.remove('hl','hl2');
+      const m = ucs[k] || (actors[k] && actors[k].mode); if(m) n.classList.add(m==='zwingend'?'hl':'hl2'); });
+    $$('.edge', root).forEach(ed => { const on = (ucs[ed.dataset.f]||actors[ed.dataset.f]) && (ucs[ed.dataset.t]||actors[ed.dataset.t]); ed.classList.toggle('on', !!on); });
+    const list = Object.entries(actors).sort((a,b)=> (a[1].mode>b[1].mode?-1:1));
+    $('#bankOut').innerHTML = `<h4>${name(id)}</h4>` + (list.length ? `<ul class="small" style="padding-left:1.1em;margin:0">` +
+      list.map(([a,v]) => `<li style="margin:.45em 0"><strong style="color:${v.mode==='zwingend'?'var(--uc)':'var(--warn)'}">${name(a)}</strong> <span class="muted">(${v.mode})</span><br>${esc(v.why.join(' → '))}</li>`).join('') + '</ul>'
+      : '<p class="small muted">Kein Akteur beteiligt.</p>') + `<p class="small muted" style="margin:.8em 0 0">Klick auf eine andere Ellipse, um weiterzuspielen.</p>`;
+  });
+})();
+
+/* ---------- solutions ---------- */
+const UC_SOL = [
+  {t:'Bilderverwaltung', src:'Übung', spec:{w:720,h:340,b:{x:150,y:12,w:555,h:318,l:'Bilderverwaltung'},
+    nodes:[{id:'b',t:'a',x:70,y:85,l:'Benutzer'},{id:'a',t:'a',x:70,y:255,l:'Autor'},
+      {id:'an',t:'u',x:270,y:70,l:'Album anzeigen'},{id:'ed',t:'u',x:280,y:255,l:'Album editieren'},
+      {id:'er',t:'u',x:450,y:150,l:'Album erstellen'},{id:'ae',t:'u',x:460,y:290,l:'Album ändern'},{id:'bi',t:'u',x:620,y:220,l:'Bild\neditieren',rx:58}],
+    edges:[{f:'b',t:'an',k:'as'},{f:'a',t:'ed',k:'as'},{f:'a',t:'b',k:'ge'},{f:'er',t:'ed',k:'ge'},{f:'ae',t:'ed',k:'ge'},{f:'bi',t:'er',k:'ex',off:-12},{f:'ae',t:'bi',k:'in',off:14}]},
+   txt:'Autor erbt per Generalisierung alles vom Benutzer. „Entweder erstellen oder ändern“ → beide sind Spezialisierungen von „Album editieren“.'},
+  {t:'Statistikabfragen', src:'IHK Wi 2014/15', spec:{w:720,h:380,b:{x:160,y:12,w:545,h:356,l:'Statistikabfragen'},
+    nodes:[{id:'p',t:'a',x:70,y:70,l:'Premiumnutzer'},{id:'n',t:'a',x:70,y:200,l:'Nutzer'},{id:'ad',t:'a',x:70,y:320,l:'Administrator'},
+      {id:'ps',t:'u',x:310,y:70,l:'Premiumstatistik\nabrufen'},{id:'ss',t:'u',x:310,y:200,l:'Standardstatistik\nabrufen'},{id:'at',t:'u',x:310,y:320,l:'Admin-Tools\nabrufen'},
+      {id:'lo',t:'u',x:540,y:200,l:'Login'},{id:'de',t:'u',x:570,y:70,l:'Daten\neingeben',rx:56}],
+    edges:[{f:'p',t:'n',k:'ge'},{f:'p',t:'ps',k:'as'},{f:'n',t:'ss',k:'as'},{f:'ad',t:'at',k:'as'},{f:'ad',t:'ss',k:'as'},
+      {f:'ps',t:'lo',k:'in'},{f:'at',t:'lo',k:'in',off:-12},{f:'de',t:'lo',k:'ex',l:'«extend»\n[Erstanmeldung]',off:-44}]},
+   txt:'Der Administrator kann <em>nur</em> Standardstatistiken – er braucht also eine Verbindung zu „Standardstatistik abrufen“ (in deiner Lösung fehlt die). Premiumnutzer erbt vom Nutzer die Standardstatistik.'},
+  {t:'Kino', src:'Übung', spec:{w:720,h:430,b:{x:130,y:12,w:470,h:406,l:'Kino'},
+    nodes:[{id:'g',t:'a',x:60,y:180,l:'Gast'},{id:'k',t:'a',x:665,y:180,l:'Kassierer'},
+      {id:'vb',t:'u',x:260,y:65,l:'Kinokarten vorbestellen'},{id:'kk',t:'u',x:260,y:185,l:'Kinokarten kaufen'},{id:'pc',t:'u',x:260,y:305,l:'Popcorn und Getränke\nbestellen'},
+      {id:'re',t:'u',x:470,y:185,l:'Rechnung bezahlen',rx:72},{id:'kr',t:'u',x:470,y:290,l:'Mit Kreditkarte\nzahlen',rx:68},{id:'pr',t:'u',x:470,y:385,l:'Automatische\nPrüfung',rx:60}],
+    edges:[{f:'g',t:'kk',k:'as'},{f:'k',t:'re',k:'as'},{f:'vb',t:'kk',k:'ex',off:-36},{f:'pc',t:'kk',k:'ex',off:-36},{f:'kk',t:'re',k:'in'},{f:'kr',t:'re',k:'ex',off:-34},{f:'pr',t:'kr',k:'ex',off:-34}]},
+   txt:'„können vorbestellt sein“, „möglich“, „bei Bedarf“ → drei extends. „Danach bezahlt“ gehört zu jedem Kauf → include.'},
+  {t:'Ferienhausvermietung', src:'IHK So2012 GA1', spec:{w:700,h:470,b:{x:140,y:12,w:545,h:446,l:'Ferienhaus-Buchung'},
+    nodes:[{id:'v',t:'a',x:60,y:110,l:'Vermieter'},{id:'k',t:'a',x:60,y:330,l:'Kunde'},
+      {id:'e',t:'u',x:300,y:55,l:'Ferienhaus einstellen'},{id:'r',t:'u',x:300,y:160,l:'Ferienhaus reservieren'},{id:'b',t:'u',x:560,y:160,l:'Reservierungs-\nbestätigung senden',rx:72},
+      {id:'s',t:'u',x:300,y:265,l:'Ferienhaus suchen'},{id:'p',t:'u',x:300,y:345,l:'Verfügbarkeit prüfen'},{id:'a',t:'u',x:300,y:425,l:'Reservierungsauftrag stellen'}],
+    edges:[{f:'v',t:'e',k:'as'},{f:'v',t:'r',k:'as'},{f:'r',t:'b',k:'in'},{f:'k',t:'s',k:'as'},{f:'k',t:'p',k:'as'},{f:'k',t:'a',k:'as'}]},
+   txt:'Wie die „richtige Lösung“ in deiner Mitschrift: jede Zeile der Aufgabe ein Use Case, „reserviert … und verschickt“ → include für die Bestätigung. Vorsicht vor Ketten aus include-Pfeilen, die einen <em>Ablauf</em> darstellen – das ist Aufgabe des Aktivitätsdiagramms.'},
+  {t:'Schlüsselsystem', src:'IHK AP1 Herbst 2024', spec:{w:640,h:310,b:{x:140,y:12,w:485,h:286,l:'Schlüsselsystem'},
+    nodes:[{id:'m',t:'a',x:60,y:90,l:'Mitarbeiter'},{id:'a',t:'a',x:60,y:250,l:'Administrator'},
+      {id:'o',t:'u',x:280,y:55,l:'Tür öffnen'},{id:'s',t:'u',x:280,y:140,l:'Tür schließen'},{id:'p',t:'u',x:280,y:250,l:'Türschlösser\nprogrammieren'},{id:'b',t:'u',x:520,y:150,l:'Berechtigungs-\nprüfung',rx:64}],
+    edges:[{f:'m',t:'o',k:'as'},{f:'m',t:'s',k:'as'},{f:'a',t:'p',k:'as'},{f:'a',t:'m',k:'ge'},{f:'o',t:'b',k:'in'},{f:'s',t:'b',k:'in',off:-11},{f:'p',t:'b',k:'in',off:-12}]},
+   txt:'Deine Lösung stimmt. „Öffnen / schließen“ in eine Ellipse zu schreiben ist erlaubt, zwei getrennte Use Cases sind aber sauberer.'}
+];
+$('#ucSolutions').innerHTML = UC_SOL.map(s => `<details class="sol"><summary><span>${s.t} <span class="src">${s.src}</span></span></summary><div class="body"><div class="svgwrap">${ucDiagram(s.spec)}</div><p class="small" style="margin-top:10px">${s.txt}</p></div></details>`).join('');
+</script>
+<script>
+/* =====================================================================
+   ACTIVITY
+   ===================================================================== */
+notation('actNotation','actNotationOut',[
+  {n:'Startknoten', svg:'<circle cx="70" cy="27" r="11" fill="#E7EEF8"/>', t:'Gefüllter Kreis. Hier liegt zu Beginn der Token. Genau ein Start pro Aktivität (üblich).'},
+  {n:'Aktion', svg:`<rect class="shape" x="20" y="10" width="100" height="34" rx="12"/>${txt(70,27,'Betrag prüfen')}`, t:'Abgerundetes Rechteck mit einer Tätigkeit, formuliert als Verb: „Rechnung archivieren“, „Füllstand abfragen“.'},
+  {n:'Kontrollfluss', svg:'<line class="stroke" x1="14" y1="27" x2="126" y2="27" marker-end="url(#mOpen)"/>', t:'Pfeil, der die Reihenfolge festlegt. Der Token wandert entlang dieser Pfeile.'},
+  {n:'Entscheidung', svg:'<line class="stroke" x1="70" y1="-6" x2="70" y2="8" marker-end="url(#mOpen)"/><path class="shape" d="M70,9 L88,27 L70,45 L52,27z"/><line class="stroke" x1="88" y1="27" x2="128" y2="27" marker-end="url(#mOpen)"/><line class="stroke" x1="52" y1="27" x2="12" y2="27" marker-end="url(#mOpen)"/><text class="lbl" x="108" y="18" text-anchor="middle">[ja]</text><text class="lbl" x="32" y="18" text-anchor="middle">[nein]</text>', t:'Raute mit <strong>einem</strong> Eingang und mehreren Ausgängen. An jedem Ausgang steht ein <strong>Guard</strong> in eckigen Klammern, z. B. [Betrag ≥ 1.000 €]. Die Guards müssen sich gegenseitig ausschließen.'},
+  {n:'Zusammenführung', svg:'<path class="shape" d="M70,9 L88,27 L70,45 L52,27z"/><line class="stroke" x1="12" y1="27" x2="52" y2="27" marker-end="url(#mOpen)"/><line class="stroke" x1="128" y1="27" x2="88" y2="27" marker-end="url(#mOpen)"/>', t:'Auch eine Raute (Merge), aber mit mehreren Eingängen und einem Ausgang. Führt <em>alternative</em> Wege wieder zusammen und wartet <em>nicht</em>.'},
+  {n:'Gabelung (Fork)', svg:'<rect x="30" y="24" width="80" height="6" fill="#E7EEF8"/><line class="stroke" x1="70" y1="2" x2="70" y2="23" marker-end="url(#mOpen)"/><line class="stroke" x1="45" y1="31" x2="45" y2="52" marker-end="url(#mOpen)"/><line class="stroke" x1="95" y1="31" x2="95" y2="52" marker-end="url(#mOpen)"/>', t:'Schwarzer Balken: Ein Fluss teilt sich in <strong>parallele</strong> Stränge („gleichzeitig“, „parallel“ in der Aufgabe).'},
+  {n:'Vereinigung (Join)', svg:'<rect x="30" y="24" width="80" height="6" fill="#E7EEF8"/><line class="stroke" x1="45" y1="2" x2="45" y2="23" marker-end="url(#mOpen)"/><line class="stroke" x1="95" y1="2" x2="95" y2="23" marker-end="url(#mOpen)"/><line class="stroke" x1="70" y1="31" x2="70" y2="52" marker-end="url(#mOpen)"/>', t:'Balken, der <strong>wartet</strong>, bis alle parallelen Stränge angekommen sind („nach Abschluss der Aktionen …“).'},
+  {n:'Aktivitätsende', svg:'<circle cx="70" cy="27" r="13" fill="none" stroke="#E7EEF8" stroke-width="1.6"/><circle cx="70" cy="27" r="8" fill="#E7EEF8"/>', t:'Kreis mit Punkt: Die <strong>gesamte</strong> Aktivität endet – alle Tokens verschwinden.'},
+  {n:'Ablaufende', svg:'<circle cx="70" cy="27" r="13" fill="none" stroke="#E7EEF8" stroke-width="1.6"/><path class="stroke" d="M61,18 L79,36 M79,18 L61,36"/>', t:'Kreis mit X: Nur <strong>dieser eine</strong> Strang endet, andere parallele Stränge laufen weiter.'},
+  {n:'Partition (Swimlane)', svg:'<rect class="bound" x="10" y="6" width="120" height="42"/><line class="stroke" x1="70" y1="6" x2="70" y2="48"/><text class="lbl" x="40" y="20" text-anchor="middle">Kunde</text><text class="lbl" x="100" y="20" text-anchor="middle">System</text>', t:'Bahnen, die zeigen, <em>wer</em> eine Aktion ausführt (z. B. „System“ wie in deiner Bewässerungslösung).'}
+]);
+
+/* ---------- token simulation: Rechnungseingang ---------- */
+(function(){
+  const A = (id,x,y,w,l) => `<g class="act-node" id="n-${id}"><rect class="shape" x="${x-w/2}" y="${y-18}" width="${w}" height="36" rx="13"/>${txt(x,y,l)}</g>`;
+  const D = (id,x,y) => `<g class="act-node" id="n-${id}"><path class="shape" d="M${x},${y-18} L${x+18},${y} L${x},${y+18} L${x-18},${y}z"/></g>`;
+  const E = [
+    'M300,40 V72','M300,108 V142','M300,178 V207',
+    'M282,225 H60 V412','M300,243 V282','M282,300 H170 V342','M318,300 H430 V505 H318',
+    'M170,378 V412','M152,430 H78','M170,448 V505 H282',
+    'M60,448 V487','M60,523 V556','M300,523 V547',
+    'M230,553 V587','M380,553 V587','M230,623 V657','M380,623 V657','M300,663 V691'
+  ];
+  let s = E.map((d,i)=>`<path id="e${i}" class="stroke flow" d="${d}" marker-end="url(#mOpen)"/>`).join('');
+  s += `<g class="act-node" id="n-start"><circle class="shape" cx="300" cy="30" r="10" style="fill:#E7EEF8"/></g>`;
+  s += A('a1',300,90,170,'Rechnungseingang') + A('a2',300,160,190,'Automatische Prüfung');
+  s += D('d1',300,225) + D('d2',300,300) + A('a4',170,360,150,'Manuelle Prüfung') + D('d3',170,430) + D('mr',60,430) + D('m1',300,505);
+  s += A('rej',60,505,110,'Ablehnung');
+  s += `<g class="act-node" id="n-endR"><circle class="shape" cx="60" cy="570" r="13" style="fill:none"/><circle cx="60" cy="570" r="8" fill="#E7EEF8"/></g>`;
+  s += `<g class="act-node" id="n-fork"><rect class="shape" x="200" y="547" width="210" height="6" style="fill:#E7EEF8"/></g>`;
+  s += A('pay',230,605,140,'Rechnung bezahlen') + A('arch',380,605,150,'Rechnung archivieren');
+  s += `<g class="act-node" id="n-join"><rect class="shape" x="200" y="657" width="210" height="6" style="fill:#E7EEF8"/></g>`;
+  s += `<g class="act-node" id="n-end"><circle class="shape" cx="300" cy="705" r="13" style="fill:none"/><circle cx="300" cy="705" r="8" fill="#E7EEF8"/></g>`;
+  s += [[180,215,'[nicht ok]'],[322,264,'[ok]','start'],[214,290,'[≥ 1.000 €]'],[378,290,'[< 1.000 €]'],[115,420,'[nicht ok]'],[178,472,'[ok]','start']]
+        .map(g => txt(g[0],g[1],g[2],'lbl',g[3]||'middle')).join('');
+  s += `<circle id="tk1" class="token" r="7" cx="300" cy="30" opacity="0"/><circle id="tk2" class="token" r="7" cx="300" cy="30" opacity="0"/>`;
+  $('#invSvg').innerHTML = svg(470, 730, s, 'style="width:100%;max-width:470px"');
+
+  const root = $('#invSvg svg'), ch = $('#invChoices');
+  let running = false;
+  const say = (t, x) => { $('#invTitle').textContent = t; $('#invText').innerHTML = x; };
+  const node = id => $('#n-'+id, root);
+  function active(id){ $$('.act-node', root).forEach(n => n.classList.remove('active')); if(id){ node(id).classList.add('active','visited'); } }
+  function mv(tk, ei){
+    const p = $('#e'+ei, root), L = p.getTotalLength(), t = $('#'+tk, root), dur = reduced ? 1 : Math.max(380, L*3.2);
+    t.setAttribute('opacity', 1); p.classList.add('visited');
+    return new Promise(res => { const t0 = performance.now();
+      (function f(now){ const k = Math.min(1,(now-t0)/dur), pt = p.getPointAtLength(L*k); t.setAttribute('cx',pt.x); t.setAttribute('cy',pt.y); k<1 ? requestAnimationFrame(f) : res(); })(t0); });
+  }
+  function choose(opts){ return new Promise(res => {
+    ch.innerHTML = opts.map((o,i)=>`<button class="btn" data-i="${i}">${o}</button>`).join('');
+    ch.onclick = e => { const b = e.target.closest('button'); if(!b) return; ch.onclick=null; ch.innerHTML=''; res(+b.dataset.i); };
+  });}
+  async function reject(){
+    active('mr'); say('Zusammenführung','Beide „nicht ok“-Wege laufen in einem Merge-Knoten zusammen, damit „Ablehnung“ nur einmal modelliert werden muss.'); await sleep(900);
+    await mv('tk1',10); active('rej'); say('Ablehnung','Die Rechnung wird abgelehnt.'); await sleep(800);
+    await mv('tk1',11); active('endR'); say('Aktivitätsende','Der Prozess ist beendet. Probier einen anderen Weg!'); finish();
+  }
+  function finish(){ running=false; ch.innerHTML = '<button class="btn primary" id="invAgain">Nochmal durchspielen</button>'; $('#invAgain').onclick = run; }
+  async function run(){
+    if(running) return; running = true;
+    $$('.visited', root).forEach(n => n.classList.remove('visited')); $('#tk2',root).setAttribute('opacity',0);
+    ch.innerHTML = ''; active('start'); say('Startknoten','Der Token liegt bereit.'); await sleep(500);
+    await mv('tk1',0); active('a1'); say('Aktion','Die Rechnung geht ein.'); await sleep(700);
+    await mv('tk1',1); active('a2'); say('Aktion','Die automatische Prüfung läuft.'); await sleep(700);
+    await mv('tk1',2); active('d1'); say('Entscheidung','War die automatische Prüfung ok? Wähle den Guard.');
+    if(await choose(['[ok]','[nicht ok]'])===1){ await mv('tk1',3); return reject(); }
+    await mv('tk1',4); active('d2'); say('Entscheidung','Ist der Betrag größer oder gleich 1.000 €? Hier entscheidet sich, ob manuell geprüft wird.');
+    if(await choose(['[≥ 1.000 €]','[< 1.000 €]'])===0){
+      await mv('tk1',5); active('a4'); say('Aktion','Manuelle Prüfung durch die Buchhaltung.'); await sleep(700);
+      await mv('tk1',7); active('d3'); say('Entscheidung','Ist die manuelle Prüfung ok?');
+      if(await choose(['[ok]','[nicht ok]'])===1){ await mv('tk1',8); return reject(); }
+      await mv('tk1',9);
+    } else await mv('tk1',6);
+    active('m1'); say('Zusammenführung (Merge)','Ob kleiner Betrag oder manuell geprüft: Beide Wege führen hier zusammen. Ein Merge wartet nicht.'); await sleep(1100);
+    await mv('tk1',12); active('fork'); say('Gabelung (Fork)','„… wird gleichzeitig bezahlt und archiviert“: Der Token teilt sich in zwei parallele Tokens.'); await sleep(900);
+    await Promise.all([mv('tk1',13), mv('tk2',14)]); $$('.act-node',root).forEach(n=>n.classList.remove('active')); node('pay').classList.add('active','visited'); node('arch').classList.add('active','visited');
+    say('Zwei Aktionen parallel','Bezahlen und Archivieren laufen gleichzeitig.'); await sleep(900);
+    await Promise.all([mv('tk1',15), mv('tk2',16)]); $('#tk2',root).setAttribute('opacity',0); active('join');
+    say('Vereinigung (Join)','Der Join wartet, bis <em>beide</em> Tokens angekommen sind, und lässt dann einen weiterlaufen.'); await sleep(1100);
+    await mv('tk1',17); active('end'); say('Aktivitätsende','Rechnung erfolgreich verarbeitet.'); finish();
+  }
+  $('#invStart').onclick = run;
+})();
+
+/* ---------- ordering puzzle ---------- */
+(function(){
+  const IC = {
+    start:'<circle cx="14" cy="11" r="7" fill="currentColor"/>',
+    bar:'<rect x="2" y="8" width="24" height="6" fill="currentColor"/>',
+    act:'<rect x="3" y="4" width="22" height="14" rx="6" fill="none" stroke="currentColor" stroke-width="1.8"/>',
+    par:'<rect x="1" y="5" width="12" height="12" rx="4" fill="none" stroke="currentColor" stroke-width="1.6"/><rect x="15" y="5" width="12" height="12" rx="4" fill="none" stroke="currentColor" stroke-width="1.6"/>',
+    dia:'<path d="M14,2 L23,11 L14,20 L5,11z" fill="none" stroke="currentColor" stroke-width="1.8"/>',
+    end:'<circle cx="14" cy="11" r="8" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="14" cy="11" r="4.5" fill="currentColor"/>'
+  };
+  const STEPS = [
+    ['start','Startknoten'],['bar','Fork: Datenerfassung aufteilen'],['par','Bodensensoren abrufen ∥ Wetterdaten abfragen'],
+    ['bar','Join: beide Abfragen fertig'],['act','Daten auswerten und Bewässerungsbedarf ermitteln'],
+    ['dia','Entscheidung: [keine Bewässerung nötig] → Ende'],['act','Wassermenge und Dauer berechnen'],['act','Füllstand des Tanks abfragen'],
+    ['dia','Entscheidung: [Füllstand < 30 %] → Warnmeldung'],['dia','Merge: Wege zusammenführen'],['bar','Fork: Bewässern und Informieren'],
+    ['par','Bewässerung durchführen ∥ Landwirt informieren'],['bar','Join: beide Aktionen abgeschlossen'],['act','Daten speichern'],['end','Aktivitätsende']
+  ];
+  const pool = $('#ordPool'), out = $('#ordOut'), msg = $('#ordMsg');
+  function reset(){
+    out.innerHTML = ''; msg.textContent = `0 / ${STEPS.length}`;
+    pool.innerHTML = shuffle(STEPS.map((s,i)=>({s,i}))).map(o => `<button class="it" data-i="${o.i}"><svg viewBox="0 0 28 22">${IC[o.s[0]]}</svg>${esc(o.s[1])}</button>`).join('');
+  }
+  pool.addEventListener('click', e => {
+    const b = e.target.closest('.it'); if(!b) return;
+    const need = out.children.length;
+    if(+b.dataset.i === need){ out.appendChild(b); msg.textContent = `${out.children.length} / ${STEPS.length}`;
+      if(out.children.length === STEPS.length) msg.innerHTML = '<strong style="color:var(--act)">Komplett!</strong> Genau diese Struktur hat die Musterlösung: Fork/Join zweimal, zwei Entscheidungen, ein Merge.';
+    } else { b.classList.remove('shake'); void b.offsetWidth; b.classList.add('shake'); }
+  });
+  $('#ordReset').onclick = reset; reset();
+})();
+</script>
+<script>
+/* =====================================================================
+   CLASS DIAGRAM
+   ===================================================================== */
+const box = (x,y,w,l) => `<rect class="shape" x="${x}" y="${y}" width="${w}" height="26"/>${txt(x+w/2,y+13,l)}`;
+notation('clsNotation','clsNotationOut',[
+  {n:'Assoziation', svg:`<line class="stroke" x1="14" y1="30" x2="126" y2="30"/><text class="lbl" x="22" y="22">1</text><text class="lbl" x="104" y="22">0..*</text><text class="lbl" x="70" y="46" text-anchor="middle">bestellt ▸</text>`,
+   t:'Einfache Linie: Objekte der Klassen kennen sich. An den Enden stehen <strong>Multiplizitäten</strong> (1, 0..1, *, 1..*), in der Mitte ein Name mit <strong>Leserichtung</strong> ▸ („Kunde bestellt ▸ Bestellung“). An den Enden können <strong>Rollen</strong> stehen, z. B. +Besitzer.'},
+  {n:'Navigierbarkeit', svg:`<line class="stroke" x1="14" y1="30" x2="126" y2="30" marker-end="url(#mOpen)"/><path class="stroke" d="M14,24 l8,12 M22,24 l-8,12"/>`,
+   t:'Offene Pfeilspitze = man kann in diese Richtung navigieren (das Objekt kennt das andere). Ein X am Ende = ausdrücklich <em>nicht</em> navigierbar. Beispiel Terminverwaltung: Konflikt ──▸ Termin, also kennt der Konflikt seine Termine, nicht umgekehrt.'},
+  {n:'Aggregation', svg:`<line class="stroke" x1="14" y1="30" x2="126" y2="30" marker-end="url(#mDia)"/><text class="lbl" x="18" y="22">Teil</text><text class="lbl" x="122" y="22" text-anchor="end">Ganzes</text>`,
+   t:'Leere Raute <strong>am Ganzen</strong>. „Hat-ein“-Beziehung mit schwacher Bindung: Das Teil kann auch ohne das Ganze existieren und zu mehreren Ganzen gehören. Mannschaft ◇── Spieler: Löscht man die Mannschaft, gibt es die Spieler weiter.'},
+  {n:'Komposition', svg:`<line class="stroke" x1="14" y1="30" x2="126" y2="30" marker-end="url(#mDiaF)"/><text class="lbl" x="18" y="22">Teil</text><text class="lbl" x="122" y="22" text-anchor="end">Ganzes</text>`,
+   t:'Gefüllte Raute <strong>am Ganzen</strong>. Starke Bindung: Das Teil gehört zu genau einem Ganzen und wird <strong>mit ihm gelöscht</strong>. Multiplizität am Ganzen ist daher immer 1 (oder 0..1). Konflikt ◆── Referenz: Wird der Konflikt gelöscht, sind die Referenzen weg.'},
+  {n:'Generalisierung', svg:`<line class="stroke" x1="14" y1="30" x2="126" y2="30" marker-end="url(#mTri)"/><text class="lbl" x="18" y="22">Unter</text><text class="lbl" x="122" y="22" text-anchor="end">Ober</text>`,
+   t:'Leeres Dreieck zeigt auf die <strong>Oberklasse</strong>. „Ist-ein“-Beziehung (Vererbung): Die Unterklasse erbt alle Attribute, Methoden und Beziehungen. Brot ist eine Backware.'},
+  {n:'Realisierung', svg:`<line class="stroke dash" x1="14" y1="30" x2="126" y2="30" marker-end="url(#mTri)"/><text class="lbl" x="122" y="20" text-anchor="end">«interface»</text>`,
+   t:'Gestrichelte Linie mit leerem Dreieck: Eine Klasse <strong>implementiert</strong> eine Schnittstelle (realize). Die Schnittstelle trägt den Stereotyp «interface» und enthält nur Methodensignaturen.'},
+  {n:'Nutzung «use»', svg:`<line class="stroke dash" x1="14" y1="30" x2="126" y2="30" marker-end="url(#mOpen)"/><text class="lbl" x="70" y="20" text-anchor="middle">«use»</text>`,
+   t:'Gestrichelter Pfeil mit offener Spitze: Abhängigkeit, eine Klasse <strong>nutzt</strong> eine Schnittstelle oder Klasse, ohne sie zu implementieren. Alternativ als Lollipop-Notation (Kreis = angeboten, Halbkreis = benötigt).'}
+]);
+
+/* ---------- multiplicities ---------- */
+(function(){
+  const PAIRS = [
+    {a:'Kunde', b:'Bestellung', ma:'1', mb:'0..*', v:'bestellt'},
+    {a:'Person', b:'Wohnadresse', ma:'0..1', mb:'1', v:'bewohnt'},
+    {a:'Bestellung_Detail', b:'Artikel', ma:'0..*', mb:'1', v:'besitzt'},
+    {a:'Konflikt', b:'Termin', ma:'*', mb:'2', v:'umfasst'}
+  ];
+  const M = ['1','0..1','*','0..*','1..*','2'];
+  const phrase = m => ({'1':'genau ein Objekt','0..1':'höchstens ein Objekt (oder keins)','*':'beliebig viele Objekte (auch keins)','0..*':'beliebig viele Objekte (auch keins)','1..*':'mindestens ein Objekt','2':'genau zwei Objekte'})[m];
+  const lab = $('#multLab');
+  lab.innerHTML = `<div class="row" id="multPairs">${PAIRS.map((p,i)=>`<button class="chip${i?'':' sel'}" data-i="${i}">${p.a} – ${p.b}</button>`).join('')}</div>
+    <div class="svgwrap" id="multSvg"></div>
+    <div class="row small"><label>Multiplizität am Ende von <b id="mA"></b>: <select id="selA">${M.map(m=>`<option>${m}</option>`).join('')}</select></label>
+      <label>am Ende von <b id="mB"></b>: <select id="selB">${M.map(m=>`<option>${m}</option>`).join('')}</select></label></div>
+    <div class="read" id="multRead"></div>`;
+  let cur = PAIRS[0];
+  function draw(pulse){
+    const A=cur.a, B=cur.b, ma=$('#selA').value, mb=$('#selB').value;
+    $('#mA').textContent=A; $('#mB').textContent=B;
+    $('#multSvg').innerHTML = svg(600,90, box(20,32,170,A)+box(410,32,170,B)+
+      `<line class="stroke" x1="190" y1="45" x2="410" y2="45"/>
+       <text x="${200}" y="34" style="font-weight:700;fill:var(--cls)">${ma}</text>
+       <text x="${400}" y="34" text-anchor="end" style="font-weight:700;fill:var(--cls)">${mb}</text>
+       <text class="lbl" x="300" y="64" text-anchor="middle">${cur.v} ▸</text>`);
+    $('#multRead').innerHTML = `<p style="margin:0 0 .4em">Zu jedem Objekt <b>${A}</b> gibt es <mark>${phrase(mb)}</mark> vom Typ <b>${B}</b>. <span class="muted small">(Zahl rechts, bei ${B})</span></p>
+      <p style="margin:0">Zu jedem Objekt <b>${B}</b> gibt es <mark>${phrase(ma)}</mark> vom Typ <b>${A}</b>. <span class="muted small">(Zahl links, bei ${A})</span></p>`;
+  }
+  function pick(i){ cur = PAIRS[i]; $('#selA').value=cur.ma; $('#selB').value=cur.mb; $$('#multPairs .chip').forEach(c=>c.classList.toggle('sel', c.dataset.i==i)); draw(); }
+  $('#multPairs').onclick = e => { const b=e.target.closest('.chip'); if(b) pick(+b.dataset.i); };
+  $('#selA').onchange = draw; $('#selB').onchange = draw;
+  pick(0);
+  lab.insertAdjacentHTML('afterend', `<div class="fix"><h4>Check deiner Mitschrift: Terminverwaltung</h4><ul>
+    <li><b>Aussage 2</b> „Von einem Termin aus kann auf seinen Konflikt geschlossen werden“: Die Pfeilspitze zeigt nur von Konflikt zu Termin – navigierbar ist also nur Konflikt → Termin. Die übliche Musterlösung lautet <strong>falsch</strong>.</li>
+    <li><b>Aussage 12</b> „Wird ein Termineintrag gelöscht, werden alle zugehörigen Referenzen gelöscht“: Die Komposition (gefüllte Raute) besteht zwischen <em>Konflikt</em> und Referenz, nicht zwischen Termin und Referenz → <strong>falsch</strong>.</li>
+    <li>KD Bestellung, Aussage 6: Richtig ist „Nein“ – die Begründung ist aber nicht „keine Generalisierung“ allein, sondern: Bei einer Aggregation werden keine Attribute weitergegeben; Status und Datum gehören nur der Bestellung.</li>
+  </ul></div>`);
+})();
+
+/* ---------- bakery drag & drop ---------- */
+(function(){
+  const ATTR = [
+    ['- bezeichnung: String','back'],['- verkaufspreis: double','back'],['- kuehltemperatur: double','kond'],['- mindesthaltbarkeit: Date','kond'],
+    ['- gewicht: double','brot'],['- mehlsorte: String','brot'],['- abkuehldauer: int','fruh'],['- salzgehalt: double','salz'],
+    ['- zuckergehalt: double','suess'],['- lagertemperatur: double','suess']
+  ];
+  const C = (id, name, abs, kids) => `<div class="ctree"><div class="cbox"><div class="${abs?'abs':''}">${abs?'<span class="muted small" style="font-weight:400;font-style:normal">«abstract»</span><br>':''}${name}</div><div class="drop" data-cls="${id}"></div><div></div></div>${kids?`<div class="tri"></div><div class="stem"></div><div class="kids">${kids}</div>`:''}</div>`;
+  const tree = C('back','Backware',true, C('kond','Konditoreiware') + C('brot','Brot') + C('fruh','Frühstücksbackwerk',true, C('salz','Salzbackware') + C('suess','Süßbackware')));
+  const pool = $('#bakPool'), host = $('#bakTree');
+  let sel = null;
+  function reset(){
+    host.innerHTML = tree; sel = null; $('#bakMsg').textContent = '';
+    pool.innerHTML = shuffle(ATTR).map(([a,t]) => `<span class="attr-chip" draggable="true" tabindex="0" data-t="${t}">${esc(a)}</span>`).join('');
+  }
+  function select(ch){ $$('.attr-chip').forEach(c=>c.classList.remove('sel')); sel = ch; if(ch) ch.classList.add('sel'); }
+  function place(zone){ if(!sel) return; sel.classList.remove('good','badc'); zone.appendChild(sel); select(null); }
+  document.addEventListener('click', e => {
+    if(!e.target.closest('#p-cls')) return;
+    const ch = e.target.closest('.attr-chip');
+    if(ch){ select(sel===ch?null:ch); return; }
+    const zone = e.target.closest('#bakTree .drop, #bakPool');
+    if(zone && sel) place(zone);
+  });
+  document.addEventListener('keydown', e => { const ch = e.target.closest && e.target.closest('.attr-chip'); if(ch && (e.key==='Enter'||e.key===' ')){ e.preventDefault(); select(ch);} });
+  let dragged = null;
+  document.addEventListener('dragstart', e => { const ch = e.target.closest && e.target.closest('.attr-chip'); if(ch){ dragged = ch; e.dataTransfer.setData('text/plain','x'); } });
+  document.addEventListener('dragover', e => { const z = e.target.closest && e.target.closest('#bakTree .drop, #bakPool'); if(z && dragged){ e.preventDefault(); z.classList.add('over'); } });
+  document.addEventListener('dragleave', e => { const z = e.target.closest && e.target.closest('.drop'); if(z) z.classList.remove('over'); });
+  document.addEventListener('drop', e => { const z = e.target.closest && e.target.closest('#bakTree .drop, #bakPool'); if(z && dragged){ e.preventDefault(); z.classList.remove('over'); select(dragged); place(z); dragged=null; } });
+  $('#bakCheck').onclick = () => {
+    let ok=0, placed=0;
+    $$('#bakTree .attr-chip').forEach(c => { placed++; const g = c.parentElement.dataset.cls === c.dataset.t; c.classList.toggle('good',g); c.classList.toggle('badc',!g); if(g) ok++; });
+    const left = $$('#bakPool .attr-chip').length;
+    $('#bakMsg').innerHTML = ok===ATTR.length ? '<strong style="color:var(--ok)">Perfekt!</strong> Bezeichnung und Preis stehen nur einmal ganz oben, abkuehldauer bei Frühstücksbackwerk – genau dafür ist Generalisierung da.'
+      : `${ok} von ${placed} platzierten richtig${left?`, ${left} noch im Vorrat`:''}. Rote Attribute antippen und neu zuordnen.`;
+  };
+  $('#bakReset').onclick = reset; reset();
+})();
+
+/* ---------- Verein ---------- */
+function miniCls(a, b, k, label=''){
+  const mk = {as:'', ag:'url(#mDia)', ko:'url(#mDiaF)', ge:'url(#mTri)'}[k];
+  return `<div class="svgwrap" style="padding:4px">${svg(520,70, box(10,22,170,a)+box(340,22,170,b)+`<line class="stroke" x1="340" y1="35" x2="180" y2="35" ${mk?`marker-end="${mk}"`:''}/>${label?`<text class="lbl" x="260" y="27" text-anchor="middle">${label}</text>`:''}`)}</div>`;
+}
+trainer('verTrainer','verScore', [
+  {q:'„Ein Verein besteht aus mehreren Mannschaften.“ <b>Verein – Mannschaft</b>', a:2, x:['Verein','Mannschaft','ko'], w:'Eine Mannschaft gehört genau zu einem Verein und existiert nicht ohne ihn – Komposition, gefüllte Raute am Verein.'},
+  {q:'„Jede Mannschaft besteht aus einer Anzahl Spielern.“ <b>Mannschaft – Spieler</b>', a:1, x:['Mannschaft','Spieler','ag'], w:'Spieler gibt es auch ohne die Mannschaft (Wechsel, Vereinslosigkeit) – Aggregation, leere Raute an der Mannschaft.'},
+  {q:'„Mannschaften sind z. B. eine Fußballmannschaft …“ <b>Fußballmannschaft – Mannschaft</b>', a:3, x:['Mannschaft','Fußballmannschaft','ge'], w:'„ist eine“ – Generalisierung. Das Dreieck zeigt auf Mannschaft.'},
+  {q:'„Ein Trainer trainiert eine Mannschaft.“ <b>Trainer – Mannschaft</b>', a:0, x:['Trainer','Mannschaft','as','trainiert ▸'], w:'Keine Teil-Ganzes-Beziehung, sondern eine Rolle/Tätigkeit – einfache Assoziation mit Leserichtung.'},
+  {q:'„In einem Fußballturnier gibt es mehrere Gruppen.“ <b>Turnier – Gruppe</b>', a:2, x:['Turnier','Gruppe','ko'], w:'Eine Gruppe existiert nur innerhalb ihres Turniers – Komposition.'},
+  {q:'„… Gruppen, die aus mehreren Fußballmannschaften zusammengesetzt sind.“ <b>Gruppe – Fußballmannschaft</b>', a:1, x:['Gruppe','Fußballmannschaft','ag'], w:'Die Mannschaft existiert auch nach dem Turnier weiter – Aggregation.'}
+].map(i => ({q:i.q, a:i.a, opts:['Assoziation','Aggregation','Komposition','Generalisierung'],
+  exp:`<p class="small" style="margin:0 0 8px">${i.w}</p>${miniCls(i.x[0],i.x[1],i.x[2],i.x[3]||'')}`})));
+
+/* ---------- Versicherungsobjekt ---------- */
+$('#versSol').innerHTML = `<div class="treewrap"><div class="ctree">
+  <div class="cbox"><div><span class="muted small" style="font-weight:400">«abstract»</span><br><span class="abs">Versicherungsobjekt</span></div>
+   <div>neupreis: double<br>baujahr: int<br>schadenshoehe: double</div><div><span class="abs">restwertBerechnen(): double</span><br>auszahlen(): void</div></div>
+  <div class="tri"></div><div class="stem"></div><div class="kids">
+   <div class="ctree"><div class="cbox"><div>KFZ</div><div>hersteller: String<br>typschluessel: String<br>laufleistung: int</div><div>restwertBerechnen(): double</div></div></div>
+   <div class="ctree"><div class="cbox"><div>Immobilie</div><div>wohnflaeche: double<br>lagebewertung: int</div><div>restwertBerechnen(): double<br>getLagebewertung(): int</div></div></div>
+  </div></div></div>
+  <p class="small" style="margin-top:12px">Gemeinsame Attribute (neupreis, baujahr, schadenshoehe) und die gleich funktionierende Methode auszahlen() wandern nach oben. Weil die Restwertberechnung <em>unterschiedlich</em> ist, steht restwertBerechnen() in der Oberklasse als <strong>abstrakte</strong> Methode (kursiv) und wird in beiden Unterklassen überschrieben. Damit wird auch Versicherungsobjekt abstrakt. getLagebewertung() gibt es nur bei der Immobilie.</p>`;
+</script>
+<script>
+/* =====================================================================
+   STATE MACHINES
+   ===================================================================== */
+notation('stNotation','stNotationOut',[
+  {n:'Zustand', svg:`<rect class="shape" x="25" y="11" width="90" height="32" rx="12"/>${txt(70,27,'gesperrt')}`, t:'Abgerundetes Rechteck. Beschreibt eine Situation, in der das Objekt eine Weile verharrt: gesperrt, eingabebereit, reserviert. Name meist als Adjektiv oder Partizip.'},
+  {n:'Interne Aktivitäten', svg:`<rect class="shape" x="20" y="3" width="100" height="48" rx="10"/>${txt(70,13,'Störzustand')}<line class="stroke" x1="20" y1="22" x2="120" y2="22"/>${txt(70,36,'entry / Alarm an','lbl')}`, t:'<code>entry /</code> beim Betreten, <code>do /</code> solange der Zustand aktiv ist (piepen, pulsMessen), <code>exit /</code> beim Verlassen (Lautsprecher aus).'},
+  {n:'Startzustand', svg:'<circle cx="34" cy="27" r="9" fill="#E7EEF8"/><line class="stroke" x1="43" y1="27" x2="106" y2="27" marker-end="url(#mOpen)"/>', t:'Gefüllter Kreis mit Pfeil zum ersten Zustand. Am Pfeil darf eine Aktion stehen, z. B. „/ Gesamtpreis = 0“.'},
+  {n:'Endzustand', svg:'<circle cx="70" cy="27" r="13" fill="none" stroke="#E7EEF8" stroke-width="1.6"/><circle cx="70" cy="27" r="8" fill="#E7EEF8"/>', t:'Kreis mit Punkt. Das Objekt hat seinen Lebenszyklus beendet (Nachricht gelöscht, Vertrag unterschrieben).'},
+  {n:'Transition', svg:'<line class="stroke" x1="12" y1="34" x2="128" y2="34" marker-end="url(#mOpen)"/><text class="lbl" x="70" y="22" text-anchor="middle">Münze [1 €] / entsperren</text>', t:'Pfeil von Zustand zu Zustand mit <code>Ereignis [Guard] / Aktion</code>. Ereignis = was passiert, Guard = Bedingung, die zusätzlich gelten muss, Aktion = was beim Übergang getan wird.'},
+  {n:'Selbsttransition', svg:'<rect class="shape" x="35" y="24" width="70" height="26" rx="10"/><path class="stroke" d="M58,24 C48,-4 92,-4 82,24" marker-end="url(#mOpen)"/>', t:'Pfeil, der zum selben Zustand zurückführt: Ereignis wird verarbeitet, Zustand bleibt (Preis eingeben, weitere Anfrage). Achtung: exit und entry werden dabei erneut ausgeführt.'}
+]);
+
+const ST_SPECS = [
+ {id:'dreh', name:'Drehkreuz', w:700, h:410,
+  states:[{id:'ges',x:170,y:290,w:140,h:50,l:'gesperrt'},{id:'ent',x:530,y:290,w:140,h:50,l:'entsperrt'},
+          {id:'stoer',x:350,y:112,w:170,h:74,l:'Störzustand',inner:['entry / Alarm an','exit / Alarm aus'],
+           entry:c=>{c.alarm=true;return 'entry: Alarm an';}, exit:c=>{c.alarm=false;return 'exit: Alarm aus';}}],
+  init:{x:36,y:290,to:'ges'},
+  events:[['c1','1-€-Münze einwerfen'],['cx','Andere Münze einwerfen'],['pass','Durchgehen'],['key','Reset mit Schlüssel']],
+  tr:[
+   {f:'ges',t:'ent',ev:['c1'],l:'Münze [1 €] / entsperren',bend:-34,ly:-12},
+   {f:'ent',t:'ges',ev:['pass'],l:'durchgehen / sperren',bend:-34,ly:14},
+   {f:'ges',t:'ges',ev:['cx'],loop:'bottom',l:'Münze [≠ 1 €] / auswerfen'},
+   {f:'ent',t:'ent',ev:['c1','cx'],loop:'bottom',l:'Münze / zurückgeben'},
+   {f:'ges',t:'stoer',ev:['pass'],l:'durchgehen ohne Münze',bend:-24,lx:-78,ly:-6},
+   {f:'stoer',t:'ges',ev:['key'],l:'Reset mit Schlüssel',bend:-24,lx:74,ly:12},
+   {f:'stoer',t:'stoer',ev:['c1','cx'],loop:'top',l:'Münze / auswerfen'}],
+  ctx:()=>({alarm:false}), view:c=>`<span><span class="lamp ${c.alarm?'on':''}"></span> Alarm ${c.alarm?'an':'aus'}</span>`,
+  fix:'<h4>Check deiner Mitschrift</h4><ul><li>Statt „ohne Einwurf durchgehen \\ Alarm an“ <em>und</em> entry „Alarm an“ reicht eines von beiden – sonst wird der Alarm doppelt ausgelöst. Hier übernimmt das entry.</li><li>Aktionen mit <code>/</code> statt <code>\\</code> schreiben.</li></ul>'},
+ {id:'kasse', name:'Supermarktkasse', w:700, h:290,
+  states:[{id:'ein',x:230,y:170,w:170,h:52,l:'Eingabebereit'},{id:'lade',x:530,y:170,w:170,h:52,l:'Geldlade geöffnet'}],
+  init:{x:24,y:170,to:'ein',l:'/ gesamt = 0',ly:-14,a:c=>{c.total=0;}},
+  events:[['p','Preis eingeben'],['k','Taste „Kassieren“'],['z','Geldlade schließen']],
+  tr:[
+   {f:'ein',t:'ein',ev:['p'],loop:'top',l:'Preis eingeben / gesamt += preis',a:c=>{const p=Math.round((Math.random()*9+.49)*100)/100; c.total+=p; return `Preis ${p.toFixed(2).replace('.',',')} € addiert`;}},
+   {f:'ein',t:'lade',ev:['k'],l:'Kassieren / gesamt anzeigen, Lade öffnen',bend:-34,lx:30,ly:-14,a:c=>{c.shown=true; return `Anzeige: ${c.total.toFixed(2).replace('.',',')} €`;}},
+   {f:'lade',t:'ein',ev:['z'],l:'Lade schließen / gesamt = 0',bend:-34,ly:14,a:c=>{c.total=0;c.shown=false; return 'gesamt = 0';}}],
+  ctx:()=>({total:0,shown:false}), view:c=>`<span>Gesamtpreis <span class="val">${c.total.toFixed(2).replace('.',',')} €</span></span><span class="muted small">${c.shown?'wird angezeigt':''}</span>`,
+  fix:'<h4>Hinweis</h4><ul><li>Der Startpfeil darf eine Aktion tragen („/ gesamt = 0“) – so ist klar, dass die Kasse beim Start bei 0 beginnt. Dein Guard [Preis &gt; 0] ist eine sinnvolle Ergänzung.</li></ul>'},
+ {id:'lade', name:'E-Bike-Ladegerät', w:700, h:420,
+  states:[{id:'nicht',x:220,y:120,w:150,h:50,l:'nichtLadend'},{id:'norm',x:510,y:120,w:150,h:50,l:'normalLadend'},{id:'schn',x:510,y:320,w:150,h:50,l:'schnellLadend'}],
+  init:{x:36,y:120,to:'nicht',l:'Einschalten',ly:-12},
+  events:[['m','1 Minute vergeht']],
+  before:c=>{ if(c.cur==='norm') c.L=Math.min(100,c.L+3); if(c.cur==='schn') c.L=Math.min(100,c.L+9); },
+  tr:[
+   {f:'nicht',t:'nicht',ev:['m'],loop:'bottom',l:'[L < 20 %] / Akku defekt',g:c=>c.L<20,a:()=>'Akku defekt gemeldet'},
+   {f:'nicht',t:'norm',ev:['m'],l:'[20 % ≤ L < 100 %]',bend:-30,ly:-12,g:c=>c.L>=20&&c.L<100},
+   {f:'norm',t:'nicht',ev:['m'],l:'[L = 100 %]',bend:-30,ly:14,g:c=>c.L>=100},
+   {f:'norm',t:'schn',ev:['m'],l:'[L < 80 %]',bend:-30,lx:58,g:c=>c.L<80},
+   {f:'schn',t:'norm',ev:['m'],l:'[L ≥ 80 %]',bend:-30,lx:-58,g:c=>c.L>=80}],
+  ctx:()=>({L:45}),
+  view:c=>`<span>Ladestand <span class="val" data-lv>${c.L} %</span></span><label class="small muted">Akku tauschen: <input type="range" min="0" max="100" value="${c.L}" data-l></label><button class="btn ghost" data-auto>${c.run?'Zeit anhalten':'Zeit laufen lassen'}</button>`,
+  fix:'<h4>Check deiner Mitschrift</h4><ul><li>Die Selbsttransitionen bei normalLadend und schnellLadend sind nicht nötig: Trifft kein Guard zu, bleibt der Automat sowieso im Zustand. Nur „Akku defekt“ braucht eine, weil dort eine Aktion passiert.</li><li>Bei 100 % bleibt das Gerät in nichtLadend, weil [20 % ≤ L &lt; 100 %] nicht mehr zutrifft – probier es aus.</li></ul>'},
+ {id:'ab', name:'Anrufbeantworter', w:720, h:450,
+  states:[{id:'auf',x:160,y:390,w:170,h:46,l:'In Aufzeichnung'},
+          {id:'neu',x:160,y:255,w:170,h:62,l:'Neu',inner:['do / piepen']},
+          {id:'wie',x:160,y:100,w:210,h:84,l:'Wiedergabe',inner:['entry / Lautsprecher an','exit / Lautsprecher aus'],entry:c=>{c.spk=true;return 'entry: Lautsprecher an';},exit:c=>{c.spk=false;return 'exit: Lautsprecher aus';}},
+          {id:'alt',x:540,y:100,w:150,h:46,l:'Alt'},{id:'del',x:540,y:270,w:150,h:46,l:'Gelöscht'}],
+  finals:[{id:'F',x:540,y:390}],
+  init:{x:40,y:390,to:'auf'},
+  events:[['r','Aufzeichnung beendet'],['p','Wiedergabetaste'],['e','Wiedergabe zu Ende'],['d','Löschtaste']],
+  tr:[
+   {f:'auf',t:'neu',ev:['r'],l:'Aufzeichnung beendet',lx:78},
+   {f:'neu',t:'wie',ev:['p'],l:'Wiedergabetaste',lx:62},
+   {f:'wie',t:'alt',ev:['e'],l:'Wiedergabe zu Ende',bend:-26,ly:-12},
+   {f:'alt',t:'wie',ev:['p'],l:'Wiedergabetaste',bend:-26,ly:14},
+   {f:'neu',t:'del',ev:['d'],l:'Löschtaste',ly:14},
+   {f:'wie',t:'del',ev:['d'],l:'Löschtaste',lx:20,ly:-12},
+   {f:'alt',t:'del',ev:['d'],l:'Löschtaste',lx:44},
+   {f:'del',t:'F',ev:['auto'],l:''}],
+  ctx:()=>({spk:false}), view:c=>`<span><span class="lamp ${c.cur==='neu'?'on':''}" style="${c.cur==='neu'?'background:var(--st);box-shadow:0 0 12px var(--st)':''}"></span> piept</span><span><span class="lamp" style="${c.spk?'background:var(--ok);box-shadow:0 0 12px var(--ok)':''}"></span> Lautsprecher ${c.spk?'an':'aus'}</span>`,
+  fix:'<h4>Hinweis</h4><ul><li>„Solange neu, piept er“ → <code>do / piepen</code>. „Vorher Lautsprecher ein, danach aus“ → <code>entry</code> und <code>exit</code> im Wiedergabe-Zustand. Deine Lösung trifft das genau.</li></ul>'},
+ {id:'immo', name:'Immobilie', w:860, h:510,
+  states:[{id:'ver',x:170,y:375,w:150,h:46,l:'Verfügbar'},{id:'anf',x:170,y:110,w:150,h:46,l:'Angefragt'},
+          {id:'res',x:500,y:242,w:200,h:66,l:'Reserviert',inner:['entry / Bestätigung senden'],entry:()=> 'entry: Reservierungsbestätigung gesendet'},
+          {id:'vk',x:750,y:242,w:130,h:46,l:'Verkauft'}],
+  finals:[{id:'F',x:750,y:390}],
+  init:{x:170,y:480,to:'ver',l:'zum Verkauf freigegeben',lx:92},
+  events:[['a','Anfrage'],['r','Reservierung'],['z','Reservierung zurücknehmen'],['v','Verkaufen'],['s','Vertrag unterschreiben']],
+  tr:[
+   {f:'ver',t:'anf',ev:['a'],l:'Anfrage /\nInfomaterial senden',lx:-78,a:c=>{c.n++;return 'Infomaterial verschickt';}},
+   {f:'anf',t:'anf',ev:['a'],loop:'top',l:'Anfrage / Infomaterial senden',a:c=>{c.n++;return 'Infomaterial verschickt';}},
+   {f:'ver',t:'res',ev:['r'],l:'Reservierung',bend:40,ly:20},
+   {f:'res',t:'ver',ev:['z'],l:'zurücknehmen\n[keine Anfragen]',bend:40,lx:-14,ly:-24,g:c=>c.n===0},
+   {f:'anf',t:'res',ev:['r'],l:'Reservierung\n(Anfragen bleiben)',bend:-40,lx:30,ly:-22},
+   {f:'res',t:'anf',ev:['z'],l:'zurücknehmen\n[Anfragen vorhanden]',bend:-40,lx:-30,ly:24,g:c=>c.n>0},
+   {f:'res',t:'vk',ev:['v'],l:'verkaufen',ly:-12},
+   {f:'vk',t:'F',ev:['s'],l:'Vertrag\nunterschrieben',lx:-54}],
+  ctx:()=>({n:0}), view:c=>`<span>Anfragen <span class="val">${c.n}</span></span>`,
+  fix:'<h4>Hinweis</h4><ul><li>Weil „Anfragen bei einer Reservierung bestehen bleiben“, braucht die Rücknahme zwei Transitionen mit Guards – zurück nach Angefragt oder Verfügbar. Das hast du richtig erkannt.</li><li>Nur <strong>eine</strong> Reservierung ist möglich: Im Zustand Reserviert gibt es deshalb keine Transition für ein weiteres Reservierungs-Ereignis – probier es aus, es wird ignoriert.</li></ul>'},
+ {id:'fit', name:'Fitnessgerät', w:640, h:430,
+  states:[{id:'s1',x:200,y:80,w:170,h:56,l:'Leistungsstufe 1',inner:['do / pulsMessen']},{id:'s2',x:200,y:215,w:170,h:56,l:'Leistungsstufe 2',inner:['do / pulsMessen']},{id:'s3',x:200,y:350,w:170,h:56,l:'Leistungsstufe 3',inner:['do / pulsMessen']}],
+  finals:[{id:'F',x:520,y:215}],
+  init:{x:40,y:80,to:'s1'},
+  events:[['m','1 Minute vergeht'],['p','Puls gemessen'],['t','Trainingszeit abgelaufen']],
+  tr:[
+   {f:'s1',t:'s2',ev:['m'],l:'nach 1 min\n[Puls < max]',bend:-26,lx:-74,g:c=>c.p<c.max},
+   {f:'s2',t:'s3',ev:['m'],l:'nach 1 min\n[Puls < max]',bend:-26,lx:-74,g:c=>c.p<c.max},
+   {f:'s2',t:'s1',ev:['p','m'],l:'[Puls > max]',bend:-26,lx:50,g:c=>c.p>c.max},
+   {f:'s3',t:'s2',ev:['p','m'],l:'[Puls > max]',bend:-26,lx:50,g:c=>c.p>c.max},
+   {f:'s1',t:'F',ev:['t'],l:'Trainingszeit abgelaufen',lx:30,ly:-14},
+   {f:'s2',t:'F',ev:['t'],l:'',ly:-12},
+   {f:'s3',t:'F',ev:['t'],l:'',ly:12}],
+  ctx:()=>({p:120,max:150}),
+  view:c=>`<span>Puls <span class="val" data-pv>${c.p}</span> <span class="muted small">/ max ${c.max}</span></span><label class="small muted">Puls einstellen: <input type="range" min="80" max="190" value="${c.p}" data-p></label>`,
+  fix:'<h4>Hinweis</h4><ul><li>Die Pulsmessung läuft dauerhaft als <code>do / pulsMessen</code>. Der Übergang nach oben braucht Zeit-Ereignis <em>und</em> Guard, der nach unten nur den Guard.</li></ul>'}
+];
+
+(function(){
+  const host = $('#stSvg'), evBox = $('#stEvents'), ctxBox = $('#stCtx'), logBox = $('#stLog');
+  let S, ctx, timer=null;
+  const all = () => [...S.states, ...(S.finals||[]).map(f => ({...f, final:true}))];
+  const byId = id => all().find(s => s.id===id);
+  function rectPt(s, px, py){
+    if(s.final){ const dx=px-s.x, dy=py-s.y, l=Math.hypot(dx,dy)||1; return {x:s.x+dx/l*14, y:s.y+dy/l*14}; }
+    const dx=px-s.x, dy=py-s.y; const k = Math.min(dx? (s.w/2)/Math.abs(dx) : 1e9, dy? (s.h/2)/Math.abs(dy) : 1e9);
+    return {x:s.x+dx*k, y:s.y+dy*k};
+  }
+  const f1 = n => n.toFixed(1);
+  function draw(){
+    let s = '';
+    S.tr.forEach((t,i) => {
+      const A = byId(t.f), B = byId(t.t); let d, lp;
+      if(t.loop){
+        const L=t.loop, top=A.y-A.h/2, bot=A.y+A.h/2, lft=A.x-A.w/2, rgt=A.x+A.w/2;
+        if(L==='top'){ d=`M${A.x-16},${top} C${A.x-46},${top-50} ${A.x+46},${top-50} ${A.x+16},${top}`; lp={x:A.x,y:top-50}; }
+        if(L==='bottom'){ d=`M${A.x-16},${bot} C${A.x-46},${bot+50} ${A.x+46},${bot+50} ${A.x+16},${bot}`; lp={x:A.x,y:bot+50}; }
+        if(L==='right'){ d=`M${rgt},${A.y-10} C${rgt+50},${A.y-40} ${rgt+50},${A.y+40} ${rgt},${A.y+10}`; lp={x:rgt+70,y:A.y}; }
+      } else {
+        const mx=(A.x+B.x)/2, my=(A.y+B.y)/2, len=Math.hypot(B.x-A.x,B.y-A.y)||1, nx=-(B.y-A.y)/len, ny=(B.x-A.x)/len, b=t.bend||0;
+        const C = {x:mx+nx*b, y:my+ny*b}, p=rectPt(A, b?C.x:B.x, b?C.y:B.y), q=rectPt(B, b?C.x:A.x, b?C.y:A.y);
+        d = `M${f1(p.x)},${f1(p.y)} Q${f1(C.x)},${f1(C.y)} ${f1(q.x)},${f1(q.y)}`;
+        lp = {x:.25*p.x+.5*C.x+.25*q.x, y:.25*p.y+.5*C.y+.25*q.y};
+      }
+      s += `<g class="tr" data-i="${i}"><path class="stroke" d="${d}" marker-end="url(#mOpen)"/>${t.l?txt(lp.x+(t.lx||0), lp.y+(t.ly||0), t.l, 'lbl'):''}</g>`;
+    });
+    const I = S.init, T = byId(I.to), ip = rectPt(T, I.x, I.y);
+    s += `<circle cx="${I.x}" cy="${I.y}" r="9" fill="#E7EEF8"/><line class="stroke" x1="${I.x+(I.x<T.x-T.w/2?9:0)}" y1="${I.y-(I.y>T.y+T.h/2?9:0)}" x2="${f1(ip.x)}" y2="${f1(ip.y)}" marker-end="url(#mOpen)"/>`;
+    if(I.l) s += txt((I.x+ip.x)/2+(I.lx||0), (I.y+ip.y)/2+(I.ly??-12), I.l, 'lbl');
+    S.states.forEach(st => {
+      const x=st.x-st.w/2, y=st.y-st.h/2;
+      s += `<g class="st-node" data-id="${st.id}"><rect class="shape" x="${x}" y="${y}" width="${st.w}" height="${st.h}" rx="12"/>`;
+      if(st.inner){ s += txt(st.x, y+15, st.l) + `<line class="stroke" x1="${x}" y1="${y+28}" x2="${x+st.w}" y2="${y+28}"/>` + st.inner.map((l,k)=>txt(st.x, y+43+k*16, l, 'lbl')).join(''); }
+      else s += txt(st.x, st.y, st.l);
+      s += `</g>`;
+    });
+    (S.finals||[]).forEach(f => s += `<g class="st-node" data-id="${f.id}"><circle class="shape" cx="${f.x}" cy="${f.y}" r="13" style="fill:none"/><circle cx="${f.x}" cy="${f.y}" r="8" fill="#E7EEF8"/></g>`);
+    host.innerHTML = svg(S.w, S.h, s);
+  }
+  function mark(){ $$('.st-node', host).forEach(n => n.classList.toggle('cur', n.dataset.id===ctx.cur)); }
+  function view(){
+    ctxBox.innerHTML = `<span>Aktueller Zustand: <span class="val">${ctx.cur==='F'?'Endzustand':byId(ctx.cur).l}</span></span>` + (S.view?S.view(ctx):'');
+    const r = $('[data-l]', ctxBox); if(r) r.oninput = e => { ctx.L = +e.target.value; $('[data-lv]', ctxBox).textContent = ctx.L+' %'; };
+    const p = $('[data-p]', ctxBox); if(p) p.oninput = e => { ctx.p = +e.target.value; $('[data-pv]', ctxBox).textContent = ctx.p; };
+    const au = $('[data-auto]', ctxBox); if(au) au.onclick = () => { if(timer){ clearInterval(timer); timer=null; ctx.run=false; } else { ctx.run=true; timer=setInterval(()=>fire('m'), 1100); } view(); };
+    $$('button', evBox).forEach(b => b.disabled = ctx.cur==='F');
+  }
+  function log(html, no){ logBox.insertAdjacentHTML('afterbegin', `<div class="${no?'no':''}">${html}</div>`); }
+  function enter(id){
+    const st = byId(id); ctx.cur = id; mark();
+    if(st && st.entry){ const r = st.entry(ctx); if(r) log(`↳ ${esc(r)}`); }
+    const auto = S.tr.find(t => t.f===id && t.ev.includes('auto'));
+    if(auto) setTimeout(() => fire('auto'), 900);
+    if(id==='F'){ log('<strong>Endzustand erreicht.</strong> Mit „Neu starten“ geht es von vorne los.'); if(timer){clearInterval(timer); timer=null; ctx.run=false;} }
+    view();
+  }
+  function fire(ev){
+    if(ctx.cur==='F') return;
+    if(S.before && ev==='m') S.before(ctx);
+    const from = byId(ctx.cur), evName = ev==='auto' ? '(automatisch)' : (S.events.find(e=>e[0]===ev)||[0,ev])[1];
+    const t = S.tr.find(t => t.f===ctx.cur && t.ev.includes(ev) && (!t.g || t.g(ctx)));
+    if(!t){ log(`<b>${esc(evName)}</b> in „${esc(from.l)}“: keine passende Transition, Zustand bleibt.`, true); view(); return; }
+    const g = $(`.tr[data-i="${S.tr.indexOf(t)}"]`, host); g.classList.remove('fire'); void g.getBBox(); g.classList.add('fire'); setTimeout(()=>g.classList.remove('fire'), 1300);
+    const parts = [];
+    if(from.exit){ const r = from.exit(ctx); if(r) parts.push(r); }
+    if(t.a){ const r = t.a(ctx); if(r) parts.push(r); }
+    const to = t.t==='F' ? 'Endzustand' : byId(t.t).l;
+    log(`<b>${esc(evName)}</b>: „${esc(from.l)}“ → „${esc(to)}“${parts.length?` <span class="muted">(${esc(parts.join(', '))})</span>`:''}`);
+    enter(t.t);
+  }
+  function load(i){
+    if(timer){ clearInterval(timer); timer=null; }
+    S = ST_SPECS[i]; ctx = S.ctx(); logBox.innerHTML='';
+    $$('#stTabs button').forEach((b,k)=>b.setAttribute('aria-selected', k===i));
+    draw(); if(S.init.a) S.init.a(ctx);
+    evBox.innerHTML = S.events.map(e => `<button class="btn" data-ev="${e[0]}">${esc(e[1])}</button>`).join('') + `<button class="btn ghost" data-restart>Neu starten</button>`;
+    const fx = $('#stFix'); fx.style.display = S.fix ? '' : 'none'; fx.innerHTML = S.fix || '';
+    log(`Start: „${esc(byId(S.init.to).l)}“`);
+    enter(S.init.to);
+  }
+  $('#stTabs').innerHTML = ST_SPECS.map((s,i)=>`<button role="tab" data-i="${i}">${s.name}</button>`).join('');
+  $('#stTabs').onclick = e => { const b=e.target.closest('button'); if(b) load(+b.dataset.i); };
+  evBox.onclick = e => { const b=e.target.closest('button'); if(!b) return; if(b.hasAttribute('data-restart')) load(ST_SPECS.indexOf(S)); else fire(b.dataset.ev); };
+  load(0);
+})();
+</script>
+<script>
+/* =====================================================================
+   SEQUENCE
+   ===================================================================== */
+const lifeline = (x, l) => `<rect class="shape" x="${x-48}" y="6" width="96" height="26" rx="2"/>${txt(x,19,l)}<line class="stroke dash" x1="${x}" y1="32" x2="${x}" y2="52"/>`;
+notation('seqNotation','seqNotationOut',[
+  {n:'Lebenslinie', svg:lifeline(70,':Shop'), t:'Kopf mit <code>objekt : Klasse</code> (oder nur <code>:Klasse</code> für ein anonymes Objekt), darunter eine gestrichelte Linie. Die Zeit läuft nach unten. Akteure werden als Strichmännchen gezeichnet.'},
+  {n:'Aktivierungsbalken', svg:'<line class="stroke dash" x1="70" y1="2" x2="70" y2="52"/><rect class="act" x="64" y="10" width="12" height="34"/>', t:'Schmales Rechteck auf der Lebenslinie: Das Objekt ist gerade aktiv (führt eine Operation aus oder wartet auf eine Antwort). Bei Selbstaufrufen wird ein zweiter Balken versetzt daraufgelegt.'},
+  {n:'Synchrone Nachricht', svg:'<line class="stroke" x1="14" y1="34" x2="126" y2="34" marker-end="url(#mFill)"/><text class="lbl" x="70" y="24" text-anchor="middle">getData(city)</text>', t:'Durchgezogene Linie mit <strong>gefüllter</strong> Pfeilspitze. Der Sender <strong>wartet</strong>, bis die Antwort kommt – typischer Methodenaufruf.'},
+  {n:'Asynchrone Nachricht', svg:'<line class="stroke" x1="14" y1="34" x2="126" y2="34" marker-end="url(#mOpen)"/><text class="lbl" x="70" y="24" text-anchor="middle">E-Mail senden</text>', t:'Durchgezogene Linie mit <strong>offener</strong> Pfeilspitze. Der Sender wartet <strong>nicht</strong> und macht sofort weiter (E-Mail, Event, Signal).'},
+  {n:'Antwort', svg:'<line class="stroke dash" x1="126" y1="34" x2="14" y2="34" marker-end="url(#mOpen)"/><text class="lbl" x="70" y="24" text-anchor="middle">200, data</text>', t:'Gestrichelte Linie mit offener Spitze zurück zum Aufrufer. Beschriftet mit dem Rückgabewert, nicht mit einem Methodennamen.'},
+  {n:'Selbstaufruf', svg:'<line class="stroke dash" x1="40" y1="2" x2="40" y2="52"/><path class="stroke" d="M46,12 H84 V38 H50" marker-end="url(#mFill)"/><text class="lbl" x="90" y="28">pruefung()</text>', t:'Pfeil, der zur eigenen Lebenslinie zurückkehrt: Das Objekt ruft eine eigene Methode auf (getCache, pruefung).'},
+  {n:'Objekterzeugung', svg:'<line class="stroke dash" x1="8" y1="27" x2="62" y2="27" marker-end="url(#mOpen)"/><rect class="shape" x="64" y="14" width="70" height="26" rx="2"/><text class="lbl" x="34" y="18" text-anchor="middle">create()</text>', t:'Gestrichelter Pfeil (oft «create») direkt auf den <strong>Kopf</strong> des neuen Objekts. Der Kopf steht deshalb tiefer als die anderen – das Objekt existiert erst ab hier.'},
+  {n:'Objektzerstörung', svg:'<line class="stroke dash" x1="70" y1="2" x2="70" y2="32"/><path class="stroke" d="M60,30 L80,50 M80,30 L60,50" style="stroke-width:2.2"/>', t:'Ein großes X beendet die Lebenslinie. Danach kann das Objekt keine Nachrichten mehr empfangen.'},
+  {n:'Fragment alt', svg:'<rect x="8" y="4" width="124" height="46" fill="none" stroke="#FF8F7E"/><path d="M8,4 h30 v9 l-6,6 h-24z" fill="#14223A" stroke="#FF8F7E"/><text class="lbl" x="12" y="15">alt</text><line x1="8" y1="30" x2="132" y2="30" stroke="#FF8F7E" stroke-dasharray="4 4"/><text class="lbl" x="44" y="15">[im Cache]</text><text class="lbl" x="14" y="42">[else]</text>', t:'Alternativen (if/else). Der Rahmen wird mit gestrichelten Linien in Bereiche geteilt, jeder mit eigenem Guard. Genau <strong>ein</strong> Bereich wird ausgeführt.'},
+  {n:'opt, loop, par', svg:'<rect x="8" y="4" width="124" height="46" fill="none" stroke="#FF8F7E"/><path d="M8,4 h34 v9 l-6,6 h-28z" fill="#14223A" stroke="#FF8F7E"/><text class="lbl" x="12" y="15">loop</text><text class="lbl" x="48" y="15">[für jeden Artikel]</text>', t:'<strong>opt</strong> = optional, nur ausgeführt, wenn der Guard gilt (if ohne else). <strong>loop</strong> = Wiederholung, z. B. loop(1,3) oder [solange …]. <strong>par</strong> = parallele Bereiche, durch gestrichelte Linien getrennt.'},
+  {n:'Interaktionsrahmen', svg:'<rect x="8" y="4" width="124" height="46" fill="none" stroke="#E7EEF8"/><path d="M8,4 h66 v9 l-6,6 h-60z" fill="#14223A" stroke="#E7EEF8"/><text class="lbl" x="12" y="15">sd Bestellen</text>', t:'Rahmen um das ganze Diagramm mit <code>sd Name</code> im Fünfeck oben links. Optional mit Parametern, z. B. <code>sd Login(user, passwort)</code>.'}
+]);
+
+const SEQ = [
+ {id:'ws', name:'Webservice (So2024)', gap:230,
+  parts:[{id:'app',l:':App'},{id:'ws',l:':WebService'},{id:'db',l:':Database'}],
+  msgs:[
+   {f:'app',t:'ws',k:'sync',l:'GET shareholders/?city=Köln',d:'Die App sendet den GET-Request an den Endpunkt <code>shareholders/</code> mit dem Query-Parameter <code>city</code>. Synchron, weil die App auf die Response wartet.'},
+   {f:'ws',t:'ws',k:'self',l:'getCache(city)',d:'Erster Bereich des <strong>alt</strong>-Fragments, Guard [data im Cache]: Der Webservice ruft seine <em>eigene</em> Methode auf – Selbstaufruf.'},
+   {f:'ws',t:'db',k:'sync',l:'getData(city)',d:'Bereich [else]: Die Daten liegen nicht im Cache, also fragt der Webservice die Datenbank.'},
+   {f:'db',t:'ws',k:'reply',l:'data',d:'Die Datenbank liefert die Daten zurück – gestrichelte Antwort.'},
+   {f:'ws',t:'app',k:'reply',l:'Response: 200, data',d:'Egal welcher Zweig: Die App bekommt die GET-Response mit Statuscode 200 und den Daten im Body. Deshalb steht diese Nachricht <em>nach</em> dem alt-Fragment.'}],
+  frags:[{k:'alt',from:1,to:3,g:'[data im Cache]',elseAt:2,eg:'[else]'}],
+  toggle:{l:'Daten im Cache?', opts:[['beide Zweige zeigen',[]],['ja',[2,3]],['nein',[1]]]},
+  fix:'<h4>Check deiner Mitschrift</h4><ul><li>In deiner Lösung steht getCache() <em>vor</em> einem <strong>opt</strong>-Fragment und wird damit immer aufgerufen. Laut Aufgabe wird getCache aber nur aufgerufen, <em>wenn</em> die Daten im Cache sind – sonst getData. Zwei sich ausschließende Fälle → <strong>alt</strong> mit [data im Cache] und [else].</li></ul>'},
+ {id:'sp', name:'Steuerprogramm (So2019)', gap:220,
+  parts:[{id:'pl',l:':Produktionsleiter'},{id:'ae',l:':Anwendungsentwickler'},{id:'mf',l:':Maschinenführer'}],
+  msgs:[
+   {f:'pl',t:'ae',k:'sync',l:'steuerprogrammEntwickeln()',d:'Der Produktionsleiter beauftragt den Entwickler. Er wartet auf die Rückmeldung zur Produktionsbereitschaft – synchron.'},
+   {f:'ae',t:'ae',k:'self',l:'steuerprogrammErstellen()',d:'Der Entwickler erstellt das Programm selbst – Selbstaufruf.'},
+   {f:'ae',t:'mf',k:'sync',l:'probelaufDurchfuehren()',d:'Der Entwickler weist den Maschinenführer an, das Programm zu testen.'},
+   {f:'mf',t:'mf',k:'self',l:'probelauf()',d:'Der Maschinenführer führt den Probelauf durch.'},
+   {f:'mf',t:'ae',k:'reply',l:'Funktionsfähigkeit bestätigt',d:'Rückmeldung an den Entwickler – gestrichelte Antwort.'},
+   {f:'ae',t:'pl',k:'reply',l:'Produktionsbereitschaft',d:'Der Entwickler meldet die Produktionsbereitschaft an den Produktionsleiter zurück.'}],
+  fix:'<h4>Check deiner Mitschrift</h4><ul><li>Deine Lösung stimmt im Ablauf. Kleinigkeit: Gestrichelte Antworten mit dem Ergebnis beschriften („Funktionsfähigkeit bestätigt“), nicht mit Methodenklammern wie „bestätigen()“ – Klammern gehören zu Aufrufen.</li></ul>'},
+ {id:'pp', name:'Onlineshop (So2013)', gap:180,
+  parts:[{id:'k',l:':Kunde'},{id:'s',l:':Shop'},{id:'pv',l:':Produktvorlage',c:3},{id:'ab',l:':Auftragsbestaetigung',c:13}],
+  msgs:[
+   {f:'k',t:'s',k:'sync',l:'startseiteAufrufen()',d:'Der Kunde ruft die Startseite auf.'},
+   {f:'s',t:'k',k:'reply',l:'Produktarten (Foto, Poster)',d:'Der Shop zeigt die Produktarten – Antwort.'},
+   {f:'k',t:'s',k:'sync',l:'produktwahlMitteilen()',d:'Der Kunde teilt seine Produktwahl mit.'},
+   {f:'s',t:'pv',k:'create',l:'create()',d:'Der Shop <strong>erzeugt</strong> das Produktvorlagen-Objekt. Der Pfeil zeigt auf den Kopf – die Lebenslinie beginnt erst hier.'},
+   {f:'s',t:'k',k:'reply',l:'leere Vorlage, Bild hochladen',d:'Der Shop zeigt die leere Vorlage und bittet um den Upload.'},
+   {f:'k',t:'s',k:'sync',l:'bildHochladen()',d:'Der Kunde lädt das Bild hoch.'},
+   {f:'s',t:'pv',k:'sync',l:'bild()',d:'Der Shop übergibt das Bild an die Produktvorlage – Aufruf von bild().'},
+   {f:'pv',t:'s',k:'reply',l:'„Bild ist eingefügt“',d:'Die Produktvorlage meldet zurück.'},
+   {f:'s',t:'k',k:'reply',l:'fertige Vorlage, Daten eingeben',d:'Fertige Vorlage anzeigen und Adress- und Zahlungsdaten anfordern.'},
+   {f:'k',t:'s',k:'sync',l:'datenUebermitteln()',d:'Der Kunde übermittelt die Daten.'},
+   {f:'s',t:'s',k:'self',l:'pruefung(): „Daten o. k.“',d:'Selbstaufruf der eigenen Prüffunktion. Der Fall „nicht o. k.“ wird laut Aufgabe nicht betrachtet – also kein alt nötig.'},
+   {f:'s',t:'k',k:'reply',l:'bereit zur Auftragsannahme',d:'Der Shop teilt mit, dass er den Auftrag annehmen kann.'},
+   {f:'k',t:'s',k:'sync',l:'auftragErteilen()',d:'Der Kunde erteilt den Auftrag.'},
+   {f:'s',t:'ab',k:'create',l:'create()',d:'Zweite Objekterzeugung: die Auftragsbestätigung.'},
+   {f:'s',t:'k',k:'async',l:'Auftragsbestätigung per E-Mail',d:'E-Mail-Versand: Der Shop wartet nicht – asynchron, offene Pfeilspitze.'}],
+  fix:'<h4>Check deiner Mitschrift</h4><ul><li>:Produktvorlage und :Auftragsbestaetigung werden erst während des Ablaufs erzeugt. Ihr Kopf gehört auf die Höhe des create()-Pfeils, nicht ganz nach oben.</li><li>Die E-Mail ist eine asynchrone Nachricht (offene Spitze, durchgezogen).</li></ul>'},
+ {id:'wm', name:'Waschmaschine (Ausgangssituation)', gap:140,
+  parts:[{id:'h',l:'Hausmann',actor:true},{id:'st',l:':Steuerung'},{id:'wv',l:':Wasserventil'},{id:'he',l:':Heizelement'},{id:'mo',l:':Motor'},{id:'pu',l:':Pumpe'}],
+  msgs:[
+   {f:'h',t:'st',k:'sync',l:'einschalten()',d:'Der Hausmann (Akteur aus dem Use Case) startet die Maschine. Die Methode einschalten() steht im Klassendiagramm bei Steuerung.'},
+   {f:'st',t:'wv',k:'sync',l:'öffnen()',d:'Aktivitätsdiagramm Schritt 2: Wasserventil öffnen.'},
+   {f:'st',t:'he',k:'sync',l:'erhitzen(30)',d:'Wasser auf 30 °C erhitzen – Methode des Heizelements mit Parameter Temperatur.'},
+   {f:'st',t:'wv',k:'sync',l:'schließen()',d:'Wasserventil wieder schließen.'},
+   {f:'st',t:'mo',k:'sync',l:'waschen()',d:'Motor zum Waschen starten.'},
+   {f:'st',t:'pu',k:'sync',l:'abpumpen()',d:'Wasser abpumpen.'},
+   {f:'st',t:'mo',k:'sync',l:'schleudern()',d:'Im Aktivitätsdiagramm folgt ein Fork: Schleudern und Abpumpen laufen gleichzeitig. Im Sequenzdiagramm wird das zum <strong>par</strong>-Fragment.'},
+   {f:'st',t:'pu',k:'sync',l:'abpumpen()',d:'Zweiter Bereich des par-Fragments, gleichzeitig zum Schleudern.'},
+   {f:'st',t:'st',k:'self',l:'grün_blinken()',d:'Nach dem Join: Die Steuerung blinkt grün – eigene Methode, also Selbstaufruf.'}],
+  frags:[{k:'par',from:6,to:7,g:'',elseAt:7,eg:''}],
+  fix:'<h4>Hinweis</h4><ul><li>Du hattest ein eigenes Bestell-Beispiel gezeichnet (das ist korrekt aufgebaut). Hier ist die eigentliche Waschmaschinen-Aufgabe: Lebenslinien = Klassen aus dem Klassendiagramm, Reihenfolge = Aktivitätsdiagramm, Nachrichten = Methoden.</li></ul>'}
+];
+
+(function(){
+  const host = $('#seqSvg'); let S, n = 0, dim = [];
+  function bw(p){ return Math.max(104, p.l.length*7.4+22); }
+  function render(){
+    const gap = S.gap, X = {}; S.parts.forEach((p,i) => X[p.id] = 90 + i*gap + (i?20:0));
+    const W = 90 + (S.parts.length-1)*gap + 20 + 150;
+    const Y = [], fr = (S.frags||[]).map(f => ({...f}));
+    let y = S.parts.some(p=>p.actor) ? 124 : 88;
+    S.msgs.forEach((m,i) => {
+      fr.forEach(f => { if(f.from===i){ y += 30; f.top = y-24; } if(f.elseAt===i && f.elseAt!==f.from){ y += 22; f.ey = y-14; } });
+      Y[i] = y; y += m.k==='self' ? 50 : m.k==='create' ? 44 : 40;
+      fr.forEach(f => { if(f.to===i){ f.bot = y-14; y += 8; } });
+    });
+    const H = y + 20;
+    let s = '';
+    // fragments
+    fr.forEach(f => {
+      if(f.from >= n) return;
+      const inv = S.msgs.slice(f.from, f.to+1).flatMap(m => [X[m.f], X[m.t]]);
+      const x0 = Math.min(...inv) - 60, x1 = Math.max(...inv) + (S.msgs.slice(f.from,f.to+1).some(m=>m.k==='self') ? 150 : 60);
+      const bot = f.to < n ? f.bot : Y[n-1] + 30;
+      s += `<g class="frag"><rect class="fr" x="${x0}" y="${f.top}" width="${x1-x0}" height="${bot-f.top}"/><path d="M${x0},${f.top} h40 v10 l-7,7 h-33z" fill="#14223A" stroke="#FF8F7E" stroke-width="1.2"/><text class="lbl" x="${x0+6}" y="${f.top+12}" style="fill:var(--seq);font-weight:700">${f.k}</text>${f.g?`<text class="lbl" x="${X[S.msgs[f.from].f]+14}" y="${f.top+13}">${esc(f.g)}</text>`:''}`;
+      if(f.ey && f.elseAt < n) s += `<line x1="${x0}" y1="${f.ey-6}" x2="${x1}" y2="${f.ey-6}" stroke="#FF8F7E" stroke-dasharray="5 4"/>${f.eg?`<text class="lbl" x="${X[S.msgs[f.elseAt].f]+14}" y="${f.ey+6}">${esc(f.eg)}</text>`:''}`;
+      s += `</g>`;
+    });
+    // lifelines & activation
+    S.parts.forEach(p => {
+      const x = X[p.id], w = bw(p);
+      if(p.c!=null && p.c >= n) return;
+      const top = p.c!=null ? Y[p.c]-15 : 20;
+      if(p.actor) s += `<g transform="translate(0,${top-6})">${stick(x,40,p.l)}</g>`;
+      else s += `<rect class="shape" x="${x-w/2}" y="${top}" width="${w}" height="30" rx="2"/>${txt(x,top+15,p.l)}`;
+      s += `<line class="stroke dash" x1="${x}" y1="${p.actor? top+80 : top+30}" x2="${x}" y2="${H-8}" style="stroke:var(--line2)"/>`;
+      const idx = S.msgs.map((m,i)=>i).filter(i => i<n && (S.msgs[i].f===p.id || S.msgs[i].t===p.id));
+      if(idx.length){ const a = Y[idx[0]] - (p.c!=null && idx[0]===p.c ? -15 : 6), last = idx[idx.length-1], b = Y[last] + (S.msgs[last].k==='self'?32:8);
+        s += `<rect class="act" x="${x-6}" y="${a}" width="12" height="${Math.max(14,b-a)}"/>`; }
+    });
+    // messages
+    S.msgs.forEach((m,i) => {
+      if(i >= n) return;
+      const y = Y[i], x1 = X[m.f], x2 = X[m.t], cls = `msg${i===n-1?' new':''}${dim.includes(i)?' dim':''}`;
+      if(m.k==='self'){
+        s += `<g class="${cls}"><path class="stroke${i===n-1?' draw':''}" style="--len:110" d="M${x1+6},${y} H${x1+44} V${y+26} H${x1+8}" marker-end="url(#mFill)"/><text x="${x1+52}" y="${y+14}">${esc(m.l)}</text></g>`;
+        if(i < n) s += `<rect class="act" x="${x1}" y="${y+8}" width="12" height="22"/>`;
+        return;
+      }
+      const dir = x2 > x1 ? 1 : -1;
+      let ex = x2 - dir*6;
+      if(m.k==='create'){ const p = S.parts.find(p=>p.id===m.t); ex = x2 - dir*bw(p)/2; }
+      const sx = x1 + dir*6, dash = (m.k==='reply'||m.k==='create') ? ' dash' : '', mk = m.k==='sync' ? 'mFill' : 'mOpen';
+      const len = Math.abs(ex-sx);
+      s += `<g class="${cls}"><line class="stroke${dash}${i===n-1&&!dash?' draw':''}" style="--len:${len}" x1="${sx}" y1="${y}" x2="${ex}" y2="${y}" marker-end="url(#${mk})"/><text x="${(sx+ex)/2}" y="${y-8}" text-anchor="middle">${esc(m.k==='create'?'«create»':m.l)}</text></g>`;
+    });
+    host.innerHTML = svg(W, H, `<style>.dg .draw{stroke-dasharray:var(--len);stroke-dashoffset:var(--len);animation:draw .5s ease forwards}</style>` + s);
+    $('#seqDesc').innerHTML = n ? `<strong style="color:var(--seq)">${n}. ${esc(S.msgs[n-1].l)}</strong><br><span class="small">${S.msgs[n-1].d}</span>` : '<span class="muted">Noch keine Nachricht. Tippe auf „Nächste Nachricht“.</span>';
+    $('#seqCount').textContent = `${n} / ${S.msgs.length}`;
+    $('#seqPrev').disabled = n===0; $('#seqNext').disabled = n===S.msgs.length;
+  }
+  function load(i){
+    S = SEQ[i]; n = 0; dim = [];
+    $$('#seqTabs button').forEach((b,k)=>b.setAttribute('aria-selected', k===i));
+    const o = $('#seqOpts');
+    o.innerHTML = S.toggle ? `<span class="small muted">${S.toggle.l}</span>` + S.toggle.opts.map((t,k)=>`<button class="chip${k?'':' sel'}" data-k="${k}">${t[0]}</button>`).join('') : '';
+    o.onclick = e => { const b=e.target.closest('.chip'); if(!b) return; $$('.chip',o).forEach(c=>c.classList.toggle('sel',c===b)); dim = S.toggle.opts[+b.dataset.k][1]; render(); };
+    const fx = $('#seqFix'); fx.style.display = S.fix?'':'none'; fx.innerHTML = S.fix||'';
+    render();
+  }
+  $('#seqTabs').innerHTML = SEQ.map((s,i)=>`<button role="tab" data-i="${i}">${s.name}</button>`).join('');
+  $('#seqTabs').onclick = e => { const b=e.target.closest('button'); if(b) load(+b.dataset.i); };
+  $('#seqNext').onclick = () => { if(n<S.msgs.length){ n++; render(); } };
+  $('#seqPrev').onclick = () => { if(n>0){ n--; render(); } };
+  $('#seqAll').onclick = () => { n = S.msgs.length; render(); };
+  load(0);
+})();
+</script>
+<script>
+/* =====================================================================
+   REQUIREMENTS
+   ===================================================================== */
+(function(){
+  const CARDS = [
+    ['Beschreibt, WAS erreicht werden soll und WOFÜR','L'],['Wird vom Auftraggeber erstellt','L'],['Wird vom Auftragnehmer erstellt','R'],
+    ['Beschreibt, WIE und WOMIT umgesetzt wird','R'],['Grundlage für die Ausschreibung bzw. Anfrage','L'],['Enthält Architektur und Schnittstellenbeschreibungen','R'],
+    ['Grundlage für die Abnahme des Endprodukts','R'],['Budget- und Zeitrahmen aus Kundensicht','L'],['Zeitplan mit Meilensteinen der Umsetzung','R'],
+    ['Eher grob, aus Sicht der Nutzer formuliert','L'],['Vertragsgrundlage für die Leistungserbringung','R'],['Basiert auf dem Lastenheft','R']
+  ];
+  let deck, right, total, busy;
+  const D = $('#lhDeck');
+  function start(){
+    deck = shuffle(CARDS); right = 0; total = 0; busy = false;
+    $('#binL').innerHTML = ''; $('#binR').innerHTML = ''; $('#lhScore').textContent = '0 / 0'; show();
+  }
+  function show(){
+    if(!deck.length){ D.innerHTML = `<div class="card" style="border-color:var(--req)">Fertig: ${right} von ${total} richtig</div>`; return; }
+    D.innerHTML = (deck[1] ? `<div class="card back">${esc(deck[1][0])}</div>` : '') + `<div class="card" id="lhTop">${esc(deck[0][0])}</div>`;
+  }
+  function answer(side){
+    if(busy || !deck.length) return; busy = true;
+    const [t,a] = deck[0], ok = side===a, c = $('#lhTop');
+    total++; if(ok) right++;
+    c.classList.add(ok?'ok':'no');
+    $('#lhScore').textContent = `${right} / ${total}`;
+    $(a==='L'?'#binL':'#binR').insertAdjacentHTML('beforeend', `<li class="${ok?'':'w'}">${esc(t)}${ok?'':' (falsch einsortiert)'}</li>`);
+    setTimeout(() => { c.classList.add(side==='L'?'goL':'goR'); }, 260);
+    setTimeout(() => { deck.shift(); busy = false; show(); }, reduced?50:700);
+  }
+  $('#lhL').onclick = () => answer('L'); $('#lhR').onclick = () => answer('R'); $('#lhRestart').onclick = start;
+  document.addEventListener('keydown', e => { if(!$('#p-req').classList.contains('on')) return; if(e.key==='ArrowLeft') answer('L'); if(e.key==='ArrowRight') answer('R'); });
+  start();
+})();
+
+/* ---------- Satzschablone ---------- */
+(function(){
+  const COND = [['(ohne Bedingung)',''],['Nachdem ein Azubi einen Bericht eingereicht hat,','Nachdem ein Azubi einen Bericht eingereicht hat,'],['Falls der Status „Eingereicht“ ist,','Falls der Status „Eingereicht“ ist,'],['Am Ende jeder Woche','Am Ende jeder Woche']];
+  const VERB = [['muss','<b>muss</b> = Pflicht, rechtlich verbindlich – wird bei der Abnahme geprüft.'],['sollte','<b>sollte</b> = Wunsch. Nicht verbindlich, erhöht aber die Zufriedenheit.'],['wird','<b>wird</b> = Absicht für die Zukunft. Soll beim Entwurf schon berücksichtigt werden.']];
+  const ART = [['nutzer','Benutzerinteraktion'],['selbst','selbstständige Systemaktivität'],['schnitt','Schnittstellenanforderung']];
+  const WEM = ['dem Vorgesetzten','dem Azubi'];
+  const OBJ = ['den Wochenbericht','den Status des Berichts','einen Ablehnungsgrund'];
+  const PROZ = [['annehmen oder ablehnen','anzunehmen oder abzulehnen'],['speichern','zu speichern'],['bearbeiten','zu bearbeiten'],['an den Vorgesetzten senden','an den Vorgesetzten zu senden'],['anzeigen','anzuzeigen']];
+  const C = {cond:'var(--st)', verb:'var(--seq)', sys:'var(--uc)', art:'var(--act)', obj:'var(--cls)', proz:'var(--req)'};
+  const sel = (id, label, color, opts) => `<label><span><i style="background:${color}"></i>${label}</span><select id="${id}">${opts.map((o,i)=>`<option value="${i}">${esc(o)}</option>`).join('')}</select></label>`;
+  $('#reqBuilder').innerHTML =
+    sel('rC','Wann? (Bedingung)',C.cond,COND.map(c=>c[0])) + sel('rV','Verbindlichkeit',C.verb,VERB.map(v=>v[0])) +
+    sel('rA','Art der Aktivität',C.art,ART.map(a=>a[1])) + sel('rW','Wem?',C.art,WEM) +
+    sel('rO','Objekt',C.obj,OBJ) + sel('rP','Prozesswort',C.proz,PROZ.map(p=>p[0]));
+  const sp = (k, t) => `<span style="border-color:${C[k]}">${esc(t)}</span>`;
+  function build(){
+    const c = COND[$('#rC').value][1], v = VERB[$('#rV').value], a = ART[$('#rA').value][0], w = WEM[$('#rW').value], o = OBJ[$('#rO').value], p = PROZ[$('#rP').value];
+    $('#rW').disabled = a!=='nutzer';
+    let head = c ? `${sp('cond',c)} ${sp('verb',v[0])} ${sp('sys','das System')}` : `${sp('sys','Das System')} ${sp('verb',v[0])}`;
+    let tail;
+    if(a==='nutzer') tail = `${sp('art', w+' die Möglichkeit bieten,')} ${sp('obj',o)} ${sp('proz',p[1])}.`;
+    else if(a==='schnitt') tail = `${sp('art','fähig sein,')} ${sp('obj',o)} ${sp('proz',p[1])}.`;
+    else tail = `${sp('obj',o)} ${sp('proz',p[0])}.`;
+    $('#reqOut').innerHTML = head + ' ' + tail;
+    const artTxt = {nutzer:'Der Nutzer löst die Funktion aus → „<wem> die Möglichkeit bieten“.', selbst:'Das System handelt von sich aus → kein Zusatz.', schnitt:'Das System reagiert auf ein Nachbarsystem → „fähig sein“.'}[a];
+    $('#reqNote').innerHTML = v[1] + ' ' + esc(artTxt);
+  }
+  $$('#reqBuilder select').forEach(s => s.onchange = build); build();
+})();
+
+/* ---------- Erhebungsmatrix ---------- */
+(function(){
+  const M = ['Interview','Fragebogen','Bericht','Beobachtung','Inventur'];
+  const R = ['Informationstiefe','Informationsbreite','Mitarbeiterbeteiligung','Kosten / Aufwand'];
+  const L = ['–','niedrig','mittel','hoch'];
+  const REF = {Interview:[3,1,3,3], Fragebogen:[1,3,2,1], Bericht:[2,2,3,2], Beobachtung:[3,1,1,3], Inventur:[2,3,1,1]};
+  const INFO = {
+    Interview:'Geht in die Tiefe, Rückfragen möglich, hohe Akzeptanz. Aber zeitintensiv, wenige Personen, Ergebnis hängt vom Interviewer ab.',
+    Fragebogen:'Viele Personen mit wenig Aufwand, gut auswertbar. Aber keine Rückfragen, oft oberflächlich, geringe Rücklaufquote.',
+    Bericht:'Mitarbeiter beschreiben ihre Abläufe selbst schriftlich. Detailreich und beteiligend, aber subjektiv und abhängig von der Schreibbereitschaft.',
+    Beobachtung:'Zeigt, wie wirklich gearbeitet wird – auch Dinge, die niemand erwähnt. Aber teuer, Beobachtete verhalten sich evtl. anders, Gründe bleiben unklar.',
+    Inventur:'Auswertung vorhandener Unterlagen (Formulare, Handbücher, bestehende Systeme). Günstig und breit, aber ohne Mitarbeiter, Dokumente können veraltet sein.'
+  };
+  let V = {}; const tab = $('#mx');
+  function init(){ V = {}; M.forEach(m => V[m] = [0,0,0,0]); V.Interview = [3,1,3,3]; draw(); $('#mxMsg').textContent='Die Interview-Spalte stammt aus deiner Mitschrift.'; $('#mxInfo').innerHTML=''; }
+  function draw(res){
+    tab.innerHTML = `<tr><th></th>${M.map(m=>`<th>${m}</th>`).join('')}</tr>` + R.map((r,ri)=>`<tr><th>${r}</th>${M.map(m=>{
+      const v = V[m][ri]; let c = 'v'+v; if(res){ const d = Math.abs(v-REF[m][ri]); c += v===0?' no':d===0?' ok':d===1?' near':' no'; }
+      return `<td><button class="${c}" data-m="${m}" data-r="${ri}" aria-label="${m}, ${r}: ${L[v]}">${L[v]}</button></td>`; }).join('')}</tr>`).join('');
+  }
+  tab.onclick = e => { const b = e.target.closest('button'); if(!b) return; const m=b.dataset.m, r=+b.dataset.r; V[m][r] = V[m][r]%3+1; draw(); };
+  $('#mxCheck').onclick = () => {
+    draw(true); let ok=0, near=0; M.forEach(m => REF[m].forEach((x,i)=>{ const d=Math.abs(V[m][i]-x); if(V[m][i]){ if(!d) ok++; else if(d===1) near++; } }));
+    $('#mxMsg').innerHTML = `<span style="color:var(--ok)">${ok} gleich</span>, <span style="color:var(--warn)">${near} eine Stufe daneben</span>, Rest abweichend oder leer.`;
+    $('#mxInfo').innerHTML = M.map(m => `<p class="small" style="margin:0 0 .6em"><strong style="color:var(--req)">${m}</strong> (Muster: ${REF[m].map(x=>L[x]).join(', ')}) – ${INFO[m]}</p>`).join('');
+  };
+  $('#mxReset').onclick = init; init();
+})();
+
+/* ---------- flip cards ---------- */
+$('#flips').innerHTML = [
+  ['Wofür wird das Pflichtenheft im weiteren Projekt eingesetzt?','<ul><li>Angebotslegung</li><li>Auftragserteilung</li><li>Technisches Design</li><li>Abnahme des Endprodukts</li></ul>'],
+  ['Individual- vs. Standardsoftware – was ändert sich beim Pflichtenheft?','<ul><li>Individual: für einen Auftraggeber, künftige Nutzer können aktiv mitwirken → höhere Akzeptanz.</li><li>Standard: für den anonymen Markt, Anforderungen von Marketing/Produktmanagement, Nutzer nur über Pilotkunden.</li></ul>'],
+  ['Welche Informationsquellen gibt es neben Intensiv-Workshops?','<ul><li>Vorhandene, schriftliche Anforderungsspezifikationen des Auftraggebers diskutieren und übernehmen.</li></ul>'],
+  ['Was heißt: Die Informationsgewinnung ist iterativ?','<ul><li>Erheben, aufschreiben, auf Qualität prüfen, bei Mängeln erneut überarbeiten – so oft, bis die Qualität stimmt.</li></ul>'],
+  ['Qualitätsanforderungen an eine Anforderungsspezifikation?','<ul><li>Vollständig</li><li>Konsistent (widerspruchsfrei)</li><li>Eindeutig</li><li>Durchführbar</li></ul>'],
+  ['Welche Sichten auf ein System betrachtet man?','<ul><li>Daten (Data Dictionary, ER-Diagramm)</li><li>Funktionen (Klassendiagramm, Datenfluss)</li><li>Dynamik/Verhalten (Interaktions-, Zustandsdiagramm)</li><li>Benutzeroberfläche</li></ul>'],
+  ['Typische Themen in Kapitel 11 „Ergänzungen“?','<ul><li>Installations- und Integrationsrichtlinien</li><li>Rechtliches (Lizenzen, Patente)</li><li>Zeitliche Vorgaben, Deadlines</li></ul>'],
+  ['Benutzer- vs. Systemanforderung?','<ul><li><b>Benutzeranforderung:</b> Was und wofür, in 1–2 Sätzen aus Nutzersicht.</li><li><b>Systemanforderung:</b> Wie und womit, aus Funktions-, Daten- und Verhaltensperspektive (dein Wochenbericht-Beispiel).</li></ul>']
+].map(([q,a]) => `<button class="flip" aria-label="Karte umdrehen"><div class="in"><div class="f">${q}</div><div class="b">${a}</div></div></button>`).join('');
+$('#flips').onclick = e => { const f = e.target.closest('.flip'); if(f) f.classList.toggle('on'); };
+
+/* =====================================================================
+   QUIZ
+   ===================================================================== */
+const QT = {uc:['Use Case','var(--uc)'], act:['Aktivität','var(--act)'], cls:['Klassen','var(--cls)'], st:['Zustände','var(--st)'], seq:['Sequenz','var(--seq)'], req:['Anforderungen','var(--req)']};
+const BANK_Q = [
+ {t:'uc',q:'Wofür ist die Systemgrenze wichtig?',o:['Sie legt fest, was zum System gehört und was Umgebung ist (Scope)','Sie zeigt die zeitliche Reihenfolge der Use Cases','Sie trennt öffentliche von privaten Methoden','Sie markiert die Datenbankgrenze'],a:0,e:'Innerhalb: Funktionen des Systems. Außerhalb: Akteure. Damit grenzt man den Funktionsumfang ab.'},
+ {t:'uc',q:'In welche Richtung zeigt der «include»-Pfeil?',o:['Vom Basis-Use-Case zum inkludierten Use Case','Vom inkludierten Use Case zur Basis','Vom Akteur zum Use Case','Er hat keine Richtung'],a:0,e:'Basis → Teil. „Produkt kaufen“ ┄> „Zahlung abwickeln“.'},
+ {t:'uc',q:'In welche Richtung zeigt der «extend»-Pfeil?',o:['Von der Basis zur Erweiterung','Von der Erweiterung zur Basis','Immer von oben nach unten','Vom Akteur zur Erweiterung'],a:1,e:'Die Erweiterung zeigt auf den Use Case, den sie erweitert: „Rabattcode einlösen“ ┄> „Zahlung abwickeln“.'},
+ {t:'uc',q:'„Falls die Login-Daten fehlen (Erstanmeldung), muss der Nutzer Daten eingeben.“ Welche Beziehung?',o:['«include» von Login zu Daten eingeben','«extend» von Daten eingeben zu Login','Generalisierung','Assoziation zum Akteur'],a:1,e:'Trotz „muss“: Es passiert nur unter einer Bedingung. Bedingung = extend, z. B. mit [Erstanmeldung].'},
+ {t:'uc',q:'„Der Administrator kann alles, was ein Mitarbeiter kann.“ Wie modellierst du das?',o:['Generalisierung Administrator ──▷ Mitarbeiter','Generalisierung Mitarbeiter ──▷ Administrator','«include» zwischen den Akteuren','Komposition'],a:0,e:'Das Dreieck zeigt auf das Allgemeinere. Der Administrator erbt alle Assoziationen des Mitarbeiters.'},
+ {t:'uc',q:'Bankgeschäft: Welcher Akteur ist bei „Girokonto eröffnen“ nur optional beteiligt?',o:['Kundenberater','Schufa','Schalterangestellter','Kunde'],a:2,e:'„Geld einzahlen“ erweitert (extend) das Girokonto. Nur darüber kommt der Schalterangestellte ins Spiel.'},
+ {t:'uc',q:'Was kann ein Akteur NICHT sein?',o:['Eine Person in einer Rolle','Ein externes System wie die Schufa','Eine Funktion innerhalb des Systems','Eine externe Schnittstelle'],a:2,e:'Akteure stehen immer außerhalb der Systemgrenze. Funktionen innerhalb sind Use Cases.'},
+ {t:'act',q:'Welches Element verwendest du für „gleichzeitig bezahlt und archiviert“?',o:['Entscheidungsraute','Gabelung (Fork-Balken)','Merge-Raute','Zwei Startknoten'],a:1,e:'Paralleles = Fork-Balken. Danach mit einem Join-Balken wieder zusammenführen.'},
+ {t:'act',q:'Was ist der Unterschied zwischen ⊗ und ◉?',o:['⊗ beendet nur einen Strang, ◉ die ganze Aktivität','⊗ beendet die ganze Aktivität, ◉ nur einen Strang','Beide sind identisch','⊗ ist ein Startknoten'],a:0,e:'Ablaufende (⊗) für einen Teilstrang, Aktivitätsende (◉) für alles.'},
+ {t:'act',q:'Wie werden Bedingungen an den Ausgängen einer Entscheidung notiert?',o:['In eckigen Klammern [Betrag ≥ 1.000 €]','In geschweiften Klammern','Als Notiz','Mit «guard» Stereotyp'],a:0,e:'Guards stehen in eckigen Klammern und müssen sich gegenseitig ausschließen.'},
+ {t:'act',q:'Was macht ein Join-Balken?',o:['Er wählt einen Ausgang anhand einer Bedingung','Er wartet, bis alle eingehenden Stränge angekommen sind','Er beendet die Aktivität','Er wiederholt die vorherige Aktion'],a:1,e:'Join = synchronisieren. Erst wenn alle parallelen Tokens da sind, geht es weiter.'},
+ {t:'act',q:'Wozu dient eine Raute mit zwei Eingängen und einem Ausgang?',o:['Entscheidung','Merge: alternative Wege zusammenführen','Fork','Endknoten'],a:1,e:'Merge führt alternative Zweige zusammen und wartet im Gegensatz zum Join nicht.'},
+ {t:'cls',q:'Welche Sichtbarkeit bedeutet #?',o:['public','private','protected','package'],a:2,e:'+ public, - private, # protected, ~ package.'},
+ {t:'cls',q:'Wo sitzt die Raute bei Aggregation und Komposition?',o:['Am Teil','Am Ganzen','In der Mitte der Linie','Bei der Oberklasse'],a:1,e:'Die Raute markiert immer das Ganze. Leer = Aggregation, gefüllt = Komposition.'},
+ {t:'cls',q:'Was unterscheidet Komposition von Aggregation?',o:['Bei Komposition wird das Teil mit dem Ganzen gelöscht','Bei Aggregation wird das Teil mit dem Ganzen gelöscht','Komposition hat keine Multiplizität','Es gibt keinen Unterschied'],a:0,e:'Komposition = existenzabhängig. Konflikt ◆── Referenz: Konflikt weg, Referenzen weg.'},
+ {t:'cls',q:'Kunde 1 ──── 0..* Bestellung. Kann es Kunden ohne Bestellung geben?',o:['Ja, wegen 0..* bei Bestellung','Nein, wegen der 1 bei Kunde','Nur wenn die Assoziation gerichtet ist','Nein, 0..* heißt mindestens eine'],a:0,e:'Die Zahl am anderen Ende gilt: Ein Kunde hat 0 bis beliebig viele Bestellungen.'},
+ {t:'cls',q:'Wie erkennt man eine abstrakte Klasse?',o:['Name kursiv oder {abstract} / «abstract»','Name fett und unterstrichen','Gestrichelter Rahmen','Sie hat keine Attribute'],a:0,e:'Von abstrakten Klassen gibt es keine Objekte; sie dienen als Oberklasse (Backware, Versicherungsobjekt).'},
+ {t:'cls',q:'Restwert wird bei KFZ und Immobilie unterschiedlich berechnet. Wo steht restwertBerechnen()?',o:['Nur in den Unterklassen','Abstrakt in der Oberklasse, überschrieben in den Unterklassen','Nur in der Oberklasse, nicht in den Unterklassen','In einer eigenen Klasse Restwert'],a:1,e:'Abstrakte Methode oben (kursiv) garantiert, dass jedes Versicherungsobjekt sie hat – implementiert wird sie unten.'},
+ {t:'cls',q:'Termin erbt von Eintrag (+beschreibung: String). Hat ein Termin ein Attribut beschreibung?',o:['Ja, durch Vererbung','Nein, nur Eintrag','Nur wenn es public ist','Nur über eine Assoziation'],a:0,e:'Generalisierung vererbt alle Attribute an die Unterklassen.'},
+ {t:'cls',q:'Konflikt ──▸ 2 Termin (Pfeil nur zum Termin). Kann man vom Termin auf seinen Konflikt schließen?',o:['Ja, Assoziationen gelten immer in beide Richtungen','Nein, navigierbar ist nur Konflikt → Termin','Ja, wegen der Multiplizität 2','Nur bei Komposition'],a:1,e:'Die offene Pfeilspitze zeigt die Navigierbarkeit. Ohne Spitze auf der Termin-Seite kennt der Termin seinen Konflikt nicht.'},
+ {t:'cls',q:'Wie wird „Klasse implementiert Schnittstelle“ dargestellt?',o:['Gestrichelte Linie mit leerem Dreieck','Durchgezogene Linie mit leerem Dreieck','Gefüllte Raute','Gestrichelter Pfeil mit «use»'],a:0,e:'Realisierung = gestrichelt + leeres Dreieck. «use» ist die Nutzung ohne Implementierung.'},
+ {t:'cls',q:'Bestellung ◇── Bestellung_Detail. Hat jedes Detail einen eigenen Status und ein Datum (Attribute der Bestellung)?',o:['Ja, es erbt sie','Nein, Aggregation vererbt keine Attribute','Ja, wegen der Raute','Nur bei Multiplizität 1'],a:1,e:'Nur Generalisierung vererbt. Die Aggregation ist eine Teil-Ganzes-Beziehung.'},
+ {t:'st',q:'Wie ist eine Transition beschriftet?',o:['Ereignis [Guard] / Aktion','Aktion [Ereignis] / Guard','[Guard] Ereignis : Aktion','Nur mit dem Zielzustand'],a:0,e:'Alle drei Teile sind optional, die Reihenfolge ist aber fest.'},
+ {t:'st',q:'Was bedeutet „do / piepen“ in einem Zustand?',o:['Wird beim Betreten einmal ausgeführt','Läuft, solange der Zustand aktiv ist','Wird beim Verlassen ausgeführt','Ist eine Transition'],a:1,e:'entry = beim Betreten, do = während, exit = beim Verlassen.'},
+ {t:'st',q:'Drehkreuz ist entsperrt, jemand wirft eine weitere Münze ein. Was passiert?',o:['Wechsel in den Störzustand','Selbsttransition: Münze zurückgeben, bleibt entsperrt','Wechsel zu gesperrt','Endzustand'],a:1,e:'Laut Aufgabe wird die Münze zurückgegeben und das Drehkreuz bleibt entsperrt.'},
+ {t:'st',q:'Ladegerät: Nach dem Einschalten hat der Akku 50 %. Welcher Zustand folgt nach der ersten Minute?',o:['schnellLadend','normalLadend','nichtLadend','Endzustand'],a:1,e:'Erst [20 % ≤ L < 100 %] → normalLadend, in der nächsten Minute wegen [L < 80 %] → schnellLadend.'},
+ {t:'st',q:'Was passiert, wenn für ein Ereignis im aktuellen Zustand keine Transition existiert?',o:['Fehler, der Automat stürzt ab','Das Ereignis wird ignoriert, der Zustand bleibt','Sprung zum Startzustand','Sprung zum Endzustand'],a:1,e:'Ereignisse ohne passende Transition haben keine Wirkung – im Simulator gut zu sehen.'},
+ {t:'st',q:'Immobilie: Reservierung wird zurückgenommen, es liegen Anfragen vor. Zielzustand?',o:['Verfügbar','Angefragt','Verkauft','Reserviert'],a:1,e:'Die Anfragen bleiben bei der Reservierung bestehen, also zurück nach Angefragt – mit Guard [Anfragen vorhanden].'},
+ {t:'seq',q:'Woran erkennst du eine synchrone Nachricht?',o:['Durchgezogene Linie, gefüllte Pfeilspitze','Gestrichelte Linie, offene Spitze','Durchgezogene Linie, offene Spitze','Doppelte Linie'],a:0,e:'Synchron: Der Sender wartet auf die Antwort.'},
+ {t:'seq',q:'Der Shop verschickt eine E-Mail und wartet nicht. Welche Nachricht?',o:['Synchron','Asynchron (offene Pfeilspitze)','Antwort (gestrichelt)','Selbstaufruf'],a:1,e:'Asynchron = Sender macht sofort weiter.'},
+ {t:'seq',q:'Welches Fragment passt zu „wenn im Cache, dann getCache, sonst getData“?',o:['opt','loop','alt','par'],a:2,e:'Zwei sich ausschließende Fälle = alt mit [Bedingung] und [else].'},
+ {t:'seq',q:'Wie stellt man die Erzeugung eines Objekts dar?',o:['Pfeil auf den Kopf der neuen Lebenslinie, Kopf weiter unten','X am Ende der Lebenslinie','Objekt ganz oben mit «new»','Selbstaufruf create()'],a:0,e:'Die Lebenslinie beginnt erst mit der Erzeugung, daher sitzt der Kopf auf Höhe des create-Pfeils.'},
+ {t:'seq',q:'Welches Fragment nimmst du für parallele Abläufe (Schleudern und Abpumpen)?',o:['alt','par','opt','loop'],a:1,e:'par = Bereiche laufen gleichzeitig. Entspricht Fork/Join im Aktivitätsdiagramm.'},
+ {t:'seq',q:'Wie ist eine Antwortnachricht beschriftet?',o:['Mit dem Rückgabewert, z. B. „200, data“','Mit dem Methodennamen und Klammern','Gar nicht','Mit «return»'],a:0,e:'Gestrichelt, offene Spitze, beschriftet mit dem Ergebnis.'},
+ {t:'seq',q:'Was ist ein Aktivierungsbalken?',o:['Zeigt, wann ein Objekt aktiv ist bzw. eine Operation ausführt','Ein Fork aus dem Aktivitätsdiagramm','Die Systemgrenze','Ein Kommentar'],a:0,e:'Schmales Rechteck auf der Lebenslinie; Selbstaufrufe erzeugen einen verschachtelten Balken.'},
+ {t:'req',q:'Wer erstellt das Pflichtenheft?',o:['Der Auftraggeber','Der Auftragnehmer','Die IHK','Der Endnutzer'],a:1,e:'Lastenheft: Auftraggeber (was & wofür). Pflichtenheft: Auftragnehmer (wie & womit).'},
+ {t:'req',q:'Welche Frage beantwortet das Lastenheft?',o:['Wie wird es technisch umgesetzt?','Was soll erreicht werden und wofür?','Welche Datenbank wird genutzt?','Wer testet das System?'],a:1,e:'Das Lastenheft enthält die Anforderungen aus Kundensicht.'},
+ {t:'req',q:'Was gehört NICHT zu den Qualitätsanforderungen an eine Spezifikation?',o:['Vollständig','Eindeutig','Möglichst umfangreich formuliert','Durchführbar'],a:2,e:'Gefordert sind vollständig, konsistent, eindeutig, durchführbar – Länge ist kein Kriterium.'},
+ {t:'req',q:'Welche Erhebungstechnik erreicht viele Personen mit wenig Aufwand?',o:['Interview','Beobachtung','Fragebogen','Bericht'],a:2,e:'Hohe Informationsbreite, niedrige Kosten – dafür wenig Tiefe und keine Rückfragen.'},
+ {t:'req',q:'Was bedeutet „muss“ in der Anforderungs-Satzschablone?',o:['Wunsch','Rechtlich verbindliche Pflicht','Absicht für die Zukunft','Vorschlag'],a:1,e:'muss = Pflicht, sollte = Wunsch, wird = Absicht.'},
+ {t:'req',q:'Wofür ist das Pflichtenheft u. a. die Grundlage?',o:['Für die Abnahme des Endprodukts','Für die Ausschreibung','Für die Personalplanung des Kunden','Für die Marketingkampagne'],a:0,e:'Angebot, Auftragserteilung, technisches Design und Abnahme.'}
+];
+
+let quizStarted = false;
+(function(){
+  const qb = $('#qbox'); let sel = new Set(Object.keys(QT)), round = [], idx = 0, score = [], answered = false;
+  $('#quizTopics').innerHTML = Object.entries(QT).map(([k,[n,c]]) => `<button class="chip sel" data-t="${k}" style="--c:${c}">${n}</button>`).join('');
+  $('#quizTopics').onclick = e => { const b = e.target.closest('.chip'); if(!b) return; const t=b.dataset.t;
+    if(sel.has(t) && sel.size>1) sel.delete(t); else sel.add(t); $$('#quizTopics .chip').forEach(c=>c.classList.toggle('sel', sel.has(c.dataset.t))); if(!round.length || idx>=round.length) intro(); };
+  function intro(){
+    quizStarted = true;
+    const n = BANK_Q.filter(q=>sel.has(q.t)).length;
+    qb.innerHTML = `<h3>Bereit?</h3><p class="muted">${n} Fragen im Pool aus ${sel.size} Themen. Pro Runde kommen bis zu 10 zufällige dran. Tasten 1–4 wählen, Enter geht weiter.</p>${store.best!=null?`<p>Dein bestes Ergebnis bisher: <strong style="color:var(--ok)">${store.best} %</strong></p>`:''}<button class="btn primary" id="qGo">Runde starten</button>`;
+    $('#qGo').onclick = () => begin(shuffle(BANK_Q.filter(q=>sel.has(q.t))).slice(0,10));
+  }
+  window.quizIntro = intro;
+  function begin(qs){
+    round = qs.map(q => { const ord = shuffle(q.o.map((o,i)=>i)); return {...q, o: ord.map(i=>q.o[i]), a: ord.indexOf(q.a)}; });
+    idx = 0; score = []; show();
+  }
+  function show(){
+    const q = round[idx]; answered = false;
+    qb.innerHTML = `<div class="qprog"><i style="width:${idx/round.length*100}%"></i></div>
+      <div class="qmeta"><span>Frage ${idx+1} von ${round.length}</span><span style="color:${QT[q.t][1]}">${QT[q.t][0]}</span></div>
+      <div class="qq">${esc(q.q)}</div>
+      <div class="qopts">${q.o.map((o,i)=>`<button data-i="${i}"><b>${i+1}</b>${esc(o)}</button>`).join('')}</div>
+      <div class="qexp" id="qexp"></div><div class="row" style="margin-top:14px"><button class="btn primary" id="qNext" style="display:none">${idx+1<round.length?'Nächste Frage':'Auswertung zeigen'}</button></div>`;
+    $('.qopts', qb).onclick = e => { const b = e.target.closest('button'); if(b) pick(+b.dataset.i); };
+    $('#qNext').onclick = next;
+  }
+  function pick(i){
+    if(answered) return; answered = true;
+    const q = round[idx], ok = i===q.a; score.push({t:q.t, ok, q});
+    $$('.qopts button', qb).forEach((b,k)=>{ b.disabled = true; if(k===q.a) b.classList.add('right'); else if(k===i) b.classList.add('wrong'); });
+    const ex = $('#qexp'); ex.innerHTML = `<strong style="color:${ok?'var(--ok)':'var(--bad)'}">${ok?'Richtig.':'Nicht ganz.'}</strong> ${esc(q.e)}`; ex.classList.add('on');
+    $('.qprog i', qb).style.width = ((idx+1)/round.length*100)+'%';
+    const n = $('#qNext'); n.style.display=''; n.focus({preventScroll:true});
+  }
+  function next(){ idx++; idx < round.length ? show() : result(); }
+  function result(){
+    const right = score.filter(s=>s.ok).length, pct = Math.round(right/score.length*100);
+    if(store.best==null || pct > store.best){ store.best = pct; save(); renderProgress(); }
+    const C = 2*Math.PI*62, col = pct>=80?'var(--ok)':pct>=50?'var(--warn)':'var(--bad)';
+    const per = Object.keys(QT).map(t => { const a = score.filter(s=>s.t===t); return a.length ? [t, a.filter(s=>s.ok).length, a.length] : null; }).filter(Boolean);
+    const wrong = score.filter(s=>!s.ok).map(s=>s.q);
+    qb.innerHTML = `<div class="result"><svg class="ring" viewBox="0 0 150 150"><circle cx="75" cy="75" r="62" stroke="var(--ink3)"/><circle id="ringArc" cx="75" cy="75" r="62" stroke="${col}" stroke-dasharray="${C}" stroke-dashoffset="${C}" stroke-linecap="round" transform="rotate(-90 75 75)" style="transition:stroke-dashoffset 1.2s ease"/><text x="75" y="82" text-anchor="middle" style="font-family:var(--display);font-size:30px;font-weight:800;fill:var(--chalk)">${pct} %</text></svg>
+      <div><h3>${right} von ${score.length} richtig</h3><p class="muted">${pct>=80?'Stark – das sitzt.':pct>=50?'Solide Basis. Schau dir die Themen mit kurzen Balken nochmal an.':'Noch Luft nach oben. Die Simulationen in den Themen helfen beim Verstehen.'}</p>
+      <div class="bars">${per.map(([t,r,n])=>`<div><span>${QT[t][0]}</span><span class="b"><i style="width:${r/n*100}%;background:${QT[t][1]}"></i></span><span>${r}/${n}</span></div>`).join('')}</div></div></div>
+      <div class="row" style="margin-top:20px"><button class="btn primary" id="qAgain">Neue Runde</button>${wrong.length?`<button class="btn" id="qWrong">Falsche wiederholen (${wrong.length})</button>`:''}</div>`;
+    requestAnimationFrame(()=>requestAnimationFrame(()=>{ $('#ringArc').style.strokeDashoffset = C*(1-pct/100); }));
+    $('#qAgain').onclick = () => begin(shuffle(BANK_Q.filter(q=>sel.has(q.t))).slice(0,10));
+    if(wrong.length) $('#qWrong').onclick = () => begin(shuffle(wrong.map(w => BANK_Q.find(b=>b.q===w.q))));
+    if(pct>=80 && !reduced){ const cols=['#7CC4FF','#5FE0B0','#F2B44C','#B79CFF','#FF8F7E']; for(let i=0;i<40;i++){ const d=document.createElement('i'); d.className='confetti'; d.style.left=Math.random()*100+'%'; d.style.background=cols[i%5]; d.style.animationDelay=(Math.random()*.5)+'s'; qb.appendChild(d); setTimeout(()=>d.remove(),2600);} }
+  }
+  document.addEventListener('keydown', e => {
+    if(!$('#p-quiz').classList.contains('on') || !round.length || idx>=round.length) return;
+    if(/^[1-4]$/.test(e.key) && !answered){ const b = $$('.qopts button', qb)[+e.key-1]; if(b) pick(+e.key-1); }
+    else if(e.key==='Enter' && answered && document.activeElement?.id!=='qNext'){ next(); }
+  });
+})();
+
+/* ---------- init ---------- */
+renderProgress();
+go(location.hash.slice(1) || 'start', false);
+window.addEventListener('hashchange', () => go(location.hash.slice(1), false));
+</script>
+</body>
+</html>
