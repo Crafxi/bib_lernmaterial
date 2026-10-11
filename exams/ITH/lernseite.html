@@ -33,7 +33,7 @@
             --bad: #ff6b7f;
             --warn: #ffc24f;
             --glass-bg: linear-gradient(150deg, rgba(255, 255, 255, .12) 0%, rgba(255, 255, 255, .035) 42%, rgba(255, 255, 255, .06) 100%);
-            --glass-blur: blur(28px) saturate(190%) brightness(1.05);
+            --glass-blur: blur(22px) saturate(180%);
             --rim: inset 0 1px 0 rgba(255, 255, 255, .3), inset 0 -1px 0 rgba(255, 255, 255, .05), inset 1px 0 0 rgba(255, 255, 255, .07), inset -1px 0 0 rgba(255, 255, 255, .04);
             --drop: 0 30px 70px -30px rgba(0, 0, 0, .8), 0 2px 10px -3px rgba(0, 0, 0, .45);
             --spring: cubic-bezier(.34, 1.56, .64, 1);
@@ -137,104 +137,28 @@
             position: fixed;
             inset: 0;
             z-index: -2;
-            overflow: hidden;
             pointer-events: none;
+            transform: translateZ(0);
             background:
-                radial-gradient(1100px 760px at 85% -12%, rgba(70, 100, 255, .22), transparent 60%),
-                radial-gradient(900px 700px at -12% 112%, rgba(0, 190, 170, .14), transparent 60%),
+                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"),
+                radial-gradient(58vmax 54vmax at 6% 4%, rgba(88, 116, 255, .85), rgba(44, 60, 190, .42) 40%, transparent 72%),
+                radial-gradient(54vmax 56vmax at 100% 46%, rgba(168, 120, 255, .78), rgba(96, 46, 190, .36) 42%, transparent 72%),
+                radial-gradient(50vmax 44vmax at 55% 112%, rgba(28, 205, 182, .5), rgba(11, 111, 122, .22) 42%, transparent 72%),
+                radial-gradient(30vmax 30vmax at 0% 84%, rgba(255, 141, 82, .36), rgba(184, 64, 31, .14) 44%, transparent 72%),
+                radial-gradient(1100px 760px at 85% -12%, rgba(70, 100, 255, .2), transparent 60%),
+                radial-gradient(900px 700px at -12% 112%, rgba(0, 190, 170, .12), transparent 60%),
                 linear-gradient(180deg, #070a16, #04060c)
         }
 
-        .blob {
-            position: absolute;
-            width: 48vmax;
-            height: 48vmax;
-            border-radius: 43% 57% 61% 39%/48% 41% 59% 52%;
-            filter: blur(55px);
-            opacity: .5;
-            mix-blend-mode: screen;
-            will-change: transform, border-radius;
-            animation: morph 24s ease-in-out infinite alternate, drift 36s ease-in-out infinite alternate
-        }
-
-        .b1 {
-            background: radial-gradient(circle at 35% 35%, #4f6dff, #2433b0 55%, transparent 72%);
-            top: -14vmax;
-            left: -10vmax
-        }
-
-        .b2 {
-            background: radial-gradient(circle at 60% 40%, #a173ff, #5a2bb8 55%, transparent 72%);
-            top: 18vh;
-            right: -16vmax;
-            animation-delay: -9s, -14s
-        }
-
-        .b3 {
-            background: radial-gradient(circle, #18cdb4, #0b6f7a 55%, transparent 72%);
-            bottom: -20vmax;
-            left: 24vw;
-            opacity: .38;
-            animation-delay: -15s, -22s
-        }
-
-        .b4 {
-            background: radial-gradient(circle, #ff8d52, #b8401f 55%, transparent 72%);
-            width: 30vmax;
-            height: 30vmax;
-            top: 58vh;
-            left: -8vmax;
-            opacity: .26;
-            animation-delay: -4s, -7s
-        }
-
-        @keyframes morph {
-            0% {
-                border-radius: 43% 57% 61% 39%/48% 41% 59% 52%
-            }
-
-            50% {
-                border-radius: 61% 39% 42% 58%/35% 62% 38% 65%
-            }
-
-            100% {
-                border-radius: 38% 62% 55% 45%/60% 44% 56% 40%
-            }
-        }
-
-        @keyframes drift {
-            0% {
-                transform: translate(0, 0) rotate(0) scale(1)
-            }
-
-            50% {
-                transform: translate(7vw, 5vh) rotate(45deg) scale(1.1)
-            }
-
-            100% {
-                transform: translate(-5vw, 9vh) rotate(-25deg) scale(.94)
-            }
-        }
-
-        .grain {
-            position: fixed;
-            inset: 0;
-            z-index: -1;
-            pointer-events: none;
-            opacity: .07;
-            mix-blend-mode: overlay;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")
-        }
-
         /* ---------- glass material ---------- */
+        /* Hinter Panels liegt nur der ruhige Hintergrund, Blur wäre dort unsichtbar, kostet aber viel.
+   Echte Unschärfe nur bei Elementen, die über Inhalt schweben (Hex-Fenster, Tab-Leiste, Sheet). */
         .panel,
         .side,
         .term,
         details.sol,
         .note {
             background: var(--glass-bg);
-            -webkit-backdrop-filter: var(--glass-blur);
-            backdrop-filter: var(--glass-blur);
             border: 1px solid rgba(255, 255, 255, .09);
             box-shadow: var(--rim), var(--drop);
         }
@@ -280,10 +204,14 @@
             opacity: 1
         }
 
-        html.refract .side,
+        .term {
+            -webkit-backdrop-filter: var(--glass-blur);
+            backdrop-filter: var(--glass-blur)
+        }
+
         html.refract .term {
-            -webkit-backdrop-filter: url(#liquid) blur(22px) saturate(190%);
-            backdrop-filter: url(#liquid) blur(22px) saturate(190%)
+            -webkit-backdrop-filter: url(#liquid) blur(20px) saturate(180%);
+            backdrop-filter: url(#liquid) blur(20px) saturate(180%)
         }
 
         /* ---------- layout ---------- */
@@ -359,7 +287,7 @@
             grid-template-columns: 10px 34px 1fr;
             align-items: center;
             gap: 8px;
-            padding: 8px 12px;
+            padding: 7px 12px;
             border-radius: 16px;
             color: var(--muted);
             text-decoration: none;
@@ -403,14 +331,8 @@
         }
 
         .port.active .led {
-            animation: breathe 1.8s ease-in-out infinite
-        }
-
-        @keyframes breathe {
-            50% {
-                opacity: .4;
-                transform: scale(.8)
-            }
+            outline: 3px solid rgba(255, 255, 255, .14);
+            outline-offset: 1px
         }
 
         .side-foot {
@@ -435,8 +357,14 @@
         }
 
         .sec {
-            max-width: 1000px;
-            padding-top: 84px
+            max-width: 1080px;
+            padding: 84px 40px 30px;
+            margin-inline: -40px
+        }
+
+        .hero.paused *,
+        .hero.paused {
+            animation-play-state: paused !important
         }
 
         .sec-head {
@@ -863,14 +791,12 @@
         @keyframes dropin {
             from {
                 opacity: 0;
-                transform: translateY(-8px);
-                filter: blur(6px)
+                transform: translateY(-8px)
             }
 
             to {
                 opacity: 1;
-                transform: none;
-                filter: none
+                transform: none
             }
         }
 
@@ -1030,8 +956,7 @@
 
         .hero-copy>* {
             opacity: 0;
-            transform: translateY(22px);
-            filter: blur(10px)
+            transform: translateY(22px)
         }
 
         .hero.in .hero-copy>* {
@@ -1049,8 +974,7 @@
         @keyframes rise {
             to {
                 opacity: 1;
-                transform: none;
-                filter: none
+                transform: none
             }
         }
 
@@ -1063,7 +987,7 @@
         }
 
         .hero.in .term {
-            animation: termIn 1.3s var(--spring) .2s forwards, float 9s ease-in-out 1.6s infinite
+            animation: termIn 1.3s var(--spring) .2s forwards
         }
 
         @keyframes termIn {
@@ -1209,7 +1133,7 @@
             border: 1px solid color-mix(in srgb, var(--c, var(--pad)) 30%, transparent);
             background: linear-gradient(170deg, color-mix(in srgb, var(--c, var(--pad)) 20%, rgba(255, 255, 255, .04)), color-mix(in srgb, var(--c, var(--pad)) 8%, transparent));
             box-shadow: inset 0 1px 0 rgba(255, 255, 255, .12);
-            transition: background .3s, color .3s, transform .55s var(--spring), opacity .4s, box-shadow .4s, filter .6s var(--ease)
+            transition: background .3s, color .3s, transform .55s var(--spring), opacity .4s, box-shadow .4s
         }
 
         .byte.hov {
@@ -1235,8 +1159,7 @@
 
         .byte.ghost {
             opacity: 0;
-            transform: translateY(10px) scale(.5);
-            filter: blur(5px)
+            transform: translateY(10px) scale(.5)
         }
 
         .fdetail {
@@ -1337,7 +1260,6 @@
             border-radius: 41%;
             z-index: -1;
             background: linear-gradient(180deg, rgba(255, 173, 98, .75), rgba(255, 120, 60, .35));
-            animation: spin 7s linear infinite;
             transition: top .9s var(--spring)
         }
 
@@ -1349,6 +1271,10 @@
             to {
                 transform: rotate(360deg)
             }
+        }
+
+        .bitbtn[aria-pressed="true"]::after {
+            animation: spin 4.5s cubic-bezier(.2, .7, .3, 1) 1
         }
 
         .bitbtn:nth-child(4) {
@@ -1545,8 +1471,7 @@
         .tedge.lost .wire {
             stroke: var(--warn);
             stroke-dasharray: 5 5;
-            filter: none;
-            animation: dash 1s linear infinite
+            filter: none
         }
 
         .tedge.down .wire {
@@ -1710,8 +1635,7 @@
             background: linear-gradient(110deg, color-mix(in srgb, var(--c) 14%, transparent), rgba(255, 255, 255, .03));
             border: 1px solid color-mix(in srgb, var(--c) 28%, transparent);
             box-shadow: inset 0 1px 0 rgba(255, 255, 255, .12), inset 4px 0 0 var(--c);
-            -webkit-backdrop-filter: blur(14px);
-            backdrop-filter: blur(14px);
+            background-color: rgba(16, 20, 36, .55);
             transition: transform .55s var(--spring), background .3s, box-shadow .4s
         }
 
@@ -1868,14 +1792,12 @@
         @keyframes pop {
             from {
                 opacity: 0;
-                transform: scale(.6);
-                filter: blur(6px)
+                transform: scale(.6)
             }
 
             to {
                 opacity: 1;
-                transform: none;
-                filter: none
+                transform: none
             }
         }
 
@@ -2036,8 +1958,7 @@
             background: linear-gradient(90deg, var(--accent), var(--accent-2), var(--accent));
             background-size: 200% 100%;
             box-shadow: 0 0 14px var(--accent), inset 0 1px 0 rgba(255, 255, 255, .6);
-            transition: width .8s var(--spring);
-            animation: flow 3s linear infinite
+            transition: width .8s var(--spring)
         }
 
         @keyframes flow {
@@ -2409,14 +2330,12 @@
         .reveal {
             opacity: 0;
             transform: translateY(34px) scale(.965);
-            filter: blur(12px);
-            transition: opacity .9s var(--ease) var(--d, 0s), transform 1.2s var(--spring) var(--d, 0s), filter .9s var(--ease) var(--d, 0s)
+            transition: opacity .9s var(--ease) var(--d, 0s), transform 1.2s var(--spring) var(--d, 0s)
         }
 
         .reveal.in {
             opacity: 1;
-            transform: none;
-            filter: none
+            transform: none
         }
 
         @media (max-width:900px) {
@@ -2870,20 +2789,7 @@
             }
 
             /* Leistung auf dem Handy */
-            .blob {
-                filter: blur(34px);
-                opacity: .42
-            }
-
-            .b3,
-            .b4 {
-                display: none
-            }
-
-            .panel,
-            .term,
-            details.sol,
-            .note {
+            .term {
                 -webkit-backdrop-filter: blur(16px) saturate(170%);
                 backdrop-filter: blur(16px) saturate(170%)
             }
@@ -2896,15 +2802,6 @@
             .panel::after,
             .term::after {
                 display: none
-            }
-
-            .reveal {
-                filter: none;
-                transition: opacity .8s var(--ease) var(--d, 0s), transform 1s var(--spring) var(--d, 0s)
-            }
-
-            .hero-copy>* {
-                filter: none
             }
 
             /* Bedienung mit dem Daumen */
@@ -3118,6 +3015,143 @@
             }
         }
 
+        /* ---------- Leistungsmodus ---------- */
+        html.lite .panel,
+        html.lite .side,
+        html.lite .term,
+        html.lite details.sol,
+        html.lite .note,
+        html.lite .tabbar,
+        html.lite .sheet,
+        html.lite .peek,
+        html.lite .qnav,
+        html.lite .sheet-back,
+        html.lite .perf-toast {
+            -webkit-backdrop-filter: none !important;
+            backdrop-filter: none !important
+        }
+
+        html.lite .panel,
+        html.lite .term,
+        html.lite details.sol,
+        html.lite .note,
+        html.lite .side {
+            background: linear-gradient(150deg, rgba(44, 50, 80, .9), rgba(22, 26, 44, .92) 45%, rgba(26, 30, 50, .92))
+        }
+
+        html.lite .tabbar,
+        html.lite .sheet,
+        html.lite .peek,
+        html.lite .qnav,
+        html.lite .perf-toast {
+            background: linear-gradient(160deg, rgba(40, 46, 72, .97), rgba(20, 24, 40, .97))
+        }
+
+        html.lite .panel::after,
+        html.lite .term::after,
+        html.lite .ripple {
+            display: none
+        }
+
+        html.lite .reveal {
+            opacity: 1;
+            transform: none;
+            transition: none
+        }
+
+        html.lite .bitbtn::after {
+            animation: none
+        }
+
+        html.lite .hero h1 {
+            animation: none
+        }
+
+        .perf {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            width: 100%;
+            margin-top: 14px;
+            padding: 9px 12px;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, .1);
+            background: rgba(255, 255, 255, .05);
+            color: var(--text);
+            font: 500 .84rem var(--sans);
+            cursor: pointer;
+            text-align: left
+        }
+
+        .perf small {
+            display: block;
+            color: var(--muted);
+            font-size: .74rem
+        }
+
+        .perf .sw {
+            flex: none;
+            width: 40px;
+            height: 24px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, .16);
+            position: relative;
+            transition: background .3s;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, .4)
+        }
+
+        .perf .sw::after {
+            content: "";
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #fff;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, .4);
+            transition: transform .45s var(--spring)
+        }
+
+        .perf[aria-checked="true"] .sw {
+            background: var(--ok)
+        }
+
+        .perf[aria-checked="true"] .sw::after {
+            transform: translateX(16px)
+        }
+
+        .perf-toast {
+            position: fixed;
+            z-index: 70;
+            right: 20px;
+            bottom: calc(env(safe-area-inset-bottom, 0px) + 20px);
+            max-width: 340px;
+            padding: 14px 16px;
+            border-radius: 22px;
+            background: linear-gradient(160deg, rgba(44, 50, 80, .8), rgba(18, 22, 38, .75));
+            -webkit-backdrop-filter: blur(18px);
+            backdrop-filter: blur(18px);
+            border: 1px solid rgba(255, 255, 255, .16);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, .3), 0 20px 50px -14px rgba(0, 0, 0, .8);
+            animation: pop .6s var(--spring) both
+        }
+
+        .perf-toast p {
+            margin: 0 0 10px;
+            font-size: .92rem
+        }
+
+        @media (max-width:900px) {
+            .perf-toast {
+                left: 12px;
+                right: 12px;
+                max-width: none;
+                bottom: calc(env(safe-area-inset-bottom, 0px) + 84px)
+            }
+        }
+
         @media (prefers-reduced-motion: reduce) {
 
             *,
@@ -3127,10 +3161,6 @@
                 animation-iteration-count: 1 !important;
                 transition-duration: .001ms !important;
                 animation-delay: 0s !important
-            }
-
-            .blob {
-                animation: none
             }
 
             .reveal,
@@ -3149,13 +3179,7 @@
 </head>
 
 <body>
-    <div class="bg" aria-hidden="true">
-        <div class="blob b1"></div>
-        <div class="blob b2"></div>
-        <div class="blob b3"></div>
-        <div class="blob b4"></div>
-    </div>
-    <div class="grain" aria-hidden="true"></div>
+    <div class="bg" aria-hidden="true"></div>
     <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
         <filter id="liquid" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB">
             <feTurbulence type="fractalNoise" baseFrequency="0.006 0.009" numOctaves="2" seed="11" result="n" />
@@ -3192,9 +3216,8 @@
                 <li><a class="port" href="#s-cheat" data-topic="cheat"><span class="led"></span><span
                             class="code">Σ</span><span>Spickzettel</span></a></li>
             </ul>
-            <p class="side-foot">Die Zahlen sind die Verzweigungen aus der Probeklausur. Die LEDs zeigen deinen
-                Quiz-Stand: <span class="led"></span> noch nicht geübt, <span class="led amber"></span> teilweise, <span
-                    class="led green"></span> alles richtig.</p>
+            <p class="side-foot">Zahlen = Verzweigungen der Probeklausur. LEDs = Quiz-Stand: <span class="led"></span>
+                offen, <span class="led amber"></span> teilweise, <span class="led green"></span> alles richtig.</p>
         </aside>
 
         <main class="main">
@@ -3353,7 +3376,8 @@
                 <div class="note">
                     <p><b>Kopfrechen-Trick Hex → Dezimal:</b> erste Ziffer × 16 + zweite Ziffer. Beispiel
                         <code>2c</code> = 2 × 16 + 12 = 44. <b>Dezimal → Hex:</b> durch 16 teilen, Ergebnis ist die
-                        erste Ziffer, der Rest die zweite. 133 : 16 = 8 Rest 5 → <code>85</code>.</p>
+                        erste Ziffer, der Rest die zweite. 133 : 16 = 8 Rest 5 → <code>85</code>.
+                    </p>
                 </div>
                 <button class="btn" data-quiz="zahl" type="button">Quiz zu Zahlensystemen</button>
             </section>
@@ -3714,10 +3738,12 @@
                         <ol style="margin:0">
                             <li>Byte 0–5: Ziel-MAC, Byte 6–11: Quell-MAC</li>
                             <li>Byte 12–13: EtherType (<code>08 00</code> IPv4, <code>08 06</code> ARP,
-                                <code>86 dd</code> IPv6)</li>
+                                <code>86 dd</code> IPv6)
+                            </li>
                             <li>Byte 14: <code>45</code> → IPv4, Header 5 × 4 = 20 Byte</li>
                             <li>Byte 16–17: Total Length, Byte 22: TTL, Byte 23: Protocol (<code>06</code> TCP,
-                                <code>11</code> UDP, <code>01</code> ICMP)</li>
+                                <code>11</code> UDP, <code>01</code> ICMP)
+                            </li>
                             <li>Byte 26–29: Quell-IP, Byte 30–33: Ziel-IP</li>
                             <li>Ab Byte 34: TCP/UDP, zuerst Quell-Port, dann Ziel-Port (je 2 Byte)</li>
                         </ol>
@@ -3943,7 +3969,8 @@
                             <li>Hosts = 2<sup>Hostbits</sup> − 2 (Netzadresse und Broadcast fallen weg)</li>
                             <li>Private Bereiche: <code>10.0.0.0/8</code>, <code>172.16.0.0/12</code>,
                                 <code>192.168.0.0/16</code>. Sie dürfen in jedem privaten Netz wiederverwendet werden
-                                und werden im Internet nicht geroutet.</li>
+                                und werden im Internet nicht geroutet.
+                            </li>
                         </ul>
                     </div>
                     <div class="panel" style="margin:0">
@@ -4011,7 +4038,8 @@
                             (die anderen sind MAC-artig bzw. haben nur 4 Hex-Paare oder ungültige Zeichen wie „7G“).
                         </li>
                         <li><b>A61.1</b> CIDR = Classless Inter-Domain Routing (klassenlose Adressierung mit Suffix).
-                            <b>A61.2</b> Dotted Decimal: z. B. <code>192.168.1.1</code>.</li>
+                            <b>A61.2</b> Dotted Decimal: z. B. <code>192.168.1.1</code>.
+                        </li>
                         <li><b>A61.3</b> Richtig: „besteht aus 32 Bit“ und „logische Adresse im Gegensatz zur
                             physikalischen MAC-Adresse“.</li>
                         <li><b>A61.4</b> 192.168.128.254 /24 ist eine Host-Adresse im Netz 192.168.128.0 /24. Als
@@ -4020,7 +4048,8 @@
                         <li><b>A61.5</b> /26 → 2<sup>6</sup> − 2 = <b>62</b> Clients</li>
                         <li><b>A63</b> 199.1.2.100 / 255.255.255.224: Suffix <b>/27</b>, NA <b>199.1.2.96</b>, erste
                             <b>199.1.2.97</b>, letzte <b>199.1.2.126</b>, BC <b>199.1.2.127</b>, <b>30</b> Hosts, mit
-                            /30 maximal 2<sup>3</sup> = <b>8</b> Subnetze.</li>
+                            /30 maximal 2<sup>3</sup> = <b>8</b> Subnetze.
+                        </li>
                     </ul>
                 </details>
                 <button class="btn" data-quiz="ipv4" type="button">Quiz zu IPv4</button>
@@ -4068,13 +4097,15 @@
                     <ul>
                         <li><b>A70.1</b> 4 Subnetze aus /24 → 2 Bit leihen → /26 → <b>255.255.255.192</b></li>
                         <li><b>A70.2.1</b> Subnetz 1 (Zählung 0–3): <b>192.168.168.64</b>. <b>A70.2.2</b> Subnetz 3:
-                            <b>192.168.168.192</b></li>
+                            <b>192.168.168.192</b>
+                        </li>
                         <li><b>A71.1</b> 192.168.3.49 /28: NA <b>192.168.3.48</b>, BC <b>192.168.3.63</b></li>
                         <li><b>A71.2</b> Mind. 4 Hosts → 3 Hostbits (2<sup>3</sup> − 2 = 6) → <b>/29</b> =
                             255.255.255.248</li>
                         <li><b>A71.3</b> Von /28 auf /29 = 1 Bit geliehen → <b>2</b> Subnetze</li>
                         <li><b>A71.4</b> Größte Host-Adresse Subnetz 0: <b>192.168.3.54</b> (BC .55), Subnetz 1:
-                            <b>192.168.3.62</b> (BC .63)</li>
+                            <b>192.168.3.62</b> (BC .63)
+                        </li>
                     </ul>
                 </details>
                 <button class="btn" data-quiz="sub" type="button">Quiz zum Subnetting</button>
@@ -4189,14 +4220,16 @@ Router-Link 2</textarea></label>
                             <li><b>MAC-Ziel:</b> Ziel im eigenen Netz → MAC des Ziels (aus der ARP-Tabelle). Ziel in
                                 fremdem Netz → MAC des Gateways</li>
                             <li><b>EtherType:</b> ping = IPv4 → <code>0x0800</code>. Ein ARP-Frame hätte
-                                <code>0x0806</code></li>
+                                <code>0x0806</code>
+                            </li>
                         </ul>
                     </div>
                 </div>
                 <div class="note exam">
                     <p><b>A91.1 (max. Einträge in der ARP-Tabelle):</b> Zähle alle anderen Geräte mit IP-Adresse im
                         <b>selben Subnetz</b> (andere PCs, Server, das Router-Interface). Switches tauchen nicht auf,
-                        Geräte hinter einem Router auch nicht, denn ARP-Broadcasts gehen nicht über Router hinaus.</p>
+                        Geräte hinter einem Router auch nicht, denn ARP-Broadcasts gehen nicht über Router hinaus.
+                    </p>
                 </div>
                 <button class="btn" data-quiz="arp" type="button">Quiz zu ARP</button>
             </section>
@@ -5733,12 +5766,55 @@ fa f0 8b 99 00 00 02 04  05 b4 00 00 00 00 00 00`;
             }
 
 
+
+            /* =================== LEISTUNG =================== */
+            function initPerf() {
+                const root = document.documentElement;
+                const toggles = [];
+                const set = on => { root.classList.toggle('lite', on); toggles.forEach(t => t.setAttribute('aria-checked', on ? 'true' : 'false')); };
+                function makeToggle() {
+                    const b = h('button', { class: 'perf', type: 'button', role: 'switch', 'aria-checked': 'false' }, h('span', {}, 'Leistungsmodus', h('small', {}, 'Weniger Glas-Effekte, flüssiger')), h('span', { class: 'sw', 'aria-hidden': 'true' }));
+                    b.addEventListener('click', () => { const on = !root.classList.contains('lite'); set(on); store.set('lite', on); });
+                    toggles.push(b); return b;
+                }
+                const foot = $('.side-foot'); if (foot) foot.after(makeToggle());
+                const sheetHead = $('.sheet .row'); if (sheetHead) sheetHead.before(makeToggle());
+                const saved = store.get('lite', null);
+                if (saved === true) set(true);
+                if (saved !== null || RM) return;
+                // Beim ersten Scrollen kurz messen, ob die Seite ruckelt, und dann den Leistungsmodus anbieten
+                let measuring = false;
+                const onScroll = () => {
+                    if (measuring || document.visibilityState !== 'visible') return;
+                    measuring = true; window.removeEventListener('scroll', onScroll);
+                    const ds = []; let last = performance.now(); const end = last + 1600;
+                    const tick = t => { ds.push(t - last); last = t; if (t < end) requestAnimationFrame(tick); else judge(); };
+                    requestAnimationFrame(tick);
+                    function judge() {
+                        if (document.visibilityState !== 'visible' || ds.length < 10) return;
+                        ds.sort((a, b) => a - b);
+                        const slow = ds.filter(d => d > 34).length / ds.length;
+                        if (slow > 0.25) offer();
+                    }
+                };
+                setTimeout(() => window.addEventListener('scroll', onScroll, { passive: true }), 1500);
+                function offer() {
+                    const t = h('div', { class: 'perf-toast', role: 'status' },
+                        h('p', {}, 'Die Glas-Effekte bremsen dein Gerät etwas aus. Leistungsmodus einschalten? Du kannst das jederzeit im Menü ändern.'),
+                        h('div', { class: 'row' },
+                            h('button', { class: 'btn primary', type: 'button', onclick: () => { set(true); store.set('lite', true); t.remove(); } }, 'Einschalten'),
+                            h('button', { class: 'btn ghost', type: 'button', onclick: () => { store.set('lite', false); t.remove(); } }, 'Nein danke')));
+                    document.body.append(t);
+                }
+            }
+
             /* =================== LIQUID GLASS =================== */
             function initGlass() {
                 const root = document.documentElement;
                 // Chromium kann SVG-Filter im backdrop-filter → echte Lichtbrechung
                 const brands = navigator.userAgentData && navigator.userAgentData.brands;
                 if (!RM && !isTouchLayout() && brands && brands.some(b => /Chromium|Google Chrome|Microsoft Edge/.test(b.brand))) root.classList.add('refract');
+                initPerf();
 
                 // Segment-Controls: flüssige Glas-Pille
                 const placers = [];
@@ -5808,8 +5884,20 @@ fa f0 8b 99 00 00 02 04  05 b4 00 00 00 00 00 00`;
                     els.forEach(el => io.observe(el));
                 }
 
-                // Hero-Auftritt
-                requestAnimationFrame(() => $('.hero').classList.add('in'));
+                // Hero-Auftritt; Animationen im Hero pausieren, sobald er nicht mehr zu sehen ist
+                const hero = $('.hero');
+                requestAnimationFrame(() => hero.classList.add('in'));
+                if ('IntersectionObserver' in window) new IntersectionObserver(es => hero.classList.toggle('paused', !es[0].isIntersecting)).observe(hero);
+                // Abschnitte außerhalb des Bildes nicht rendern. Erst nach dem ersten Layout aktivieren,
+                // mit der gemessenen Höhe als Platzhalter, damit Sprünge über die Navigation exakt landen.
+                const idle = window.requestIdleCallback || (fn => setTimeout(fn, 600));
+                const fontsReady = document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve();
+                fontsReady.then(() => idle(() => $$('.sec').forEach(sec => {
+                    const cs = getComputedStyle(sec);
+                    const inner = sec.offsetHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom);
+                    sec.style.containIntrinsicSize = `auto ${Math.round(inner)}px`; sec.style.contentVisibility = 'auto';
+                })));
+                $$('.sec').forEach(sec => sec.addEventListener('contentvisibilityautostatechange', e => { if (!e.skipped) requestAnimationFrame(relayout); }));
 
                 // Quiz: Glas pulsiert bei richtig, wackelt bei falsch
                 const qb = $('#quiz-box');
