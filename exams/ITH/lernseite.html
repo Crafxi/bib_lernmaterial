@@ -1158,15 +1158,37 @@
         /* ---------- hex dump ---------- */
         .hexwrap {
             overflow-x: auto;
-            padding: 4px 2px 6px
+            padding: 4px 2px 6px;
+            container-type: inline-size
         }
 
         .hex {
+            --cols: 16;
             display: grid;
-            grid-template-columns: auto repeat(var(--cols, 16), minmax(24px, 1fr));
+            grid-template-columns: auto repeat(var(--cols), minmax(26px, 1fr));
             gap: 5px;
             font-family: var(--mono);
             font-size: .84rem
+        }
+
+        .hex .off.mid {
+            display: none
+        }
+
+        @container (max-width: 560px) {
+            .hex {
+                --cols: 8;
+                gap: 6px;
+                font-size: .9rem
+            }
+
+            .hex .off.mid {
+                display: block
+            }
+
+            .hex .byte {
+                padding: 7px 0
+            }
         }
 
         .hex .off {
@@ -2507,6 +2529,595 @@
             }
         }
 
+        /* ---------- mobile: tab bar, sheet, peek ---------- */
+        .tabbar,
+        .sheet,
+        .sheet-back,
+        .peek {
+            display: none
+        }
+
+        @media (max-width:900px) {
+            .side {
+                display: none
+            }
+
+            html {
+                scroll-padding-top: calc(env(safe-area-inset-top, 0px) + 16px)
+            }
+
+            .main {
+                padding-bottom: calc(150px + env(safe-area-inset-bottom, 0px))
+            }
+
+            .hero {
+                padding-top: calc(24px + env(safe-area-inset-top, 0px))
+            }
+
+            .tabbar {
+                display: flex;
+                position: fixed;
+                z-index: 50;
+                left: 12px;
+                right: 12px;
+                bottom: calc(env(safe-area-inset-bottom, 0px) + 12px);
+                gap: 6px;
+                align-items: center;
+                padding: 6px;
+                border-radius: 32px;
+                background: linear-gradient(160deg, rgba(40, 46, 72, .62), rgba(18, 22, 38, .5));
+                -webkit-backdrop-filter: blur(24px) saturate(190%);
+                backdrop-filter: blur(24px) saturate(190%);
+                border: 1px solid rgba(255, 255, 255, .14);
+                box-shadow: inset 0 1px 0 rgba(255, 255, 255, .3), 0 18px 40px -12px rgba(0, 0, 0, .8);
+                transition: transform .6s var(--spring), padding .5s var(--spring), left .5s var(--spring), right .5s var(--spring)
+            }
+
+            .tabbar.mini {
+                left: 40px;
+                right: 40px;
+                padding: 4px;
+                transform: translateY(4px) scale(.96)
+            }
+
+            .tabbar.mini .tb-sub {
+                opacity: 0;
+                max-height: 0
+            }
+
+            .tb-btn {
+                flex: none;
+                width: 48px;
+                height: 48px;
+                display: grid;
+                place-items: center;
+                border-radius: 50%;
+                color: var(--text);
+                cursor: pointer;
+                background: linear-gradient(170deg, rgba(255, 255, 255, .16), rgba(255, 255, 255, .04));
+                border: 1px solid rgba(255, 255, 255, .14);
+                box-shadow: inset 0 1px 0 rgba(255, 255, 255, .35);
+                transition: transform .5s var(--spring), opacity .3s;
+                -webkit-tap-highlight-color: transparent
+            }
+
+            .tb-btn:active {
+                transform: scale(.86)
+            }
+
+            .tb-btn:disabled {
+                opacity: .3
+            }
+
+            .tb-quiz {
+                background: linear-gradient(135deg, rgba(196, 176, 255, .95), rgba(140, 205, 255, .9));
+                color: var(--ink);
+                border-color: rgba(255, 255, 255, .45);
+                box-shadow: inset 0 1px 0 rgba(255, 255, 255, .7), 0 8px 22px -8px rgba(150, 130, 255, .9)
+            }
+
+            .tb-cur {
+                flex: 1;
+                min-width: 0;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                height: 48px;
+                padding: 0 14px;
+                border-radius: 24px;
+                border: 0;
+                background: transparent;
+                color: var(--text);
+                text-align: left;
+                cursor: pointer;
+                -webkit-tap-highlight-color: transparent;
+                transition: transform .5s var(--spring), background .3s
+            }
+
+            .tb-cur:active {
+                transform: scale(.96);
+                background: rgba(255, 255, 255, .08)
+            }
+
+            .tb-cur .led {
+                flex: none
+            }
+
+            .tb-txt {
+                display: flex;
+                flex-direction: column;
+                min-width: 0;
+                line-height: 1.2
+            }
+
+            .tb-txt.swap {
+                animation: dropin .5s var(--ease)
+            }
+
+            .tb-name {
+                font-weight: 650;
+                font-size: .98rem;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis
+            }
+
+            .tb-sub {
+                font-size: .74rem;
+                color: var(--muted);
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                max-height: 1.4em;
+                transition: opacity .3s, max-height .4s
+            }
+
+            .tb-grid {
+                margin-left: auto;
+                color: var(--muted);
+                display: grid
+            }
+
+            .sheet-back {
+                display: block;
+                position: fixed;
+                inset: 0;
+                z-index: 60;
+                background: rgba(2, 4, 10, .45);
+                -webkit-backdrop-filter: blur(6px);
+                backdrop-filter: blur(6px);
+                opacity: 0;
+                transition: opacity .4s var(--ease)
+            }
+
+            .sheet-back.open {
+                opacity: 1
+            }
+
+            .sheet-back[hidden],
+            .sheet[hidden],
+            .peek[hidden] {
+                display: none
+            }
+
+            .sheet {
+                display: block;
+                position: fixed;
+                z-index: 61;
+                left: 8px;
+                right: 8px;
+                bottom: calc(env(safe-area-inset-bottom, 0px) + 8px);
+                max-height: 80vh;
+                overflow-y: auto;
+                overscroll-behavior: contain;
+                padding: 8px 14px 18px;
+                border-radius: 34px;
+                background: linear-gradient(160deg, rgba(44, 50, 80, .78), rgba(18, 22, 38, .72));
+                -webkit-backdrop-filter: blur(30px) saturate(190%);
+                backdrop-filter: blur(30px) saturate(190%);
+                border: 1px solid rgba(255, 255, 255, .16);
+                box-shadow: inset 0 1px 0 rgba(255, 255, 255, .35), 0 -10px 60px -10px rgba(0, 0, 0, .8);
+                transform: translateY(110%);
+                transition: transform .6s var(--spring)
+            }
+
+            .sheet.open {
+                transform: translateY(0)
+            }
+
+            .grab {
+                width: 42px;
+                height: 5px;
+                border-radius: 3px;
+                background: rgba(255, 255, 255, .35);
+                margin: 6px auto 12px
+            }
+
+            .sheet-head {
+                display: flex;
+                justify-content: space-between;
+                align-items: baseline;
+                gap: 10px;
+                padding: 0 4px 10px;
+                font-size: 1.1rem
+            }
+
+            .sheet-head .muted {
+                font-size: .8rem
+            }
+
+            .sheet-list {
+                list-style: none;
+                margin: 0;
+                padding: 0;
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 8px
+            }
+
+            .sheet-list li {
+                margin: 0
+            }
+
+            .sheet .port {
+                display: flex;
+                align-items: center;
+                gap: 9px;
+                height: 100%;
+                padding: 12px 12px;
+                border-radius: 18px;
+                white-space: normal;
+                font-size: .9rem;
+                line-height: 1.25;
+                color: var(--text);
+                background: linear-gradient(170deg, rgba(255, 255, 255, .09), rgba(255, 255, 255, .02));
+                border: 1px solid rgba(255, 255, 255, .09);
+                box-shadow: inset 0 1px 0 rgba(255, 255, 255, .12);
+                transition: transform .45s var(--spring)
+            }
+
+            .sheet .port:active {
+                transform: scale(.95)
+            }
+
+            .sheet .port.active {
+                border-color: rgba(185, 160, 255, .6);
+                background: linear-gradient(170deg, rgba(185, 160, 255, .24), rgba(255, 255, 255, .03))
+            }
+
+            .sheet .port .code {
+                display: none
+            }
+
+            .sheet .port .cnt {
+                margin-left: auto;
+                font-family: var(--mono);
+                font-size: .72rem;
+                color: var(--muted)
+            }
+
+            .sheet .led {
+                flex: none
+            }
+
+            .sheet .row .btn {
+                flex: 1;
+                justify-content: center
+            }
+
+            .peek {
+                display: block;
+                position: fixed;
+                z-index: 45;
+                left: 12px;
+                right: 12px;
+                bottom: calc(env(safe-area-inset-bottom, 0px) + 84px);
+                padding: 14px 16px;
+                border-radius: 26px;
+                background: linear-gradient(160deg, color-mix(in srgb, var(--c, #fff) 20%, rgba(30, 36, 60, .75)), rgba(16, 20, 34, .72));
+                -webkit-backdrop-filter: blur(26px) saturate(190%);
+                backdrop-filter: blur(26px) saturate(190%);
+                border: 1px solid color-mix(in srgb, var(--c, #fff) 45%, transparent);
+                box-shadow: inset 0 1px 0 rgba(255, 255, 255, .3), 0 20px 50px -14px rgba(0, 0, 0, .85), 0 0 40px -18px var(--c, transparent);
+                transform: translateY(140%) scale(.9);
+                opacity: 0;
+                transition: transform .6s var(--spring), opacity .35s
+            }
+
+            .peek.show {
+                transform: none;
+                opacity: 1
+            }
+
+            .pk-name {
+                color: var(--c, var(--text));
+                font-size: 1.02rem
+            }
+
+            .pk-x {
+                width: 32px;
+                height: 32px;
+                flex: none;
+                border-radius: 50%;
+                border: 1px solid rgba(255, 255, 255, .15);
+                background: rgba(255, 255, 255, .1);
+                color: var(--text);
+                font-size: 1.2rem;
+                line-height: 1;
+                cursor: pointer
+            }
+
+            .pk-val {
+                font-family: var(--mono);
+                margin: 4px 0
+            }
+
+            .pk-info {
+                font-size: .9rem;
+                color: rgba(235, 240, 250, .85);
+                max-height: 6.4em;
+                overflow: auto
+            }
+
+            .pk-more {
+                margin-top: 8px;
+                border: 0;
+                background: none;
+                color: var(--accent-2);
+                font: 600 .88rem var(--sans);
+                padding: 0;
+                cursor: pointer
+            }
+
+            /* Leistung auf dem Handy */
+            .blob {
+                filter: blur(34px);
+                opacity: .42
+            }
+
+            .b3,
+            .b4 {
+                display: none
+            }
+
+            .panel,
+            .term,
+            details.sol,
+            .note {
+                -webkit-backdrop-filter: blur(16px) saturate(170%);
+                backdrop-filter: blur(16px) saturate(170%)
+            }
+
+            .layer {
+                -webkit-backdrop-filter: none;
+                backdrop-filter: none
+            }
+
+            .panel::after,
+            .term::after {
+                display: none
+            }
+
+            .reveal {
+                filter: none;
+                transition: opacity .8s var(--ease) var(--d, 0s), transform 1s var(--spring) var(--d, 0s)
+            }
+
+            .hero-copy>* {
+                filter: none
+            }
+
+            /* Bedienung mit dem Daumen */
+            .seg {
+                display: flex;
+                flex-wrap: nowrap;
+                overflow-x: auto;
+                max-width: 100%;
+                scrollbar-width: none;
+                -webkit-overflow-scrolling: touch;
+                scroll-snap-type: x proximity
+            }
+
+            .seg::-webkit-scrollbar {
+                display: none
+            }
+
+            .seg button {
+                flex: none;
+                white-space: nowrap;
+                padding: .6em 1em;
+                scroll-snap-align: center
+            }
+
+            .btn {
+                padding: .72em 1.25em
+            }
+
+            .row>.btn[data-ip],
+            .row>.btn[data-sub] {
+                font-size: .85rem
+            }
+
+            .byte {
+                padding: 8px 0;
+                font-size: .9rem
+            }
+
+            .hex {
+                gap: 5px
+            }
+
+            .bitgrid {
+                grid-template-columns: 1fr;
+                gap: 2px
+            }
+
+            .bitgrid .k {
+                margin-top: 8px
+            }
+
+            .qnav {
+                position: sticky;
+                z-index: 6;
+                bottom: calc(env(safe-area-inset-bottom, 0px) + 82px);
+                margin: 18px -8px -6px;
+                padding: 8px;
+                border-radius: 24px;
+                background: linear-gradient(160deg, rgba(40, 46, 72, .7), rgba(18, 22, 38, .6));
+                -webkit-backdrop-filter: blur(20px);
+                backdrop-filter: blur(20px);
+                border: 1px solid rgba(255, 255, 255, .12);
+                box-shadow: inset 0 1px 0 rgba(255, 255, 255, .2), 0 12px 30px -12px rgba(0, 0, 0, .7)
+            }
+
+            .qnav .btn.primary {
+                flex: 1;
+                justify-content: center
+            }
+
+            .opt {
+                padding: 15px 16px
+            }
+
+            .hs .arr {
+                height: 58px
+            }
+
+            .hs .arr i {
+                top: 44px
+            }
+
+            .hs .arr span {
+                font-size: .7rem;
+                line-height: 1.25
+            }
+
+            .tour .row {
+                width: 100%
+            }
+
+            .tour .row .btn {
+                flex: 1;
+                justify-content: center
+            }
+        }
+
+        @media (max-width:600px) {
+            #topo-svg text {
+                font-size: 21px
+            }
+
+            #topo-svg .lbl {
+                font-size: 19px
+            }
+
+            #topo-svg .tedge .wire {
+                stroke-width: 3.5
+            }
+
+            #topo-svg .tedge.bus .wire {
+                stroke-width: 7
+            }
+
+            .scene {
+                border-radius: 20px
+            }
+
+            .sec h2 {
+                font-size: 1.75rem
+            }
+
+            .hero h1 {
+                font-size: 2.35rem
+            }
+
+            .lead {
+                font-size: 1rem
+            }
+
+            .term {
+                border-radius: 24px
+            }
+
+            .term-body {
+                padding: 12px
+            }
+        }
+
+        /* ---------- fixes ---------- */
+        html,
+        body {
+            overflow-x: clip
+        }
+
+        .term-bar>span:nth-child(2) {
+            flex: 1;
+            min-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            text-align: center
+        }
+
+        .term-bar .btn {
+            flex: none
+        }
+
+        .seg.fade-r {
+            -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 40px), transparent);
+            mask-image: linear-gradient(90deg, #000 calc(100% - 40px), transparent)
+        }
+
+        .seg.fade-l {
+            -webkit-mask-image: linear-gradient(90deg, transparent, #000 40px);
+            mask-image: linear-gradient(90deg, transparent, #000 40px)
+        }
+
+        .seg.fade-l.fade-r {
+            -webkit-mask-image: linear-gradient(90deg, transparent, #000 40px, #000 calc(100% - 40px), transparent);
+            mask-image: linear-gradient(90deg, transparent, #000 40px, #000 calc(100% - 40px), transparent)
+        }
+
+        @media (max-width:900px) {
+            .tabbar.mini {
+                left: 22px;
+                right: 22px
+            }
+
+            .tabbar.mini .tb-grid {
+                display: none
+            }
+        }
+
+        @media (max-width:600px) {
+            table.t td.m {
+                white-space: normal;
+                overflow-wrap: anywhere
+            }
+
+            .term-bar {
+                font-size: .76rem;
+                padding: 10px 12px
+            }
+        }
+
+        @media (max-width:900px) {
+            .qnav .btn {
+                white-space: nowrap;
+                font-size: .9rem
+            }
+
+            .qnav .btn.ghost {
+                flex: none;
+                padding: .72em 1em
+            }
+
+            .tabbar.mini .tb-btn:not(.tb-quiz) {
+                width: 40px;
+                height: 40px
+            }
+        }
+
         @media (prefers-reduced-motion: reduce) {
 
             *,
@@ -3522,9 +4133,8 @@ Router-Link 2</textarea></label>
                 <div class="panel">
                     <div class="row" style="justify-content:space-between">
                         <div class="seg" id="arp-mode" role="group" aria-label="Ziel">
-                            <button type="button" data-m="lan" aria-pressed="true">ping 192.168.5.103 (eigenes
-                                Netz)</button>
-                            <button type="button" data-m="wan" aria-pressed="false">ping 8.8.8.8 (fremdes Netz)</button>
+                            <button type="button" data-m="lan" aria-pressed="true">Eigenes Netz (.103)</button>
+                            <button type="button" data-m="wan" aria-pressed="false">Fremdes Netz (8.8.8.8)</button>
                         </div>
                         <div class="row">
                             <button class="btn" id="arp-prev" type="button">Zurück</button>
@@ -3802,6 +4412,10 @@ Router-Link 2</textarea></label>
                 get(k, d) { try { const v = localStorage.getItem('ith-' + k); return v ? JSON.parse(v) : d; } catch (e) { return d; } },
                 set(k, v) { try { localStorage.setItem('ith-' + k, JSON.stringify(v)); } catch (e) { } }
             };
+            const MQ_M = window.matchMedia ? matchMedia('(max-width: 600px)') : { matches: false };
+            const isMobile = () => MQ_M.matches;
+            const isTouchLayout = () => window.matchMedia ? matchMedia('(max-width: 900px)').matches : false;
+            function onBreakpoint(fn) { if (MQ_M.addEventListener) MQ_M.addEventListener('change', fn); else if (MQ_M.addListener) MQ_M.addListener(fn); }
             function sv(tag, attrs = {}, parent) {
                 const e = document.createElementNS(SVGNS, tag);
                 for (const k in attrs) e.setAttribute(k, attrs[k]);
@@ -3898,7 +4512,7 @@ Router-Link 2</textarea></label>
                     $('#bb-sum').textContent = parts.length ? parts.join(' + ') + ' = ' + val : '0';
                     if (target !== null && !solved && val === target) {
                         solved = true; streak++;
-                        $('#trainer').classList.add('win');
+                        $('#trainer').classList.add('win'); haptic([10, 40, 20]);
                         $('#tr-msg').textContent = `Richtig! Serie: ${streak}`;
                     }
                 }
@@ -4069,6 +4683,7 @@ Router-Link 2</textarea></label>
                     t.nodes.forEach(n => {
                         if (n.type === 'tap') { sv('circle', { cx: n.x, cy: n.y, r: 4, fill: '#3ccf8e' }, svg); return; }
                         const g = sv('g', { class: 'tnode' + (endpoint(n) ? '' : ' infra'), 'data-id': n.id, tabindex: 0, role: 'button', 'aria-label': (n.label || n.id) + ' ausfallen lassen' }, svg);
+                        sv('circle', { cx: n.x, cy: n.y, r: 32, fill: 'transparent' }, g);
                         if (n.type === 'host') {
                             sv('rect', { class: 'shape', x: n.x - 19, y: n.y - 14, width: 38, height: 26, rx: 4 }, g);
                             sv('rect', { x: n.x - 7, y: n.y + 12, width: 14, height: 4, fill: '#93a3b8' }, g);
@@ -4338,15 +4953,13 @@ Router-Link 2</textarea></label>
                 if (fr.fcs) add('fcs', 'FCS (Frame Check Sequence)', last - 3, last, 'l2', 'CRC-Prüfsumme der Sicherungsschicht (4 Byte), hier auf Null gesetzt. Gehört nicht zum Paket!');
                 return { b, F, ihl, tl, doff, t0, ipEnd, dataStart };
             }
-            function cols() { return window.matchMedia && matchMedia('(max-width: 600px)').matches ? 8 : 16; }
             function buildHex(container, P, onPick) {
                 container.innerHTML = '';
-                const n = cols(); container.style.setProperty('--cols', n);
                 const map = new Array(P.b.length).fill(-1);
                 P.F.forEach((f, i) => { for (let k = f.s; k <= f.e; k++) map[k] = i; });
                 const bytes = [];
                 P.b.forEach((v, i) => {
-                    if (i % n === 0) container.append(h('span', { class: 'off' }, i.toString().padStart(2, '0')));
+                    if (i % 8 === 0) container.append(h('span', { class: i % 16 === 8 ? 'off mid' : 'off' }, i.toString().padStart(2, '0')));
                     const f = P.F[map[i]];
                     const el = h('button', { class: 'byte c-' + (f ? f.layer : 'pad'), type: 'button', 'aria-label': `Byte ${i}: ${hex2(v)}${f ? ', ' + f.name : ''}` }, hex2(v));
                     el.dataset.i = i; el.dataset.f = map[i];
@@ -4430,8 +5043,6 @@ Router-Link 2</textarea></label>
                     c.append(h('p', { class: 'muted', style: 'margin:10px 0 0' }, tdata === 0 ? 'Nutzdaten 0: Das ist reiner Verbindungsaufbau. In der Klausur ist mit „Payload des Paketes“ aber der Datenteil des IP-Pakets gemeint, also alles nach dem IP-Header.' : ''));
                 }
                 segGroup($('#fr-pick'), 'f', v => { cur = v; load(); });
-                let lastCols = cols();
-                window.addEventListener('resize', () => { const c = cols(); if (c !== lastCols) { lastCols = c; const s = sel, t = tourIdx; load(); tourIdx = t; if (t >= 0) tourUI(); else pick(s); } });
                 load();
 
                 // handshake
@@ -4505,34 +5116,40 @@ Router-Link 2</textarea></label>
             function initSwitch() {
                 const svg = $('#sw-svg');
                 let mode = 'switch', sat = [], busy = false;
-                const pcX = i => 70 + (i - 1) * 115, portX = i => 220 + (i - 1) * 40;
-                const PCY = 258;
+                const LAY = {
+                    wide: { W: 600, H: 330, swX: 160, swW: 280, swY: 118, port: i => 220 + (i - 1) * 40, portY: 176, pc: i => 70 + (i - 1) * 115, PCY: 258, pcW: 60, legend: ['MAC von PCx: 00:aa:00:00:00:0x, angeschlossen an Port x'] },
+                    tall: { W: 360, H: 360, swX: 30, swW: 300, swY: 30, port: i => 110 + (i - 1) * 35, portY: 88, pc: i => 36 + (i - 1) * 72, PCY: 236, pcW: 56, legend: ['MAC von PCx: 00:aa:00:00:00:0x', 'angeschlossen an Port x'] }
+                };
+                let L = LAY.wide;
                 const mac = i => `00:aa:00:00:00:0${i}`;
-                const pcTop = i => [pcX(i), PCY - 22], portPt = i => [portX(i), 176];
+                const pcTop = i => [L.pc(i), L.PCY - 22], portPt = i => [L.port(i), L.portY];
                 const pcs = {};
                 function draw() {
+                    L = LAY[isMobile() ? 'tall' : 'wide'];
+                    svg.setAttribute('viewBox', `0 0 ${L.W} ${L.H}`);
                     svg.innerHTML = '';
-                    for (let i = 1; i <= 5; i++) sv('line', { x1: portX(i), y1: 176, x2: pcX(i), y2: PCY - 22, stroke: '#3a4c66', 'stroke-width': 2.5 }, svg);
-                    sv('rect', { x: 160, y: 118, width: 280, height: 58, rx: 9, fill: '#1c2839', stroke: mode === 'hub' ? '#8b9bb4' : '#4ea1ff', 'stroke-width': 2 }, svg);
-                    const t = sv('text', { x: 300, y: 143, 'text-anchor': 'middle', 'font-weight': 600 }, svg); t.textContent = mode === 'hub' ? 'Hub (Schicht 1)' : 'Switch (Schicht 2)';
+                    for (let i = 1; i <= 5; i++) sv('line', { x1: L.port(i), y1: L.portY, x2: L.pc(i), y2: L.PCY - 22, stroke: '#3a4c66', 'stroke-width': 2.5 }, svg);
+                    sv('rect', { x: L.swX, y: L.swY, width: L.swW, height: 58, rx: 12, fill: '#1a2236', stroke: mode === 'hub' ? '#a9b8cf' : '#62b3ff', 'stroke-width': 2 }, svg);
+                    const t = sv('text', { x: L.swX + L.swW / 2, y: L.swY + 24, 'text-anchor': 'middle', 'font-weight': 600 }, svg); t.textContent = mode === 'hub' ? 'Hub (Schicht 1)' : 'Switch (Schicht 2)';
                     for (let i = 1; i <= 5; i++) {
-                        sv('rect', { x: portX(i) - 9, y: 156, width: 18, height: 14, rx: 2, fill: '#0a1019', stroke: '#5c6b80' }, svg);
-                        const pl = sv('text', { x: portX(i), y: 192, 'text-anchor': 'middle', class: 'lbl', 'font-size': 11 }, svg); pl.textContent = 'P' + i;
+                        sv('rect', { x: L.port(i) - 9, y: L.portY - 20, width: 18, height: 14, rx: 3, fill: '#0a1019', stroke: '#8592aa' }, svg);
+                        const pl = sv('text', { x: L.port(i), y: L.portY + 16, 'text-anchor': 'middle', class: 'lbl' }, svg); pl.textContent = 'P' + i;
                         const g = sv('g', {}, svg);
-                        const r = sv('rect', { x: pcX(i) - 30, y: PCY - 22, width: 60, height: 40, rx: 5, fill: '#1c2839', stroke: '#3ccf8e', 'stroke-width': 2 }, g);
-                        sv('rect', { x: pcX(i) - 8, y: PCY + 18, width: 16, height: 5, fill: '#93a3b8' }, g);
-                        const nm = sv('text', { x: pcX(i), y: PCY + 4, 'text-anchor': 'middle', 'font-weight': 600 }, g); nm.textContent = 'PC' + i;
-                        const mc = sv('text', { x: pcX(i), y: PCY + 42, 'text-anchor': 'middle', class: 'lbl', 'font-size': 10.5 }, g); mc.textContent = '…:0' + i;
-                        const st = sv('text', { x: pcX(i), y: PCY - 32, 'text-anchor': 'middle', 'font-size': 12, 'font-weight': 600 }, g);
+                        const x = L.pc(i), y = L.PCY;
+                        const r = sv('rect', { x: x - L.pcW / 2, y: y - 22, width: L.pcW, height: 40, rx: 7, fill: '#1a2236', stroke: '#52e3a4', 'stroke-width': 2 }, g);
+                        sv('rect', { x: x - 8, y: y + 18, width: 16, height: 5, fill: '#a9b8cf' }, g);
+                        const nm = sv('text', { x, y: y + 4, 'text-anchor': 'middle', 'font-weight': 600 }, g); nm.textContent = 'PC' + i;
+                        const mc = sv('text', { x, y: y + 42, 'text-anchor': 'middle', class: 'lbl' }, g); mc.textContent = '…:0' + i;
+                        const st = sv('text', { x, y: y - 32, 'text-anchor': 'middle', 'font-size': 12, 'font-weight': 600 }, g);
                         pcs[i] = { r, st };
                     }
-                    const lg = sv('text', { x: 300, y: 318, 'text-anchor': 'middle', class: 'lbl' }, svg); lg.textContent = 'MAC von PCx: 00:aa:00:00:00:0x, angeschlossen an Port x';
+                    L.legend.forEach((line, k) => { const lg = sv('text', { x: L.W / 2, y: L.H - 14 - (L.legend.length - 1 - k) * 16, 'text-anchor': 'middle', class: 'lbl' }, svg); lg.textContent = line; });
                 }
                 function flash(i, ok) {
                     const p = pcs[i];
                     p.r.setAttribute('stroke', ok ? '#3ccf8e' : '#ff5d6c');
                     p.r.setAttribute('fill', ok ? 'rgba(60,207,142,.25)' : 'rgba(255,93,108,.18)');
-                    p.st.textContent = ok ? 'angenommen' : 'verworfen';
+                    p.st.textContent = ok ? 'nimmt an' : 'verwirft';
                     p.st.setAttribute('fill', ok ? '#3ccf8e' : '#ff5d6c');
                     setTimeout(() => { p.r.setAttribute('stroke', '#3ccf8e'); p.r.setAttribute('fill', '#1c2839'); p.st.textContent = ''; }, RM ? 1800 : 1600);
                 }
@@ -4578,6 +5195,7 @@ Router-Link 2</textarea></label>
                 $('#sw-send').onclick = send;
                 $('#sw-reset').onclick = () => { sat = []; renderSat(); log('SAT geleert.'); };
                 segGroup($('#sw-mode'), 'm', m => { mode = m; draw(); renderSat(); log(m === 'hub' ? 'Jetzt ein Hub: Jeder Frame geht an alle.' : 'Jetzt ein Switch mit leerer Tabelle.'); sat = []; renderSat(); });
+                onBreakpoint(() => { if (!busy) draw(); });
                 draw(); renderSat();
                 log('Tipp: Schick PC1 → PC4, dann PC4 → PC1, dann nochmal PC1 → PC4. Beobachte die Tabelle.');
             }
@@ -4725,32 +5343,54 @@ Router-Link 2</textarea></label>
             function initARP() {
                 const svg = $('#arp-svg');
                 const N = {
-                    A: { x: 90, y: 215, name: 'PC-A (du)', ip: '192.168.5.10', mac: '00-1a-2b-3c-4d-0a', kind: 'pc' },
-                    SW: { x: 300, y: 215, name: 'Switch', kind: 'sw' },
-                    B: { x: 510, y: 215, name: 'PC-B', ip: '192.168.5.103', mac: '00-1a-2b-3c-4d-67', kind: 'pc' },
-                    R: { x: 300, y: 75, name: 'Router (Gateway)', ip: '192.168.5.1', mac: '00-1a-2b-3c-4d-01', kind: 'r' },
-                    NET: { x: 510, y: 75, name: 'Internet', ip: '8.8.8.8', kind: 'net' }
+                    A: { name: 'PC-A (du)', ip: '192.168.5.10', mac: '00-1a-2b-3c-4d-0a', kind: 'pc' },
+                    SW: { name: 'Switch', kind: 'sw' },
+                    B: { name: 'PC-B', ip: '192.168.5.103', mac: '00-1a-2b-3c-4d-67', kind: 'pc' },
+                    R: { name: 'Router (Gateway)', ip: '192.168.5.1', mac: '00-1a-2b-3c-4d-01', kind: 'r' },
+                    NET: { name: 'Internet', ip: '8.8.8.8', kind: 'net' }
+                };
+                // Zwei Layouts: breit (Desktop) und hochkant (Handy). lab = wo die Beschriftung steht.
+                const LAYOUTS = {
+                    wide: { vb: '0 0 600 300', lan: [18, 28, 'start'], pos: { A: [90, 205, 'below'], SW: [300, 205, 'below'], B: [510, 205, 'below'], R: [300, 75, 'left'], NET: [510, 75, 'cbelow'] } },
+                    tall: { vb: '0 0 360 450', lan: [14, 266, 'start'], pos: { NET: [180, 42, 'cright'], R: [180, 150, 'right'], SW: [180, 262, 'right'], A: [80, 362, 'below'], B: [280, 362, 'below'] } }
                 };
                 const P = id => [N[id].x, N[id].y];
                 const cache = new Map();
                 let mode = 'lan', steps = [], idx = -1, busy = false;
+                function txt(g, x, y, str, anchor, cls, weight) {
+                    const t = sv('text', { x, y, 'text-anchor': anchor }, g);
+                    if (cls) t.setAttribute('class', cls);
+                    if (weight) t.setAttribute('font-weight', weight);
+                    t.textContent = str; return t;
+                }
                 function draw() {
+                    const L = LAYOUTS[isMobile() ? 'tall' : 'wide'];
+                    svg.setAttribute('viewBox', L.vb);
+                    Object.entries(L.pos).forEach(([id, [x, y, lab]]) => Object.assign(N[id], { x, y, lab }));
                     svg.innerHTML = '';
                     [['A', 'SW'], ['SW', 'B'], ['SW', 'R'], ['R', 'NET']].forEach(([a, b]) => sv('line', { x1: N[a].x, y1: N[a].y, x2: N[b].x, y2: N[b].y, stroke: '#3a4c66', 'stroke-width': 2.5 }, svg));
-                    const net = sv('text', { x: 18, y: 290, class: 'lbl', 'font-size': 11 }, svg); net.textContent = 'LAN 192.168.5.0/24';
+                    txt(svg, L.lan[0], L.lan[1], 'LAN 192.168.5.0/24', L.lan[2], 'lbl');
                     Object.entries(N).forEach(([id, n]) => {
                         const g = sv('g', {}, svg);
-                        if (n.kind === 'pc') { sv('rect', { x: n.x - 30, y: n.y - 20, width: 60, height: 38, rx: 5, fill: '#1c2839', stroke: id === 'A' ? '#a78bfa' : '#3ccf8e', 'stroke-width': 2 }, g); }
-                        else if (n.kind === 'sw') { sv('rect', { x: n.x - 40, y: n.y - 14, width: 80, height: 28, rx: 5, fill: '#1c2839', stroke: '#4ea1ff', 'stroke-width': 2 }, g); }
-                        else if (n.kind === 'r') { sv('circle', { cx: n.x, cy: n.y, r: 22, fill: '#1c2839', stroke: '#ff9f43', 'stroke-width': 2 }, g); sv('path', { d: `M${n.x - 10} ${n.y} h20 M${n.x} ${n.y - 10} v20`, stroke: '#ff9f43', 'stroke-width': 2 }, g); }
-                        else { sv('ellipse', { cx: n.x, cy: n.y, rx: 52, ry: 26, fill: '#1c2839', stroke: '#8b9bb4', 'stroke-width': 2, 'stroke-dasharray': '4 4' }, g); }
-                        const ty = n.kind === 'r' ? n.y - 32 : n.kind === 'net' ? n.y + 5 : n.y + 36;
-                        const t1 = sv('text', { x: n.x, y: ty, 'text-anchor': 'middle', 'font-weight': 600, 'font-size': 12.5 }, g); t1.textContent = n.name;
-                        if (n.ip && n.kind !== 'net') {
-                            const t2 = sv('text', { x: n.x, y: n.kind === 'r' ? n.y + 38 : ty + 15, 'text-anchor': 'middle', class: 'lbl', 'font-size': 11 }, g); t2.textContent = n.ip;
-                            const t3 = sv('text', { x: n.x, y: n.kind === 'r' ? n.y + 52 : ty + 29, 'text-anchor': 'middle', class: 'lbl', 'font-size': 10.5 }, g); t3.textContent = n.mac;
+                        if (n.kind === 'pc') sv('rect', { x: n.x - 30, y: n.y - 20, width: 60, height: 38, rx: 6, fill: '#1a2236', stroke: id === 'A' ? '#b9a0ff' : '#52e3a4', 'stroke-width': 2 }, g);
+                        else if (n.kind === 'sw') sv('rect', { x: n.x - 40, y: n.y - 14, width: 80, height: 28, rx: 6, fill: '#1a2236', stroke: '#62b3ff', 'stroke-width': 2 }, g);
+                        else if (n.kind === 'r') { sv('circle', { cx: n.x, cy: n.y, r: 22, fill: '#1a2236', stroke: '#ffad62', 'stroke-width': 2 }, g); sv('path', { d: `M${n.x - 10} ${n.y} h20 M${n.x} ${n.y - 10} v20`, stroke: '#ffad62', 'stroke-width': 2 }, g); }
+                        else sv('ellipse', { cx: n.x, cy: n.y, rx: 52, ry: 26, fill: '#1a2236', stroke: '#a9b8cf', 'stroke-width': 2, 'stroke-dasharray': '4 4' }, g);
+                        const lines = n.kind === 'net' ? [] : [[n.name, null, 600]].concat(n.ip ? [[n.ip, 'lbl'], [n.mac, 'lbl']] : []);
+                        if (n.kind === 'net') {
+                            txt(g, n.x, n.y + 5, n.name, 'middle', null, 600);
+                            if (n.lab === 'cright') txt(g, n.x + 62, n.y + 5, '8.8.8.8', 'start', 'lbl');
+                            else txt(g, n.x, n.y + 46, '8.8.8.8', 'middle', 'lbl');
+                            return;
                         }
-                        if (n.kind === 'net') { const t2 = sv('text', { x: n.x, y: n.y + 42, 'text-anchor': 'middle', class: 'lbl', 'font-size': 11 }, g); t2.textContent = '8.8.8.8'; }
+                        if (n.lab === 'below') lines.forEach(([t, c, w], i) => txt(g, n.x, n.y + 38 + i * 15, t, 'middle', c, w));
+                        else {
+                            const right = n.lab === 'right';
+                            const off = n.kind === 'sw' ? 50 : 32;
+                            const x = right ? n.x + off : n.x - off;
+                            const y0 = n.y - (lines.length - 1) * 7.5 + 4;
+                            lines.forEach(([t, c, w], i) => txt(g, x, y0 + i * 15, t, right ? 'start' : 'end', c, w));
+                        }
                     });
                 }
                 function consoleText() {
@@ -4818,6 +5458,7 @@ Router-Link 2</textarea></label>
                 $('#arp-prev').onclick = () => { if (idx > 0 && !busy) { idx--; show(); } };
                 $('#arp-clear').onclick = () => { cache.clear(); consoleText(); build(); };
                 segGroup($('#arp-mode'), 'm', m => { mode = m; build(); });
+                onBreakpoint(() => { if (!busy) draw(); });
                 draw(); consoleText(); build();
             }
 
@@ -4959,6 +5600,7 @@ fa f0 8b 99 00 00 02 04  05 b4 00 00 00 00 00 00`;
                     const ok = ids.filter(id => mastery[id] === 1).length;
                     led.className = 'led' + (!tried ? '' : ok === ids.length ? ' green' : ' amber');
                     p.title = `${ok} von ${ids.length} Quizfragen zuletzt richtig`;
+                    const cn = p.querySelector('.cnt'); if (cn) cn.textContent = tried ? `${ok}/${ids.length}` : '';
                 });
                 const total = Q.length, ok = Q.filter(q => mastery[q.id] === 1).length;
                 const st = $('#qz-stat'); if (st) st.textContent = `Gemeistert: ${ok} von ${total} Fragen.`;
@@ -4994,7 +5636,11 @@ fa f0 8b 99 00 00 02 04  05 b4 00 00 00 00 00 00`;
                     box.append(h('div', { class: 'qmeta' }, h('span', {}, `Frage ${S.i + 1} von ${n}`), h('span', { class: 'chips' }, h('span', { class: 'chip c-' + TCOL[q.t] }, TOPICS[q.t]), q.ref ? h('span', { class: 'chip c-pad' }, 'wie ' + q.ref) : null)));
                     const pb = h('div', { class: 'pbar' }, h('i', { style: `width:${S.i / n * 100}%` })); box.append(pb);
                     if (q.pre) box.append(h('p', { class: 'muted', style: 'margin-bottom:6px' }, q.pre));
-                    if (q.code) box.append(h('pre', { class: 'qcode' }, q.code));
+                    if (q.code) {
+                        let code = q.code;
+                        if (isMobile()) { const bs = q.code.trim().split(/\s+/); code = []; for (let k = 0; k < bs.length; k += 8) code.push(bs.slice(k, k + 8).join(' ')); code = code.join('\n'); }
+                        box.append(h('pre', { class: 'qcode' }, code));
+                    }
                     box.append(h('div', { class: 'qtext' }, q.q));
                     let getAns, lock, markResult;
                     const fbWrap = h('div', {});
@@ -5092,7 +5738,7 @@ fa f0 8b 99 00 00 02 04  05 b4 00 00 00 00 00 00`;
                 const root = document.documentElement;
                 // Chromium kann SVG-Filter im backdrop-filter → echte Lichtbrechung
                 const brands = navigator.userAgentData && navigator.userAgentData.brands;
-                if (!RM && brands && brands.some(b => /Chromium|Google Chrome|Microsoft Edge/.test(b.brand))) root.classList.add('refract');
+                if (!RM && !isTouchLayout() && brands && brands.some(b => /Chromium|Google Chrome|Microsoft Edge/.test(b.brand))) root.classList.add('refract');
 
                 // Segment-Controls: flüssige Glas-Pille
                 const placers = [];
@@ -5171,10 +5817,153 @@ fa f0 8b 99 00 00 02 04  05 b4 00 00 00 00 00 00`;
                     if (n.nodeType !== 1 || !n.classList.contains('fb')) return;
                     const c = n.classList.contains('ok') ? 'pulse-ok' : 'shake-no';
                     qb.classList.remove('pulse-ok', 'shake-no'); void qb.offsetWidth; qb.classList.add(c);
+                    haptic(c === 'pulse-ok' ? 15 : [30, 50, 30]);
                 }))).observe(qb, { childList: true, subtree: true });
             }
 
-            [initHero, initZahl, initTopo, initEth, initOSI, initFrame, initSwitch, initIPv4, initSub, initVLSM, initARP, initQuiz, initNav, initGlass].forEach(f => {
+
+            /* =================== MOBILE =================== */
+            function initMobile() {
+                const ICON = {
+                    prev: '<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+                    next: '<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+                    quiz: '<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M9.2 9a3 3 0 1 1 4.3 2.7c-.9.4-1.5 1.1-1.5 2.1v.6" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"/><circle cx="12" cy="18" r="1.4" fill="currentColor"/></svg>',
+                    grid: '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><g fill="currentColor"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></g></svg>'
+                };
+                // --- Tab-Leiste unten ---
+                const bar = h('nav', { class: 'tabbar', 'aria-label': 'Schnellnavigation' });
+                const prev = h('button', { class: 'tb-btn', type: 'button', 'aria-label': 'Vorheriges Thema', html: ICON.prev });
+                const cur = h('button', { class: 'tb-cur', type: 'button', 'aria-haspopup': 'dialog', 'aria-label': 'Themenübersicht öffnen' },
+                    h('span', { class: 'led' }), h('span', { class: 'tb-txt' }, h('span', { class: 'tb-name' }, 'Start'), h('span', { class: 'tb-sub' }, 'Alle Themen')), h('span', { class: 'tb-grid', html: ICON.grid }));
+                const next = h('button', { class: 'tb-btn', type: 'button', 'aria-label': 'Nächstes Thema', html: ICON.next });
+                const quiz = h('a', { class: 'tb-btn tb-quiz', href: '#s-quiz', 'aria-label': 'Zum Quiz', html: ICON.quiz });
+                bar.append(prev, cur, next, quiz);
+
+                // --- Themen-Sheet ---
+                const back = h('div', { class: 'sheet-back', hidden: '' });
+                const sheet = h('div', { class: 'sheet', role: 'dialog', 'aria-modal': 'true', 'aria-label': 'Themen', hidden: '' });
+                const list = h('ul', { class: 'sheet-list' });
+                $$('#patch .port').forEach(p => {
+                    const c = p.cloneNode(true);
+                    c.classList.remove('active');
+                    c.append(h('span', { class: 'cnt' }));
+                    list.append(h('li', {}, c));
+                });
+                sheet.append(h('div', { class: 'grab', 'aria-hidden': 'true' }), h('div', { class: 'sheet-head' }, h('b', {}, 'Themen'), h('span', { class: 'muted', id: 'sheet-stat' })), list,
+                    h('div', { class: 'row', style: 'margin-top:14px' }, h('a', { class: 'btn', href: '#top' }, 'Nach oben'), h('a', { class: 'btn primary', href: '#s-quiz' }, 'Quiz starten')));
+                const peek = h('div', { class: 'peek', role: 'status', hidden: '' });
+                document.body.append(bar, back, sheet, peek);
+
+                function openSheet() {
+                    back.hidden = false; sheet.hidden = false; sheet.style.transform = '';
+                    $('#sheet-stat').textContent = ($('#qz-stat') || {}).textContent || '';
+                    requestAnimationFrame(() => { back.classList.add('open'); sheet.classList.add('open'); });
+                    haptic(8);
+                }
+                function closeSheet() {
+                    back.classList.remove('open'); sheet.classList.remove('open'); sheet.style.transform = '';
+                    setTimeout(() => { if (!sheet.classList.contains('open')) { back.hidden = true; sheet.hidden = true; } }, 450);
+                }
+                cur.addEventListener('click', openSheet);
+                back.addEventListener('click', closeSheet);
+                sheet.addEventListener('click', e => { if (e.target.closest('a')) closeSheet(); });
+                document.addEventListener('keydown', e => { if (e.key === 'Escape' && sheet.classList.contains('open')) closeSheet(); });
+                // Sheet nach unten wegwischen
+                let sy = null, dy = 0;
+                sheet.addEventListener('touchstart', e => { if (sheet.scrollTop > 0) return; sy = e.touches[0].clientY; dy = 0; sheet.style.transition = 'none'; }, { passive: true });
+                sheet.addEventListener('touchmove', e => { if (sy === null) return; dy = Math.max(0, e.touches[0].clientY - sy); sheet.style.transform = `translateY(${dy}px)`; }, { passive: true });
+                sheet.addEventListener('touchend', () => { if (sy === null) return; sheet.style.transition = ''; sy = null; if (dy > 90) closeSheet(); else sheet.style.transform = ''; });
+
+                // Aktuelles Thema + Vor/Zurück
+                const order = ['top'].concat($$('.sec').map(x => x.id));
+                let curId = 'top';
+                function refresh() {
+                    const act = $('#patch .port.active');
+                    const id = act ? act.getAttribute('href').slice(1) : 'top';
+                    const name = act ? act.lastElementChild.textContent : 'Start';
+                    const sub = act && act.title ? act.title.replace('Quizfragen zuletzt richtig', 'Quizfragen richtig') : (act ? 'Zum Wiederholen' : 'Tippen für alle Themen');
+                    const led = act ? $('.led', act).className : 'led';
+                    if (id !== curId) {
+                        curId = id;
+                        const txt = $('.tb-txt', cur); txt.classList.remove('swap'); void txt.offsetWidth; txt.classList.add('swap');
+                    }
+                    $('.tb-name', cur).textContent = name;
+                    $('.tb-sub', cur).textContent = sub;
+                    $('.led', cur).className = led;
+                    const i = order.indexOf(id);
+                    prev.disabled = i <= 0; next.disabled = i >= order.length - 1;
+                }
+                const go = d => { const i = order.indexOf(curId); const t = document.getElementById(order[Math.max(0, Math.min(order.length - 1, i + d))]); if (t) { t.scrollIntoView({ behavior: RM ? 'auto' : 'smooth', block: 'start' }); haptic(6); } };
+                prev.addEventListener('click', () => go(-1));
+                next.addEventListener('click', () => go(1));
+                new MutationObserver(refresh).observe($('#patch'), { subtree: true, attributes: true, attributeFilter: ['class', 'title'] });
+                refresh();
+
+                // Leiste schrumpft beim Runterscrollen, wächst beim Hochscrollen
+                let lastY = window.scrollY, ticking = false;
+                window.addEventListener('scroll', () => {
+                    if (ticking) return; ticking = true;
+                    requestAnimationFrame(() => {
+                        const y = window.scrollY;
+                        if (Math.abs(y - lastY) > 6) { bar.classList.toggle('mini', y > lastY && y > 200); lastY = y; }
+                        ticking = false;
+                        if (!peek.hidden && detVisible()) hidePeek();
+                    });
+                }, { passive: true });
+
+                // Segment-Leisten: Rand ausblenden, wenn es noch mehr gibt
+                const fades = $$('.seg').map(seg => {
+                    const f = () => { const over = seg.scrollWidth > seg.clientWidth + 2; seg.classList.toggle('fade-l', over && seg.scrollLeft > 4); seg.classList.toggle('fade-r', over && seg.scrollLeft + seg.clientWidth < seg.scrollWidth - 4); };
+                    seg.addEventListener('scroll', f, { passive: true }); return f;
+                });
+                const runFades = () => fades.forEach(f => f());
+                window.addEventListener('resize', runFades); runFades();
+                if (document.fonts && document.fonts.ready) document.fonts.ready.then(runFades);
+                // Segment-Leisten: gewählten Eintrag in Sicht scrollen
+                $$('.seg').forEach(seg => seg.addEventListener('click', e => {
+                    const b = e.target.closest('button'); if (!b || seg.scrollWidth <= seg.clientWidth) return;
+                    seg.scrollTo({ left: b.offsetLeft - seg.clientWidth / 2 + b.offsetWidth / 2, behavior: RM ? 'auto' : 'smooth' });
+                }));
+
+                // Frameanalyse: Feld-Info schwebt ein, wenn die Erklärung nicht im Bild ist
+                const det = $('#fr-detail'); let peekT = 0;
+                const detVisible = () => { const r = det.getBoundingClientRect(); return r.top >= 0 && r.top < window.innerHeight - 170; };
+                function hidePeek() { peek.classList.remove('show'); clearTimeout(peekT); setTimeout(() => { if (!peek.classList.contains('show')) peek.hidden = true; }, 400); }
+                new MutationObserver(() => {
+                    if (!isTouchLayout() || !/c-/.test(det.className)) return;
+                    if (detVisible()) { hidePeek(); return; }
+                    const h4 = $('h4', det), val = $('.val', det), info = det.lastElementChild;
+                    peek.className = 'peek ' + (det.className.match(/c-\w+/) || [''])[0];
+                    peek.innerHTML = '';
+                    peek.append(h('div', { class: 'row', style: 'justify-content:space-between;flex-wrap:nowrap' }, h('b', { class: 'pk-name' }, h4 ? h4.textContent : ''), h('button', { class: 'pk-x', type: 'button', 'aria-label': 'Schließen', onclick: hidePeek }, '×')),
+                        h('div', { class: 'pk-val' }, val ? val.textContent : ''), h('div', { class: 'pk-info' }, info ? info.textContent : ''),
+                        h('button', { class: 'pk-more', type: 'button', onclick: () => { hidePeek(); det.scrollIntoView({ behavior: RM ? 'auto' : 'smooth', block: 'center' }); } }, 'Zur Erklärung springen'));
+                    peek.hidden = false; requestAnimationFrame(() => peek.classList.add('show'));
+                    clearTimeout(peekT); peekT = setTimeout(hidePeek, 7000);
+                }).observe(det, { childList: true });
+
+                // OSI: Details nach dem Antippen in Sicht holen
+                $('#osi-stack').addEventListener('click', () => { if (isTouchLayout()) setTimeout(() => $('#osi-detail').scrollIntoView({ behavior: RM ? 'auto' : 'smooth', block: 'nearest' }), 80); });
+
+                // Quiz: nach links wischen = nächste Frage
+                const qb = $('#quiz-box'); let tx = null, ty = 0;
+                qb.addEventListener('touchstart', e => { tx = e.touches[0].clientX; ty = e.touches[0].clientY; }, { passive: true });
+                qb.addEventListener('touchend', e => {
+                    if (tx === null) return;
+                    const dx = e.changedTouches[0].clientX - tx, dyy = Math.abs(e.changedTouches[0].clientY - ty); tx = null;
+                    if (dx < -70 && dyy < 60) { const a = $$('.qnav .btn', qb).pop(); if (a && a.textContent !== 'Antwort prüfen') a.click(); }
+                }, { passive: true });
+                new MutationObserver(ms => ms.forEach(m => m.addedNodes.forEach(n => {
+                    if (n.nodeType === 1 && n.classList.contains('fb') && isTouchLayout()) setTimeout(() => n.scrollIntoView({ behavior: RM ? 'auto' : 'smooth', block: 'center' }), 120);
+                }))).observe(qb, { childList: true, subtree: true });
+                if ('ontouchstart' in window) {
+                    const n = $('#quiz-setup .note p');
+                    if (n) n.append(h('br'), h('b', {}, 'Am Handy: '), 'Nach dem Prüfen einfach nach links wischen, um zur nächsten Frage zu kommen.');
+                }
+            }
+            function haptic(p) { try { if (navigator.vibrate && isTouchLayout()) navigator.vibrate(p); } catch (e) { } }
+
+            [initHero, initZahl, initTopo, initEth, initOSI, initFrame, initSwitch, initIPv4, initSub, initVLSM, initARP, initQuiz, initMobile, initNav, initGlass].forEach(f => {
                 try { f(); } catch (e) { console.error(f.name, e); }
             });
         })();
