@@ -34,7 +34,7 @@ Große Props gehen an die **pbbf[a/s]25C** und **pbbf[S/V]25B** raus, für die M
 
 ### Zu den KI-generierten Inhalten
 
-Die Lernseiten sind ganz oder teilweise mit KI entstanden und wurden von mir nur eingeschränkt geprüft. Es kann also Fehler drin sein, und ich übernehme keine Gewähr für Richtigkeit, Vollständigkeit oder Aktualität. Verlass dich bitte nicht blind darauf, sondern gleich wichtige Sachen immer mit den offiziellen Skripten, Folien und Vorlesungen ab. Die Seiten basieren teilweise auf Material aus dem Studium. Rechte Dritter an diesen Vorlagen bleiben davon unberührt.
+Die Lernseiten sind ganz oder teilweise mit KI entstanden und wurden von mir nur eingeschränkt geprüft. Es können also Fehler drin sein, und ich übernehme keine Gewähr für Richtigkeit, Vollständigkeit oder Aktualität. Verlass dich bitte nicht blind darauf, sondern gleich wichtige Sachen immer mit den offiziellen Skripten, Folien und Vorlesungen ab. Die Seiten basieren teilweise auf Material aus dem Studium. Rechte Dritter an diesen Vorlagen bleiben davon unberührt.
 
 ### Zu den Altklausuren
 
